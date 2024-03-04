@@ -125,7 +125,7 @@
                                 </v-col>
                                 <v-col cols="12">
                                   <CostBenefitChart :benefit-data="response?.features.benefits_trend"
-                                                    :cost-data="uploadResponse[0]?.features.costs_trend"></CostBenefitChart>
+                                                    :cost-data="response?.features.costs_trend"></CostBenefitChart>
                                 </v-col>
                               </v-row>
                             </v-card-text>
