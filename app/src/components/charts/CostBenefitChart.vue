@@ -95,7 +95,7 @@ export default defineComponent({
       plugins: {
         legend: {
           display: true,
-          position: 'top'
+          position: 'right'
         },
         title: { // Adding title configuration here
           display: true, // Ensure the title is displayed

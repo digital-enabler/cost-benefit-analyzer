@@ -73,7 +73,7 @@ export default defineComponent({
       plugins: {
         legend: {
           display: true,
-          position: 'top'
+          position: 'right'
         },
         title: {
           display: true,

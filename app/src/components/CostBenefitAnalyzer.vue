@@ -22,7 +22,7 @@
 
       <v-window v-model="tab">
         <v-window-item value="one">
-          <v-col cols="4">
+          <v-col class="py-0" cols="4">
             <v-file-input v-model="files" accept="application/JSON" label="Upload json" prepend-icon="mdi-paperclip"
                           @change="handleFileUpload"></v-file-input>
           </v-col>
@@ -39,6 +39,11 @@
                                  :value="`tab-${index}`">
                     <v-card-text>
                       <v-row>
+                        <v-col class="d-flex justify-end" cols="12">
+                          <v-btn class="bg-primary text-uppercase" color="white" prepend-icon="mdi-download"
+                                 variant="text">download report
+                          </v-btn>
+                        </v-col>
                         <v-col cols="6">
                           <v-card class="pa-2" outlined>
                             <v-expansion-panels v-model="panel">
