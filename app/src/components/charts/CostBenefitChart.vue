@@ -68,8 +68,8 @@ export default defineComponent({
           {
             label: 'Benefits',
             data: benefitsData,
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgb(54, 162, 235)',
           },
         ]
       };
