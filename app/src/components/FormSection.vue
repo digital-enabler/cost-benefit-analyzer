@@ -39,7 +39,7 @@
           <!-- Dynamically Generated Forms -->
           <v-window-item v-for="(form, formIndex) in forms" :key="`formItem-${formIndex}`">
             <v-row align="center" class="mb-3" justify="start">
-              <v-col cols="4">
+              <v-col cols="4" sm="3">
                 <v-select
                   v-model="selectedTemplates[formIndex].scenarioType"
                   :items="formOptions"
@@ -52,7 +52,7 @@
                 ></v-select>
               </v-col>
               <!-- Template Type Dropdown, shown only for NBS Template scenario -->
-              <v-col v-if="selectedTemplates[formIndex]?.scenarioType === 'nbsTemplate'" cols="4">
+              <v-col v-if="selectedTemplates[formIndex]?.scenarioType === 'nbsTemplate'" cols="4" sm="3">
                 <v-select
                   v-model="selectedTemplates[formIndex].templateType"
                   :items="templateOptions"
@@ -408,19 +408,45 @@ export default {
       // Reset the dynamic sections of the current form to the initial structure
       const currentForm = this.forms[formIndex];
 
-      currentForm.dynamicSections = newNbs;
+      currentForm.dynamicSections = [
+        {
+          title: 'Features',
+          fields: [{name: '', description: '', value: 0, objective: null}],
+        },
+        {
+          title: 'Starting Costs',
+          fields: [{name: '', description: '', value: 0}],
+        },
+        {
+          title: 'Unit Costs',
+          fields: [{name: '', description: '', value: 0}],
+        },
+        {
+          title: 'Periodic Costs',
+          fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 0}],
+          hasStartingPeriod: true,
+          hasEndingPeriod: true,
+        },
+        {
+          title: 'Starting Benefits',
+          fields: [{name: '', description: '', value: 0}],
+        },
+        {
+          title: 'Periodic Benefits',
+          fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 0}],
+          hasStartingPeriod: true,
+          hasEndingPeriod: true,
+        },
+        {
+          title: 'Others',
+          fields: [{name: '', description: '', value: 0, type: 'parameter'}],
+          hasType: true,
+        },
+      ];
     },
     // Handle the name change for the 'Others' section
     handleNameChange(newName, sectionIndex, fieldIndex) {
       const currentForm = this.forms[this.currentTabIndex];
-      // Set the name of the field
-      if (currentForm.dynamicSections[sectionIndex].title === 'Features') {
-        // Update the formName property with the new name
-        this.$set(currentForm, 'formName', newName);
-      } else {
-        // Update the name of the field in the 'Others' section
-        currentForm.dynamicSections[sectionIndex].fields[fieldIndex].name = newName;
-      }
 
       // Set the name of the constraint linked to this others name
       const constraintsSectionIndex = currentForm.dynamicSections.findIndex(section => section.title === 'Constraints');
@@ -434,11 +460,14 @@ export default {
     },
     // Handle the type change for the 'Others' section
     handleTypeChange(newType, sectionIndex, fieldIndex) {
+      const currentForm = this.forms[this.currentTabIndex];
       if (newType === 'variable') {
         // Add a constraint linked to this variable
+        currentForm.dynamicSections[sectionIndex].fields[fieldIndex].value = 'NonNegativeReals'
         this.addConstraintForVariable(sectionIndex, fieldIndex);
       } else {
         // Remove the constraint previously linked to this variable
+        currentForm.dynamicSections[sectionIndex].fields[fieldIndex].value = 0
         this.removeConstraintForVariable(sectionIndex, fieldIndex);
       }
     },
@@ -693,7 +722,7 @@ export default {
         // Create a FormData object
         const formData = new FormData();
         formData.append('file', file, 'data.json');
-
+        console.log(finalArrayData);
         // Call the API with formData
         this.useApp.optimization(formData).then((value) => {
           this.uploadResponse = value;
@@ -710,6 +739,7 @@ export default {
           }
         }
       }
+
 
     },
   },

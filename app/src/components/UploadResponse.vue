@@ -3,7 +3,7 @@
          :no-gutters="true">
     <v-col cols="12">
       <v-card class="" elevation="0">
-        <v-row :align="'center'" :align-content="'center'" :dense="true" :no-gutters="true">
+        <v-row :align="'start'" :dense="true" :no-gutters="true">
           <v-col cols="8" sm="6">
             <v-tabs v-model="currentTab" class="mb-5" @update:modelValue="panel = 0">
               <v-tab v-for="(response, index) in uploadResponse" :key="`tab-${index}`" :value="`tab-${index}`">
@@ -19,8 +19,6 @@
             <v-btn class="bg-primary text-uppercase" color="white" prepend-icon="mdi-download"
                    variant="text" @click="downloadReport">download report
             </v-btn>
-          </v-col>
-          <v-col cols="2">
           </v-col>
         </v-row>
         <div ref="reportContent">

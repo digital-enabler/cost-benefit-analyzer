@@ -132,7 +132,6 @@ export default {
         loader.value = false;
       }
     };
-    // download as pdf
 
     return {
       tab,
