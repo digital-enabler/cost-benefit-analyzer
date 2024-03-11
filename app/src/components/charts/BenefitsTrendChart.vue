@@ -79,7 +79,7 @@ export default defineComponent({
           display: true,
           text: 'Benefits over time',
           font: {
-            size: 16
+            size: 20
           },
           padding: {
             top: 20,

@@ -16,135 +16,57 @@
         class="mb-5"
         slider-color="secondary"
       >
-        <v-tab value="one">Upload json</v-tab>
-        <v-tab value="two">Define NBS</v-tab>
+        <v-tab value="one">Define NBS</v-tab>
+        <v-tab value="two">Upload json</v-tab>
       </v-tabs>
 
       <v-window v-model="tab">
-        <v-window-item value="one">
-          <v-col class="py-0" cols="4">
-            <v-file-input v-model="files" accept="application/JSON" label="Upload json" prepend-icon="mdi-paperclip"
-                          @change="handleFileUpload"></v-file-input>
-          </v-col>
-          <v-row v-if="uploadResponse">
+        <v-window-item value="two">
+          <v-row :align="'center'" :align-content="'center'" :dense="true"
+                 no-gutters>
+
+            <v-col class="py-0" cols="4">
+              <v-file-input v-model="files" accept="application/JSON" label="Upload json" prepend-icon="mdi-paperclip"
+                            @change="handleFileUpload"></v-file-input>
+            </v-col>
             <v-col cols="12">
-              <v-card class="pa-3 mb-5" elevation="0">
-                <v-tabs v-model="currentTab" class="mb-5" @update:modelValue="panel = 0">
-                  <v-tab v-for="(response, index) in uploadResponse" :key="`tab-${index}`" :value="`tab-${index}`">
-                    {{ response.label }}
-                  </v-tab>
-                </v-tabs>
-                <v-window v-model="currentTab">
-                  <v-window-item v-for="(response, index) in uploadResponse" :key="`tab-item-${index}`"
-                                 :value="`tab-${index}`">
-                    <v-card-text>
-                      <v-row>
-                        <v-col class="d-flex justify-end" cols="12">
-                          <v-btn class="bg-primary text-uppercase" color="white" prepend-icon="mdi-download"
-                                 variant="text">download report
-                          </v-btn>
-                        </v-col>
-                        <v-col cols="6">
-                          <v-card class="pa-2" outlined>
-                            <v-expansion-panels v-model="panel">
-                              <v-expansion-panel class="mb-2" elevation="0">
-                                <v-expansion-panel-title class="bg-blue text-h6 rounded py-2 pl-3 pr-2"
-                                                         collapse-icon="mdi-minus" expand-icon="mdi-plus">
-                                  Summary
-                                </v-expansion-panel-title>
-                                <v-expansion-panel-text>
-                                  <v-list density="compact">
-                                    <v-list-item v-for="item in response.features.model_summary[0].values" :key="item.index" class="px-3"
-                                                 max-height="25"
-                                                 min-height="25">
-                                      <div class="d-flex justify-space-between align-center my-0 py-0">
-                                        <v-list-item-title class="text-caption">{{ item.name }}</v-list-item-title>
-                                        <v-list-item-subtitle class="text-caption">{{
-                                            item.value
-                                          }}
-                                        </v-list-item-subtitle>
-                                      </div>
-                                      <v-divider></v-divider>
-                                    </v-list-item>
-                                  </v-list>
-                                </v-expansion-panel-text>
-                              </v-expansion-panel>
-                              <v-expansion-panel elevation="0">
-                                <v-expansion-panel-title class="bg-yellow-darken-4 text-h6 rounded py-2 pl-3 pr-2"
-                                                         collapse-icon="mdi-minus" expand-icon="mdi-plus">
-                                  Show Advanced Information
-                                </v-expansion-panel-title>
-                                <v-expansion-panel-text>
-                                  <v-list density="compact">
-                                    <v-virtual-scroll :items="response.features.model_params[0].values" height="248">
-                                      <template v-slot:default="{item}">
-                                        <v-list-item class="px-3" max-height="25" min-height="25">
-                                          <div class="d-flex justify-space-between align-center my-0 py-0">
-                                            <v-list-item-title class="text-caption">{{ item.name }}</v-list-item-title>
-                                            <v-list-item-subtitle class="text-caption">{{
-                                                item.value
-                                              }}
-                                            </v-list-item-subtitle>
-                                          </div>
-                                          <v-divider></v-divider>
-                                        </v-list-item>
-                                      </template>
-
-                                    </v-virtual-scroll>
-                                  </v-list>
-                                </v-expansion-panel-text>
-                              </v-expansion-panel>
-                            </v-expansion-panels>
-                          </v-card>
-                        </v-col>
-
-                        <v-col cols="6">
-                          <v-card class="pa-2" outlined>
-                            <present-value-bar-chart
-                              :present-value-data="response?.features.present_value"></present-value-bar-chart>
-                          </v-card>
-                        </v-col>
-                        <v-col cols="6">
-
-                        </v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-card class="pa-3 mb-5" elevation="0">
-                            <v-card-title class="bg-primary rounded">Costs & Benefits</v-card-title>
-                            <v-divider></v-divider>
-                            <v-card-text>
-                              <v-row>
-                                <v-col cols="12">
-                                  <costs-trend-bar-chart
-                                    :cost-data="response?.features.costs_trend"></costs-trend-bar-chart>
-                                </v-col>
-                                <v-col cols="12">
-                                  <benefits-trend-bar-chart
-                                    :benefits-data="response?.features.benefits_trend"></benefits-trend-bar-chart>
-                                </v-col>
-                                <v-col cols="12">
-                                  <CostBenefitChart :benefit-data="response?.features.benefits_trend"
-                                                    :cost-data="response?.features.costs_trend"></CostBenefitChart>
-                                </v-col>
-                              </v-row>
-                            </v-card-text>
-                          </v-card>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-window-item>
-                </v-window>
-              </v-card>
+              <upload-response v-if="uploadResponse" :main-tab="tab"
+                               :upload-response="uploadResponse"></upload-response>
             </v-col>
           </v-row>
         </v-window-item>
 
-        <v-window-item value="two">
-          Two
+        <v-window-item value="one">
+          <form-section
+          ></form-section>
         </v-window-item>
 
       </v-window>
+
+      <!--   Json content dialog   -->
+      <v-dialog v-model="showDialog" :persistent="false" max-width="600px">
+        <v-card>
+          <v-card-title class="bg-primary">JSON Content Preview</v-card-title>
+          <v-card-text>
+            <v-textarea
+              v-model="jsonContent"
+              :rows-max="15"
+              auto-grow
+              hide-details
+              readonly
+              rows="10"
+            ></v-textarea>
+          </v-card-text>
+          <v-card-actions>
+            <v-card :rounded="0" class="text-white" color="transparent" elevation="0" location="bottom right"
+                    position="fixed">
+              <v-btn color="primary" variant="text" @click="applyUpload">Apply</v-btn>
+              <v-btn color="primary" variant="text" @click="closeDialog">Cancel</v-btn>
+            </v-card>
+          </v-card-actions>
+
+        </v-card>
+      </v-dialog>
     </v-responsive>
 
   </v-container>
@@ -153,33 +75,53 @@
 <script>
 import {ref} from "vue";
 import {useApp} from "@/mixins/app.js";
-import CostBenefitChart from "@/components/charts/CostBenefitChart.vue";
-import CostsTrendBarChart from "@/components/charts/CostsTrendBarChart.vue";
-import BenefitsTrendBarChart from "@/components/charts/BenefitsTrendChart.vue";
-import PresentValueBarChart from "@/components/charts/PresentValueBarChart.vue";
+import html2pdf from 'html2pdf.js';
+import FormSection from './FormSection.vue';
+import UploadResponse from "@/components/UploadResponse.vue";
 
 
 export default {
   name: "CostBenefitAnalyzer",
-  components: {PresentValueBarChart, BenefitsTrendBarChart, CostsTrendBarChart, CostBenefitChart},
+  components: {
+    UploadResponse, FormSection
+  },
   setup() {
     const {optimization} = useApp();
     const tab = ref('one');
     const files = ref(null);
     const uploadResponse = ref(null);
-    const currentTab = ref('');
     const panel = ref(0);
     const loader = ref(false);
+    const showDialog = ref(false);
+    const jsonContent = ref('');
 
+    // handle file upload
+    const handleFileUpload = (event) => {
+      const file = event.target.files[0];
+      if (file && file.type.match('application/json')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          jsonContent.value = e.target.result;
+          showDialog.value = true;
+        };
+        reader.readAsText(file);
+      } else {
+        // Handle the case where the file is not JSON
+        alert("Please upload a JSON file.");
+      }
+    };
+    // close the dialog
+    const closeDialog = () => {
+      showDialog.value = false;
+      files.value = null;
+    };
 
-    const handleFileUpload = async () => {
+    // call the api
+    const applyUpload = async () => {
+      showDialog.value = false;
       loader.value = true;
       const formData = new FormData();
-
-      // If multiple files can be selected, iterate over them
-      for (let file of files.value) {
-        formData.append("file", file); // Adjust the name "files[]" based on your API endpoint's expectation
-      }
+      formData.append("file", new Blob([jsonContent.value], {type: "application/json"}));
 
       try {
         uploadResponse.value = await optimization(formData);
@@ -188,9 +130,9 @@ export default {
       } catch (error) {
         console.error("Error uploading file:", error);
         loader.value = false;
-        // Handle error here (e.g., show an error message)
       }
     };
+    // download as pdf
 
     return {
       tab,
@@ -198,9 +140,12 @@ export default {
       files,
       uploadResponse,
       optimization,
-      currentTab,
       panel,
-      loader
+      loader,
+      applyUpload,
+      showDialog,
+      jsonContent,
+      closeDialog,
     };
   }
 };

@@ -84,7 +84,7 @@ export default defineComponent({
           display: true,
           text: 'Present Value Analysis',
           font: {
-            size: 16
+            size: 20
           },
         },
         tooltip: {

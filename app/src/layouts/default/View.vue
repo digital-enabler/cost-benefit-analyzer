@@ -3,7 +3,7 @@
     <router-view/>
   </v-main>
 
-  <v-footer :app="true" color="primary">
+  <v-footer :app="true" color="primary" height="40">
     <v-card
       class="text-left d-flex align-center"
       color="primary"
