@@ -278,11 +278,11 @@ export default {
         if (featuresSection && featuresSection.fields.length) {
           return featuresSection.fields[0].name;
         }
-        return `NBS Example Name`; // Default name if no name is set
+        return `NBS Example Name`;
       });
     },
     isCurrentFormValid() {
-      return this.formValidities[this.currentTabIndex]; // Assumes currentTabIndex is reactive
+      return this.formValidities[this.currentTabIndex];
     },
     // Compute the available names for the "Others" section based on the current form
     availableOthersOptions() {
@@ -291,16 +291,13 @@ export default {
           const selectedNames = section.fields.map(f => f.name);
           return this.othersNameOptions.filter(option => !selectedNames.includes(option));
         } else {
-          return []; // Return an empty array for sections that are not 'Others'
+          return [];
         }
       });
     },
     shouldShowForm() {
-      // Use optional chaining to safely access scenarioType,
-      // and fallback to null if anything along the chain is undefined.
       const scenarioType = this.selectedTemplates[this.currentTabIndex]?.scenarioType ?? null;
 
-      // Based on your requirement:
       // Show form if scenarioType is 'new' or if 'nbsTemplate' is selected and a templateType is also selected.
       return scenarioType === 'new' || (scenarioType === 'nbsTemplate' && this.selectedTemplates[this.currentTabIndex]?.templateType);
     },
@@ -315,7 +312,6 @@ export default {
     checkFormValidity(form) {
       return form.dynamicSections.every(section => {
         return section.fields.every(field => {
-          // Your validation logic
           return field.name.trim() !== '' && field.value !== null;
         });
       });
@@ -339,14 +335,14 @@ export default {
       const isValid = form.dynamicSections.every(section => {
         return section.fields.every(field => {
           // Add your specific field validation logic here
-          return field.name.trim() !== '' && field.value !== null; // Example check
+          return field.name.trim() !== '' && field.value !== null;
         });
       });
 
       // Update the validity state for the specific form
       this.formValidities[formIndex] = isValid;
 
-      return isValid; // Return the validity status
+      return isValid;
     },
     createFormStructure() {
       return {
@@ -382,7 +378,6 @@ export default {
         case 'inland-wetlands':
           currentForm.dynamicSections = inlandWetlands;
           break;
-
         case 'mangrove-forests':
           currentForm.dynamicSections = mangroveForestsTemplate;
           break;
@@ -395,12 +390,8 @@ export default {
         case 'river-floodplain':
           currentForm.dynamicSections = riverFloodPlainTemplate;
           break;
-
-        // Add more cases for additional templates as needed
-
         default:
           console.error('Selected template data not found');
-          // Optionally, handle the case where the template data is not found (e.g., show an error message)
           break;
       }
     },
@@ -491,10 +482,10 @@ export default {
       currentForm.dynamicSections[constraintsSectionIndex].fields.push({
         name: variableName,
         description: '',
-        value: [0, 10], // Default value for the constraint
+        value: [0, 10],
         inputType: 'slider',
         linkedToOthersFieldIndex: othersFieldIndex,
-        disabled: true,// Store the link by the index of the variable field in the "Others" section
+        disabled: true,
       });
     },
 
@@ -605,7 +596,6 @@ export default {
       form.dynamicSections.forEach(section => {
         switch (section.title) {
           // Handle each section type and push data into the respective arrays in finalData.features
-          // Use the structure you have for mapping fields to their corresponding features
           case 'Features':
             finalData.label = section.fields.map(field => field.name).join(', ');
             finalData.description = section.fields.map(field => field.description).join(', ');
@@ -739,8 +729,6 @@ export default {
           }
         }
       }
-
-
     },
   },
 };
