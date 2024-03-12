@@ -1,4 +1,4 @@
-// inlandWetlandsTemplate.js
+// newNbs.js
 const newNbs = [
   {
     title: 'Features',
