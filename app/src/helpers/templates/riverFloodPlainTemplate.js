@@ -123,7 +123,7 @@ const riverFloodPlainTemplate = [
         },
         value: 250000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       },
       {
         name: "Material costs phase3-PostRestoration",
@@ -135,7 +135,7 @@ const riverFloodPlainTemplate = [
         },
         value: 40000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,
@@ -164,7 +164,7 @@ const riverFloodPlainTemplate = [
         },
         value: 360000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,

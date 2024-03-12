@@ -14,7 +14,7 @@ const newNbs = [
   },
   {
     title: 'Periodic Costs',
-    fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 0}],
+    fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 'None'}],
     hasStartingPeriod: true,
     hasEndingPeriod: true,
   },
@@ -24,7 +24,7 @@ const newNbs = [
   },
   {
     title: 'Periodic Benefits',
-    fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 0}],
+    fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 'None'}],
     hasStartingPeriod: true,
     hasEndingPeriod: true,
   },

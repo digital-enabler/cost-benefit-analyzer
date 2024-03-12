@@ -123,7 +123,7 @@ const mangroveForestsTemplate = [
         },
         value: 150000,
         startingPeriod: 6,
-        endingPeriod: 0
+        endingPeriod: 'None'
       },
       {
         name: "Material costs phase3-PostRestoration",
@@ -135,7 +135,7 @@ const mangroveForestsTemplate = [
         },
         value: 20000,
         startingPeriod: 6,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,
@@ -164,7 +164,7 @@ const mangroveForestsTemplate = [
         },
         value: 240000,
         startingPeriod: 6,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,

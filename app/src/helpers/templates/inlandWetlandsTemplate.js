@@ -123,7 +123,7 @@ const inlandWetlandsTemplate = [
         },
         value: 75000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       },
       {
         name: "Material costs phase3-PostRestoration",
@@ -135,7 +135,7 @@ const inlandWetlandsTemplate = [
         },
         value: 10000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,
@@ -164,7 +164,7 @@ const inlandWetlandsTemplate = [
         },
         value: 120000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,

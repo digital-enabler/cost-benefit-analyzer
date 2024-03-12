@@ -127,11 +127,15 @@
                                         :rules="[rules.required]" class="w-50 d-inline-block pr-1"
                                         density="compact" label="Starting Period" type="number"
                                         variant="outlined"></v-text-field>
-                          <v-text-field v-if="section.hasEndingPeriod" v-model="fieldSet.endingPeriod"
+                          <v-text-field v-if="section.hasEndingPeriod"
+                                        v-model="fieldSet.endingPeriod"
                                         :rules="[v => rules.validateEndingPeriod(v, form, section, fieldSet)]"
                                         class="w-50 d-inline-block"
-                                        density="compact" label="Ending Period" type="number"
-                                        variant="outlined"></v-text-field>
+                                        density="compact" label="Ending Period"
+                                        placeholder="None"
+                                        type="number"
+                                        variant="outlined">
+                          </v-text-field>
                           <v-range-slider
                             v-if="fieldSet.inputType === 'slider'"
                             v-model="fieldSet.value"
@@ -393,26 +397,28 @@ export default {
     // load the data for each template
     loadTemplateData(templateType, formIndex) {
       const currentForm = this.forms[formIndex];
+      let templateData;
       switch (templateType) {
         case 'inland-wetlands':
-          currentForm.dynamicSections = inlandWetlandsTemplate;
+          templateData = JSON.parse(JSON.stringify(inlandWetlandsTemplate));
           break;
         case 'mangrove-forests':
-          currentForm.dynamicSections = mangroveForestsTemplate;
+          templateData = JSON.parse(JSON.stringify(mangroveForestsTemplate));
           break;
         case 'reef-ecosystems':
-          currentForm.dynamicSections = reefEcosystemsTemplate;
+          templateData = JSON.parse(JSON.stringify(reefEcosystemsTemplate));
           break;
         case 'urban-green':
-          currentForm.dynamicSections = urbanGreenTemplate;
+          templateData = JSON.parse(JSON.stringify(urbanGreenTemplate));
           break;
         case 'river-floodplain':
-          currentForm.dynamicSections = riverFloodPlainTemplate;
+          templateData = JSON.parse(JSON.stringify(riverFloodPlainTemplate));
           break;
         default:
           console.error('Selected template data not found');
           break;
       }
+      currentForm.dynamicSections = templateData;
     },
     resetForm(formIndex) {
       // Reset the dynamic sections of the current form to the initial structure
@@ -642,8 +648,8 @@ export default {
               name: field.name,
               description: field.description,
               value: Number(field.value),
-              starting_period: field.startingPeriod,
-              ending_period: field.endingPeriod
+              starting_period: Number(field.startingPeriod),
+              ending_period: field.endingPeriod === '' ? 'None' : Number(field.endingPeriod)
             }));
             break;
 
@@ -660,8 +666,8 @@ export default {
               name: field.name,
               description: field.description,
               value: Number(field.value),
-              starting_period: field.startingPeriod,
-              ending_period: field.endingPeriod
+              starting_period: Number(field.startingPeriod),
+              ending_period: field.endingPeriod === '' ? 'None' : Number(field.endingPeriod)
             }));
             break;
 
@@ -732,6 +738,7 @@ export default {
         const formData = new FormData();
         formData.append('file', file, 'data.json');
         // Call the API with formData
+        console.log(finalArrayData);
         this.useApp.optimization(formData).then((value) => {
           this.uploadResponse = value;
         });

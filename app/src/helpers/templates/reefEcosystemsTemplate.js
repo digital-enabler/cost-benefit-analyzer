@@ -123,7 +123,7 @@ const reefEcosystemsTemplate = [
         },
         value: 44000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       },
       {
         name: "Material costs phase3-PostRestoration",
@@ -135,7 +135,7 @@ const reefEcosystemsTemplate = [
         },
         value: 6000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,
@@ -164,7 +164,7 @@ const reefEcosystemsTemplate = [
         },
         value: 90000,
         startingPeriod: 3,
-        endingPeriod: 0
+        endingPeriod: 'None'
       }
     ],
     hasStartingPeriod: true,
