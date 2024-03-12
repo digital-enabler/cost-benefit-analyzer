@@ -2,35 +2,50 @@
 const newNbs = [
   {
     title: 'Features',
-    fields: [{name: '', description: '', value: 0, objective: null}],
+    fields: [{name: '', description: '', value: 0, objective: 'net_benefit_maximization', valueRequired: false}],
   },
   {
     title: 'Starting Costs',
-    fields: [{name: '', description: '', value: 0}],
+    fields: [{name: '', description: '', value: 0, required: false}],
   },
   {
-    title: 'Unit Costs',
-    fields: [{name: '', description: '', value: 0}],
+    title: 'Units Costs',
+    fields: [{name: '', description: '', value: 0, required: false}],
   },
   {
     title: 'Periodic Costs',
-    fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 'None'}],
+    fields: [{
+      name: '', description: '', value: '', startingPeriod: 0, endingPeriod: 10, type: {
+        description: "",
+        trend: "",
+        cumulative: 0
+      },
+    }],
     hasStartingPeriod: true,
     hasEndingPeriod: true,
   },
   {
     title: 'Starting Benefits',
-    fields: [{name: '', description: '', value: 0}],
+    fields: [{name: 'starting_benefits', description: '', value: 0, required: false, disabled: true}],
   },
   {
     title: 'Periodic Benefits',
-    fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 'None'}],
+    fields: [{
+      name: '', description: '', value: '', startingPeriod: 0, endingPeriod: 10, type: {
+        description: "",
+        trend: "",
+        cumulative: 0
+      },
+    }],
     hasStartingPeriod: true,
     hasEndingPeriod: true,
   },
   {
     title: 'Others',
-    fields: [{name: '', description: '', value: 0, type: 'parameter'}],
+    fields: [
+      {name: 'units_resource', description: '', value: 10, type: 'parameter'},
+      {name: 'period', description: '', value: 10, type: 'parameter'},
+    ],
     hasType: true,
   },
 ]

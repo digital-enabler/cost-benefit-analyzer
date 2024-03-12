@@ -35,8 +35,11 @@ const urbanGreenTemplate = [
     ],
   },
   {
-    title: 'Unit Costs',
-    fields: [],
+    title: 'Units Costs',
+    fields: [{
+      title: 'Units Costs',
+      fields: [{name: '', description: '', value: 0, required: false}],
+    }],
   },
   {
     title: 'Periodic Costs',
@@ -123,7 +126,7 @@ const urbanGreenTemplate = [
         },
         value: 17500,
         startingPeriod: 3,
-        endingPeriod: 'None'
+        endingPeriod: ''
       },
       {
         name: "Material costs phase3-PostRestoration",
@@ -135,7 +138,7 @@ const urbanGreenTemplate = [
         },
         value: 2500,
         startingPeriod: 3,
-        endingPeriod: 'None'
+        endingPeriod: ''
       }
     ],
     hasStartingPeriod: true,
@@ -147,7 +150,8 @@ const urbanGreenTemplate = [
       {
         name: "starting_benefits",
         description: "",
-        value: 0
+        value: 0,
+        disabled: true
       }
     ],
   },
@@ -164,7 +168,7 @@ const urbanGreenTemplate = [
         },
         value: 40000,
         startingPeriod: 3,
-        endingPeriod: 'None'
+        endingPeriod: ''
       }
     ],
     hasStartingPeriod: true,

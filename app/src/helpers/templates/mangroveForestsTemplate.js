@@ -35,8 +35,11 @@ const mangroveForestsTemplate = [
     ],
   },
   {
-    title: 'Unit Costs',
-    fields: [],
+    title: 'Units Costs',
+    fields: [{
+      title: 'Units Costs',
+      fields: [{name: '', description: '', value: 0, required: false}],
+    }],
   },
   {
     title: 'Periodic Costs',
@@ -123,7 +126,7 @@ const mangroveForestsTemplate = [
         },
         value: 150000,
         startingPeriod: 6,
-        endingPeriod: 'None'
+        endingPeriod: ''
       },
       {
         name: "Material costs phase3-PostRestoration",
@@ -135,7 +138,7 @@ const mangroveForestsTemplate = [
         },
         value: 20000,
         startingPeriod: 6,
-        endingPeriod: 'None'
+        endingPeriod: ''
       }
     ],
     hasStartingPeriod: true,
@@ -147,7 +150,8 @@ const mangroveForestsTemplate = [
       {
         name: "starting_benefits",
         description: "",
-        value: 0
+        value: 0,
+        disabled: true
       }
     ],
   },
@@ -164,7 +168,7 @@ const mangroveForestsTemplate = [
         },
         value: 240000,
         startingPeriod: 6,
-        endingPeriod: 'None'
+        endingPeriod: ''
       }
     ],
     hasStartingPeriod: true,

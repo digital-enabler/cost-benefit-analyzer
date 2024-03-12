@@ -16,7 +16,9 @@
         class="mb-5"
         slider-color="secondary"
       >
-        <v-tab value="one">Define NBS</v-tab>
+        <v-tab value="one">
+          <v-btn class="bg-primary" color="white" variant="text" @click="resetDefineNbs(tab)">Define NBS</v-btn>
+        </v-tab>
         <v-tab value="two">Upload json</v-tab>
       </v-tabs>
 
@@ -37,7 +39,7 @@
         </v-window-item>
 
         <v-window-item value="one">
-          <form-section
+          <form-section :reset-tab="resetTab"
           ></form-section>
         </v-window-item>
 
@@ -75,7 +77,6 @@
 <script>
 import {ref} from "vue";
 import {useApp} from "@/mixins/app.js";
-import html2pdf from 'html2pdf.js';
 import FormSection from './FormSection.vue';
 import UploadResponse from "@/components/UploadResponse.vue";
 
@@ -94,6 +95,21 @@ export default {
     const loader = ref(false);
     const showDialog = ref(false);
     const jsonContent = ref('');
+    const resetTab = ref('');
+    const resetDefineNbs = () => {
+      let randomString = "";
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+      for (let i = 0; i < 5; i++) {
+        let word = "";
+        const wordLength = Math.floor(Math.random() * 5) + 3; // Word length between 3 and 7 characters
+        for (let j = 0; j < wordLength; j++) {
+          word += letters.charAt(Math.floor(Math.random() * letters.length));
+        }
+        randomString += (i === 0 ? "" : " ") + word;
+      }
+      resetTab.value = randomString;
+    }
 
     // handle file upload
     const handleFileUpload = (event) => {
@@ -145,6 +161,8 @@ export default {
       showDialog,
       jsonContent,
       closeDialog,
+      resetTab,
+      resetDefineNbs
     };
   }
 };
@@ -153,7 +171,7 @@ export default {
 
 <style scoped>
 .v-expansion-panel-text__wrapper {
-  padding: 0px !important;
+  padding: 0 !important;
 }
 </style>
 

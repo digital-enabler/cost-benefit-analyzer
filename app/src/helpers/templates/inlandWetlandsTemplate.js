@@ -35,8 +35,8 @@ const inlandWetlandsTemplate = [
     ],
   },
   {
-    title: 'Unit Costs',
-    fields: [],
+    title: 'Units Costs',
+    fields: [{name: '', description: '', value: 0, required: false}],
   },
   {
     title: 'Periodic Costs',
@@ -123,7 +123,7 @@ const inlandWetlandsTemplate = [
         },
         value: 75000,
         startingPeriod: 3,
-        endingPeriod: 'None'
+        endingPeriod: ''
       },
       {
         name: "Material costs phase3-PostRestoration",
@@ -135,7 +135,7 @@ const inlandWetlandsTemplate = [
         },
         value: 10000,
         startingPeriod: 3,
-        endingPeriod: 'None'
+        endingPeriod: ''
       }
     ],
     hasStartingPeriod: true,
@@ -147,7 +147,8 @@ const inlandWetlandsTemplate = [
       {
         name: "starting_benefits",
         description: "",
-        value: 0
+        value: 0,
+        disabled: true
       }
     ],
   },
@@ -164,7 +165,7 @@ const inlandWetlandsTemplate = [
         },
         value: 120000,
         startingPeriod: 3,
-        endingPeriod: 'None'
+        endingPeriod: ''
       }
     ],
     hasStartingPeriod: true,

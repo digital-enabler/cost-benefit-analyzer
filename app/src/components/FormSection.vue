@@ -1,15 +1,13 @@
 <template>
   <v-container class="fill-height pt-0" fluid>
     <v-responsive class="fill-height">
-      <upload-response v-if="uploadResponse" :main-tab="'one'" :upload-response="uploadResponse"
-                       @uploadResponseUpdated="handleUploadResponse"></upload-response>
+      <upload-response v-if="uploadResponse"
+                       :upload-response="uploadResponse"></upload-response>
       <v-sheet v-else>
-        <v-row align="center" class="mb-3">
+        <v-row align="center" class="mb-5">
           <v-col cols="11">
             <v-tabs v-model="currentTabIndex" background-color="primary">
-              <v-tab v-for="(form, index) in forms" :key="`form-${index}`"
-                     :append-icon="selectedTemplates[index]?.scenarioType && applyFormClickedState[index] && formValidities[index] === false ? 'mdi-exclamation-thick' : null"
-                     :class="{ 'error-tab': selectedTemplates[index]?.scenarioType && applyFormClickedState[index] && formValidities[index] === false }">
+              <v-tab v-for="(form, index) in forms" :key="`form-${index}`">
                 <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
                     <!--                  button to remove tab-->
@@ -38,14 +36,16 @@
         <v-window v-model="currentTabIndex">
           <!-- Dynamically Generated Forms -->
           <v-window-item v-for="(form, formIndex) in forms" :key="`formItem-${formIndex}`">
-            <v-row align="center" class="mb-3" justify="start">
+            <v-row align="center" justify="start">
               <v-col cols="4" sm="3">
                 <v-select
                   v-model="safeSelectedTemplates[formIndex].scenarioType"
                   :items="formOptions"
-                  class="pt-0 pl-0"
+                  class="pt-2 pl-0"
                   hide-details
                   item-title="text"
+                  density="compact"
+                  variant="outlined"
                   item-value="value"
                   label="Select scenario type"
                   @update:modelValue="handleFormSelection($event, formIndex, form)"
@@ -68,8 +68,8 @@
                 <v-btn v-if="shouldShowForm" class="mr-2" color="primary"
                        @click="applyForm">Apply
                 </v-btn>
-                <v-btn v-if="shouldShowForm" :disabled="!isCurrentFormValid" color="primary"
-                       @click="downloadJson">Download
+                <v-btn v-if="shouldShowForm" :disabled="!isFormValid(currentTabIndex)"
+                       color="primary" @click="downloadJson">Download
                 </v-btn>
               </v-col>
             </v-row>
@@ -93,8 +93,7 @@
                         <v-tooltip>
                           <template v-slot:activator="{ props }">
                             <v-btn
-                              v-if="section.title !== 'Constraints' && section.title !== 'Unit Costs' && section.title !== 'Features'"
-                              :disabled="forms[currentTabIndex].dynamicSections[sectionIndex].fields.length >= 2 && section.title === 'Others'"
+                              v-if="section.title !== 'Constraints' && section.title !== 'Units Costs' && section.title !== 'Features' && section.title !== 'Others'"
                               class="ml-2"
                               color="primary"
                               icon="mdi-plus" size="36" v-bind="props" @click="addField(sectionIndex)"></v-btn>
@@ -107,20 +106,30 @@
                         <!--section fields -->
                         <div v-for="(fieldSet, fieldSetIndex) in section.fields"
                              :key="`fieldSet-${sectionIndex}-${fieldSetIndex}`">
-                          <v-text-field v-if="section.title !== 'Others'" v-model="fieldSet.name"
-                                        :readonly="fieldSet.disabled" :rules="[rules.required]" density="compact"
+                          <v-text-field v-if="section.title !== 'Others'"
+                                        v-model="fieldSet.name"
+                                        :readonly="fieldSet.disabled"
+                                        :rules="section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [rules.nameRequiredIfValueFilled(fieldSet.value)] : [rules.required]"
+                                        density="compact"
                                         label="Name"
                                         variant="outlined"></v-text-field>
-                          <v-select v-if="section.title === 'Features'" v-model="fieldSet.objective"
+                          <v-select v-if="section.title === 'Features'"
+                                    v-model="fieldSet.objective"
+                                    class="mt-2"
+                                    density="compact"
+                                    variant="outlined"
                                     :items="objectiveOptions"
                                     :rules="[rules.required]" label="Objective Type" outlined></v-select>
                           <v-textarea v-if="section.title !== 'Others'" v-model="fieldSet.description"
                                       density="compact"
+                                      class="mt-2"
                                       label="Description" variant="outlined"></v-textarea>
+                          <!--                          period cost and periodic benefit are required-->
                           <v-text-field v-if="section.title !== 'Others' && section.title !== 'Constraints'"
                                         v-model="fieldSet.value"
+                                        :rules="section.title === 'Features' || section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [] : [rules.required]"
                                         :label="section.title === 'Features' ? 'Discount rate' : 'Value'"
-                                        :rules="[rules.required]"
+                                        class="mb-2"
                                         :step="section.title === 'Features' ? '0.01' : '100'" density="compact"
                                         type="number" variant="outlined"></v-text-field>
                           <v-text-field v-if="section.hasStartingPeriod" v-model="fieldSet.startingPeriod"
@@ -161,6 +170,8 @@
                                         variant="outlined"></v-textarea>
                             <v-select
                               v-model="fieldSet.type"
+                              density="compact"
+                              variant="outlined"
                               :items="['parameter', 'variable']"
                               label="Type"
                               @update:modelValue="handleTypeChange($event, sectionIndex, fieldSetIndex)"
@@ -180,7 +191,7 @@
                           <v-tooltip>
                             <template v-slot:activator="{ props }">
                               <v-btn
-                                v-if="section.title !== 'Constraints' && section.title !== 'Features' && section.title !== 'Unit Costs'"
+                                v-if="section.title !== 'Constraints' && section.title !== 'Features' && section.title !== 'Units Costs' && section.title !== 'Others' "
                                 :disabled="forms[formIndex].dynamicSections[sectionIndex].fields.length === 1"
                                 color="red"
                                 icon="mdi-minus"
@@ -202,9 +213,18 @@
           </v-window-item>
         </v-window>
       </v-sheet>
-      <v-snackbar v-model="snackbar" :timeout="5000" color="error" location="top right">
-        {{ snackbarText }}
-        <v-btn color="white" variant="text" @click="snackbar = false">Close</v-btn>
+      <v-snackbar v-model="snackbar" :timeout="500000" color="error" location="top right">
+
+        <div class="text-subtitle-1 pb-2">
+          ERROR
+        </div>
+
+        <p> {{ snackbarText }}</p>
+        <p> {{ snackbarTextEnd }}</p>
+
+        <template v-slot:actions>
+          <v-btn class="float-right" color="white" variant="text" @click="snackbar = false">Close</v-btn>
+        </template>
       </v-snackbar>
     </v-responsive>
   </v-container>
@@ -224,16 +244,22 @@ import inlandWetlandsTemplate from "@/helpers/templates/inlandWetlandsTemplate";
 export default {
   components: {UploadResponse},
   mixins: [useApp()],
+  props: {
+    resetTab: {
+      type: String
+    }
+  },
   data() {
     return {
       valid: true,
       snackbar: false,
       snackbarText: '',
+      snackbarTextEnd: '',
       objectiveOptions: ['bep_estimation', 'net_benefit_maximization'],
       othersNameOptions: ['units_resource', 'period'],
       currentTabIndex: 0,
-      applyFormClickedState: [],
-      formValidities: [],
+      // applyFormClickedState: [],
+      // formValidities: [],
       uploadResponse: null,
       selectedTemplates: [{scenarioType: null, templateType: null}],
       templateOptions: [
@@ -251,7 +277,17 @@ export default {
         // Add more templates as needed
       ],
       rules: {
-        required: value => value !== null && value !== undefined && value !== '' || 'Required',
+        required: value => (value !== null && value !== '' && value !== undefined) || 'This field is required',
+        nameRequiredIfValueFilled: (valueField) => (nameFieldValue) => {
+          // Ensure valueField is parsed as a number and check if it's greater than 0
+          const value = parseFloat(valueField);
+          // If valueField is 0, NaN or less than 0, don't enforce this rule
+          if (!value || value <= 0) {
+            return true;
+          }
+          // If value is filled (greater than 0) and name is not, enforce rule
+          return nameFieldValue ? true : 'Name is required if value is greater than 0';
+        },
         min: v => v >= 0 || 'Must be positive',
         max: v => v <= 1 || 'Must be less than or equal to 1',
         validateEndingPeriod: (value, form, section, field) => {
@@ -266,13 +302,17 @@ export default {
     };
   },
   watch: {
-    'forms': {
-      handler() {
-        this.forms.forEach((form, index) => {
-          this.formValidities[index] = this.checkFormValidity(form);
-        });
-      },
-      deep: true,
+    // 'forms': {
+    //   handler() {
+    //     this.forms.forEach((form, index) => {
+    //       this.formValidities[index] = this.checkFormValidity(form);
+    //     });
+    //   },
+    //   deep: true,
+    // },
+    resetTab() {
+      // Perform the desired actions when resetTab changes
+      this.handleUploadResponse();
     },
   },
   computed: {
@@ -291,9 +331,9 @@ export default {
         return `NBS Example Name`; // Default name if no name is set or if form.dynamicSections is undefined
       });
     },
-    isCurrentFormValid() {
-      return this.formValidities[this.currentTabIndex];
-    },
+    // isCurrentFormValid() {
+    //   return this.formValidities[this.currentTabIndex];
+    // },
     // Compute the available names for the "Others" section based on the current form
     availableOthersOptions() {
       return this.forms[this.currentTabIndex].dynamicSections.map(section => {
@@ -313,6 +353,13 @@ export default {
     },
   },
   methods: {
+    isFormValid(formIndex) {
+      const refName = `form-${formIndex}`;
+      if (this.$refs[refName] && this.$refs[refName][0]) {
+        return this.$refs[refName][0].isValid;
+      }
+      return false; // Assume invalid if the form ref is not found
+    },
     handleUploadResponse() {
       this.selectedTemplates = this.forms.map(() => ({scenarioType: null, templateType: null}));
 
@@ -322,51 +369,48 @@ export default {
       // reset forms to their initial state
       this.forms = [this.createFormStructure()];
       this.currentTabIndex = 0;
-      this.applyFormClickedState = this.forms.map(() => false);
-      this.formValidities = this.forms.map(() => false);
-
     },
-    checkFormValidity(form) {
-      // Ensure form.dynamicSections is defined and is an array
-      if (form.dynamicSections && Array.isArray(form.dynamicSections)) {
-        return form.dynamicSections.every(section => {
-          return section.fields.every(field => {
-            // Your validation logic
-            return field.name.trim() !== '' && field.value !== null;
-          });
-        });
-      }
-      // Return false or some default validity state if dynamicSections is not as expected
-      return false;
-    },
+    // checkFormValidity(form) {
+    //   // Ensure form.dynamicSections is defined and is an array
+    //   if (form.dynamicSections && Array.isArray(form.dynamicSections)) {
+    //     return form.dynamicSections.every(section => {
+    //       return section.fields.every(field => {
+    //         // Your validation logic
+    //         return field.name.trim() !== '' && field.value !== null;
+    //       });
+    //     });
+    //   }
+    //   // Return false or some default validity state if dynamicSections is not as expected
+    //   return false;
+    // },
     removeTab(index) {
       // Remove the tab at the specified index
       this.forms.splice(index, 1);
       this.selectedTemplates.splice(index, 1);
-      this.formValidities.splice(index, 1);
+      // this.formValidities.splice(index, 1);
 
       // Adjust currentTabIndex if necessary
       if (this.currentTabIndex >= this.forms.length) {
         this.currentTabIndex = Math.max(this.forms.length - 1, 0);
       }
     },
-    validateForm(formIndex) {
-      // Retrieve the form to validate using the formIndex
-      const form = this.forms[formIndex];
-
-      // Check if all required fields have values
-      const isValid = form.dynamicSections.every(section => {
-        return section.fields.every(field => {
-          // Add your specific field validation logic here
-          return field.name.trim() !== '' && field.value !== null;
-        });
-      });
-
-      // Update the validity state for the specific form
-      this.formValidities[formIndex] = isValid;
-
-      return isValid;
-    },
+    // validateForm(formIndex) {
+    //   // Retrieve the form to validate using the formIndex
+    //   const form = this.forms[formIndex];
+    //
+    //   // Check if all required fields have values
+    //   const isValid = form.dynamicSections.every(section => {
+    //     return section.fields.every(field => {
+    //       // Add your specific field validation logic here
+    //       return field.name.trim() !== '' && field.value !== null;
+    //     });
+    //   });
+    //
+    //   // Update the validity state for the specific form
+    //   this.formValidities[formIndex] = isValid;
+    //
+    //   return isValid;
+    // },
     createFormStructure() {
       return {
         dynamicSections: newNbs,
@@ -424,41 +468,7 @@ export default {
       // Reset the dynamic sections of the current form to the initial structure
       const currentForm = this.forms[formIndex];
 
-      currentForm.dynamicSections = [
-        {
-          title: 'Features',
-          fields: [{name: '', description: '', value: 0, objective: null}],
-        },
-        {
-          title: 'Starting Costs',
-          fields: [{name: '', description: '', value: 0}],
-        },
-        {
-          title: 'Unit Costs',
-          fields: [{name: '', description: '', value: 0}],
-        },
-        {
-          title: 'Periodic Costs',
-          fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 0}],
-          hasStartingPeriod: true,
-          hasEndingPeriod: true,
-        },
-        {
-          title: 'Starting Benefits',
-          fields: [{name: '', description: '', value: 0}],
-        },
-        {
-          title: 'Periodic Benefits',
-          fields: [{name: '', description: '', value: 0, startingPeriod: 0, endingPeriod: 0}],
-          hasStartingPeriod: true,
-          hasEndingPeriod: true,
-        },
-        {
-          title: 'Others',
-          fields: [{name: '', description: '', value: 0, type: 'parameter'}],
-          hasType: true,
-        },
-      ];
+      currentForm.dynamicSections = JSON.parse(JSON.stringify(newNbs));
     },
     // Handle the name change for the 'Others' section
     handleNameChange(newName, sectionIndex, fieldIndex) {
@@ -605,7 +615,7 @@ export default {
         label: '',
         description: '',
         features: {
-          objective: '',
+          objective: 'net_benefit_maximization',
           discount_rate: 0,
           starting_costs: [],
           units_costs: [],
@@ -619,6 +629,16 @@ export default {
 
       // Your logic to process each section and update finalData accordingly
       form.dynamicSections.forEach(section => {
+        let fieldsData = [];
+        if (["Starting Costs", "Units Costs", "Starting Benefits"].includes(section.title)) {
+          // Check if all values in this section are 0 or empty
+          const allValuesZeroOrEmpty = section.fields.every(field => !field.value || Number(field.value) === 0);
+          if (allValuesZeroOrEmpty) {
+            // If all values are 0 or empty, keep the corresponding array empty
+            finalData.features[section.title.replace(/\s+/g, '_').toLowerCase()] = [];
+            return;
+          }
+        }
         switch (section.title) {
           // Handle each section type and push data into the respective arrays in finalData.features
           case 'Features':
@@ -628,15 +648,15 @@ export default {
             finalData.features.discount_rate = Number(section.fields.map(field => field.value));
             break;
           case 'Starting Costs':
-            finalData.features.starting_costs = section.fields.map(field => ({
+            fieldsData = section.fields.map(field => ({
               name: field.name,
               description: field.description,
               value: Number(field.value)
             }));
             break;
 
-          case 'Unit Costs':
-            finalData.features.units_costs = section.fields.map(field => ({
+          case 'Units Costs':
+            fieldsData = section.fields.map(field => ({
               name: field.name,
               description: field.description,
               value: Number(field.value)
@@ -644,7 +664,7 @@ export default {
             break;
 
           case 'Periodic Costs':
-            finalData.features.periodic_costs = section.fields.map(field => ({
+            fieldsData = section.fields.map(field => ({
               name: field.name,
               description: field.description,
               value: Number(field.value),
@@ -654,7 +674,7 @@ export default {
             break;
 
           case 'Starting Benefits':
-            finalData.features.starting_benefits = section.fields.map(field => ({
+            fieldsData = section.fields.map(field => ({
               name: field.name,
               description: field.description,
               value: Number(field.value)
@@ -662,7 +682,7 @@ export default {
             break;
 
           case 'Periodic Benefits':
-            finalData.features.periodic_benefits = section.fields.map(field => ({
+            fieldsData = section.fields.map(field => ({
               name: field.name,
               description: field.description,
               value: Number(field.value),
@@ -672,7 +692,7 @@ export default {
             break;
 
           case 'Others':
-            finalData.features.others = section.fields.map(field => ({
+            fieldsData = section.fields.map(field => ({
               name: field.name,
               description: field.description,
               value: field.type === 'parameter' ? Number(field.value) : field.value,
@@ -681,14 +701,19 @@ export default {
             break;
 
           case 'Constraints':
-            finalData.features.constraints = section.fields.map(field => ({
+            fieldsData = section.fields.map(field => ({
               name: field.name,
               description: field.description,
               value: `(${field.value[0]}, cst, ${field.value[1]})`
             }));
             break;
         }
-      })
+        if (fieldsData.length > 0) {
+          finalData.features[section.title.replace(/\s+/g, '_').toLowerCase()] = fieldsData;
+        }
+      });
+
+      console.log(finalData);
 
       return finalData;
     },
@@ -713,45 +738,41 @@ export default {
       URL.revokeObjectURL(fileURL);
     },
     applyForm() {
-      this.formValidities = this.forms.map((form, formIndex) => this.validateForm(formIndex));
-      let allValid = this.formValidities.every(isValid => isValid);
-      this.applyFormClickedState[this.currentTabIndex] = true;
+      let invalidFormNames = []; // To keep track of names of invalid forms
+      this.snackbar = false;
 
-      this.forms.map((_, index) => {
-        const formRef = this.$refs['form-' + index];
-        if (formRef) {
-          return formRef[0].validate();
+      // Iterate over each form reference and validate
+      this.forms.forEach((form, index) => {
+        const refName = `form-${index}`;
+        if (this.$refs[refName][0].validate()) {
+          const isValid = this.$refs[refName][0].isValid;
+          if (!isValid) {
+            // If the form is invalid, add its name to the list of invalid form names
+            const formName = this.featureNames[index] || `NBS Example Name ${index + 1}`;
+            invalidFormNames.push(formName);
+          }
         }
-        return Promise.resolve(true);
       });
 
-      if (allValid) {
-        // Proceed with applying form data if all forms are valid
+      if (invalidFormNames.length === 0) {
+        // All forms are valid, proceed with your logic
         const finalArrayData = this.forms.map(form => this.formatFormData(form));
-        // Convert the finalArrayData to JSON & format it
         const jsonData = JSON.stringify(finalArrayData, null, 2);
 
-        // Create a Blob from the JSON string
         const file = new Blob([jsonData], {type: 'application/json'});
-
-        // Create a FormData object
         const formData = new FormData();
         formData.append('file', file, 'data.json');
-        // Call the API with formData
+
         this.useApp.optimization(formData).then((value) => {
           this.uploadResponse = value;
         });
       } else {
-        // add snackbar if the form that has error is not the current tab
-        const invalidFormIndex = this.formValidities.findIndex(isValid => !isValid);
-
-        if (invalidFormIndex !== -1) {
-          if (invalidFormIndex !== this.currentTabIndex) {
-            // Show snackbar with a message indicating the issue
-            this.snackbarText = `There's an error in another section. Please review all sections.`;
-            this.snackbar = true;
-          }
-        }
+        // One or more forms are invalid
+        // Construct a message that includes the names of the invalid forms
+        const invalidFormsString = invalidFormNames.join(', ');
+        this.snackbarText = `Errors found in:${invalidFormsString}`;
+        this.snackbarTextEnd = `Please review these sections.`;
+        this.snackbar = true;
       }
     },
   },

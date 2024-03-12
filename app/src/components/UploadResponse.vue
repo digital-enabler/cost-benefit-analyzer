@@ -12,9 +12,8 @@
             </v-tabs>
           </v-col>
           <v-col class="text-right" cols="4" sm="6">
-            <v-btn v-if="mainTab === 'one'" class="bg-primary text-uppercase mr-2" color="white"
-                   prepend-icon="mdi-refresh"
-                   variant="text" @click="rerunSimulation">RERUN
+            <v-btn class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-download"
+                   variant="text" @click="downloadJson">download json
             </v-btn>
             <v-btn class="bg-primary text-uppercase" color="white" prepend-icon="mdi-download"
                    variant="text" @click="downloadReport">download report
@@ -146,18 +145,30 @@ export default {
       type: Array,
       required: true
     },
-    mainTab: {
-      type: String,
-      required: false
-    },
   },
-  setup(props, context) {
+  setup(props) {
     const currentTab = ref('');
     const {optimization} = useApp();
     const files = ref(null);
     const panel = ref(0);
     const reportContent = ref(null);
 
+    const downloadJson = () => {
+      const jsonData = JSON.stringify(props.uploadResponse, null, 2); // Pretty print JSON
+      const blob = new Blob([jsonData], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary link to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'data.json'; // Name of the file to be downloaded
+      document.body.appendChild(link); // Append to the document
+      link.click(); // Trigger the download
+
+      // Clean up by removing the link and revoking the object URL
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    };
 
     const downloadReport = () => {
       if (reportContent.value) {
@@ -173,11 +184,6 @@ export default {
       }
     };
 
-    const rerunSimulation = () => {
-      context.emit('uploadResponseUpdated');
-    }
-
-
     return {
       files,
       optimization,
@@ -185,7 +191,7 @@ export default {
       downloadReport,
       panel,
       currentTab,
-      rerunSimulation
+      downloadJson
     };
   }
 };
