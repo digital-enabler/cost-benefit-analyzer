@@ -8,8 +8,8 @@
           <v-col cols="11">
             <v-tabs v-model="currentTabIndex" background-color="primary">
               <v-tab v-for="(form, index) in forms" :key="`form-${index}`"
-                     :append-icon="selectedTemplates[index].scenarioType && applyFormClickedState[index] && formValidities[index] === false ? 'mdi-exclamation-thick' : null"
-                     :class="{ 'error-tab': selectedTemplates[index].scenarioType && applyFormClickedState[index] && formValidities[index] === false }">
+                     :append-icon="selectedTemplates[index]?.scenarioType && applyFormClickedState[index] && formValidities[index] === false ? 'mdi-exclamation-thick' : null"
+                     :class="{ 'error-tab': selectedTemplates[index]?.scenarioType && applyFormClickedState[index] && formValidities[index] === false }">
                 <v-tooltip location="top">
                   <template v-slot:activator="{ props }">
                     <!--                  button to remove tab-->
@@ -41,7 +41,7 @@
             <v-row align="center" class="mb-3" justify="start">
               <v-col cols="4" sm="3">
                 <v-select
-                  v-model="selectedTemplates[formIndex].scenarioType"
+                  v-model="safeSelectedTemplates[formIndex].scenarioType"
                   :items="formOptions"
                   class="pt-0 pl-0"
                   hide-details
@@ -210,12 +210,12 @@
 
 import {useApp} from "@/mixins/app";
 import UploadResponse from "@/components/UploadResponse.vue";
-import inlandWetlands from "@/helpers/templates/inlandWetlandsTemplate";
 import mangroveForestsTemplate from "@/helpers/templates/mangroveForestsTemplate";
 import newNbs from "@/helpers/templates/newNbs";
 import reefEcosystemsTemplate from "@/helpers/templates/reefEcosystemsTemplate";
 import urbanGreenTemplate from "@/helpers/templates/urbanGreenTemplate";
 import riverFloodPlainTemplate from "@/helpers/templates/riverFloodPlainTemplate";
+import inlandWetlandsTemplate from "@/helpers/templates/inlandWetlandsTemplate";
 
 export default {
   components: {UploadResponse},
@@ -272,13 +272,19 @@ export default {
     },
   },
   computed: {
+    safeSelectedTemplates() {
+      return this.forms.map((_, index) => this.selectedTemplates[index] || {scenarioType: null, templateType: null});
+    },
     featureNames() {
       return this.forms.map(form => {
-        const featuresSection = form.dynamicSections.find(section => section.title === 'Features');
-        if (featuresSection && featuresSection.fields.length) {
-          return featuresSection.fields[0].name;
+        // Check if dynamicSections exists and is an array before calling find
+        if (Array.isArray(form.dynamicSections)) {
+          const featuresSection = form.dynamicSections.find(section => section.title === 'Features');
+          if (featuresSection && featuresSection.fields.length) {
+            return featuresSection.fields[0].name;
+          }
         }
-        return `NBS Example Name`;
+        return `NBS Example Name`; // Default name if no name is set or if form.dynamicSections is undefined
       });
     },
     isCurrentFormValid() {
@@ -303,18 +309,31 @@ export default {
     },
   },
   methods: {
-    handleUploadResponse(uploadResponse) {
-      this.selectedTemplates = [];
-      this.selectedTemplates.push({scenarioType: null, templateType: null});
-      this.forms[0].dynamicSections[0].fields[0].name = 'NBS Example Name';
-      this.uploadResponse = uploadResponse;
+    handleUploadResponse() {
+      this.selectedTemplates = this.forms.map(() => ({scenarioType: null, templateType: null}));
+
+      // Reset the upload response
+      this.uploadResponse = null;
+
+      // reset forms to their initial state
+      this.forms = [this.createFormStructure()];
+      this.currentTabIndex = 0;
+      this.applyFormClickedState = this.forms.map(() => false);
+      this.formValidities = this.forms.map(() => false);
+
     },
     checkFormValidity(form) {
-      return form.dynamicSections.every(section => {
-        return section.fields.every(field => {
-          return field.name.trim() !== '' && field.value !== null;
+      // Ensure form.dynamicSections is defined and is an array
+      if (form.dynamicSections && Array.isArray(form.dynamicSections)) {
+        return form.dynamicSections.every(section => {
+          return section.fields.every(field => {
+            // Your validation logic
+            return field.name.trim() !== '' && field.value !== null;
+          });
         });
-      });
+      }
+      // Return false or some default validity state if dynamicSections is not as expected
+      return false;
     },
     removeTab(index) {
       // Remove the tab at the specified index
@@ -376,7 +395,7 @@ export default {
       const currentForm = this.forms[formIndex];
       switch (templateType) {
         case 'inland-wetlands':
-          currentForm.dynamicSections = inlandWetlands;
+          currentForm.dynamicSections = inlandWetlandsTemplate;
           break;
         case 'mangrove-forests':
           currentForm.dynamicSections = mangroveForestsTemplate;

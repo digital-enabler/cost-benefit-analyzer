@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="uploadResponse" :align="'center'" :align-content="'center'" :dense="true"
+  <v-row :align="'center'" :align-content="'center'" :dense="true"
          :no-gutters="true">
     <v-col cols="12">
       <v-card class="" elevation="0">
@@ -149,7 +149,7 @@ export default {
     mainTab: {
       type: String,
       required: false
-    }
+    },
   },
   setup(props, context) {
     const currentTab = ref('');
@@ -174,7 +174,7 @@ export default {
     };
 
     const rerunSimulation = () => {
-      context.emit('uploadResponseUpdated', null);
+      context.emit('uploadResponseUpdated');
     }
 
 
