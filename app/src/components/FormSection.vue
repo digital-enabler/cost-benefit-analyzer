@@ -738,7 +738,6 @@ export default {
         const formData = new FormData();
         formData.append('file', file, 'data.json');
         // Call the API with formData
-        console.log(finalArrayData);
         this.useApp.optimization(formData).then((value) => {
           this.uploadResponse = value;
         });
