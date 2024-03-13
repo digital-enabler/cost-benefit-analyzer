@@ -26,7 +26,7 @@ const newNbs = [
   },
   {
     title: 'Starting Benefits',
-    fields: [{name: 'starting_benefits', description: '', value: 0, required: false, disabled: true}],
+    fields: [{name: '', description: '', value: 0, required: false, disabled: true}],
   },
   {
     title: 'Periodic Benefits',

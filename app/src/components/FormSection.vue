@@ -530,7 +530,7 @@ export default {
           type: 'parameter'
         };
 
-        if (section.hasStartingPeriod) newField.startingPeriod = 10;
+        if (section.hasStartingPeriod) newField.startingPeriod = 0;
         if (section.hasEndingPeriod) newField.endingPeriod = 10;
 
         section.fields.push(newField);
