@@ -213,7 +213,7 @@
           </v-window-item>
         </v-window>
       </v-sheet>
-      <v-snackbar v-model="snackbar" :timeout="500000" color="error" location="top right">
+      <v-snackbar v-model="snackbar" :timeout="5000" color="error" location="top right">
 
         <div class="text-subtitle-1 pb-2">
           ERROR
@@ -258,8 +258,6 @@ export default {
       objectiveOptions: ['bep_estimation', 'net_benefit_maximization'],
       othersNameOptions: ['units_resource', 'period'],
       currentTabIndex: 0,
-      // applyFormClickedState: [],
-      // formValidities: [],
       uploadResponse: null,
       selectedTemplates: [{scenarioType: null, templateType: null}],
       templateOptions: [
@@ -274,7 +272,6 @@ export default {
       formOptions: [
         {text: 'Create New Scenario', value: 'new'},
         {text: 'NBS Template', value: 'nbsTemplate'},
-        // Add more templates as needed
       ],
       rules: {
         required: value => (value !== null && value !== '' && value !== undefined) || 'This field is required',
@@ -302,16 +299,7 @@ export default {
     };
   },
   watch: {
-    // 'forms': {
-    //   handler() {
-    //     this.forms.forEach((form, index) => {
-    //       this.formValidities[index] = this.checkFormValidity(form);
-    //     });
-    //   },
-    //   deep: true,
-    // },
     resetTab() {
-      // Perform the desired actions when resetTab changes
       this.handleUploadResponse();
     },
   },
@@ -331,9 +319,6 @@ export default {
         return `NBS Example Name`; // Default name if no name is set or if form.dynamicSections is undefined
       });
     },
-    // isCurrentFormValid() {
-    //   return this.formValidities[this.currentTabIndex];
-    // },
     // Compute the available names for the "Others" section based on the current form
     availableOthersOptions() {
       return this.forms[this.currentTabIndex].dynamicSections.map(section => {
@@ -370,19 +355,6 @@ export default {
       this.forms = [this.createFormStructure()];
       this.currentTabIndex = 0;
     },
-    // checkFormValidity(form) {
-    //   // Ensure form.dynamicSections is defined and is an array
-    //   if (form.dynamicSections && Array.isArray(form.dynamicSections)) {
-    //     return form.dynamicSections.every(section => {
-    //       return section.fields.every(field => {
-    //         // Your validation logic
-    //         return field.name.trim() !== '' && field.value !== null;
-    //       });
-    //     });
-    //   }
-    //   // Return false or some default validity state if dynamicSections is not as expected
-    //   return false;
-    // },
     removeTab(index) {
       // Remove the tab at the specified index
       this.forms.splice(index, 1);
@@ -394,23 +366,6 @@ export default {
         this.currentTabIndex = Math.max(this.forms.length - 1, 0);
       }
     },
-    // validateForm(formIndex) {
-    //   // Retrieve the form to validate using the formIndex
-    //   const form = this.forms[formIndex];
-    //
-    //   // Check if all required fields have values
-    //   const isValid = form.dynamicSections.every(section => {
-    //     return section.fields.every(field => {
-    //       // Add your specific field validation logic here
-    //       return field.name.trim() !== '' && field.value !== null;
-    //     });
-    //   });
-    //
-    //   // Update the validity state for the specific form
-    //   this.formValidities[formIndex] = isValid;
-    //
-    //   return isValid;
-    // },
     createFormStructure() {
       return {
         dynamicSections: newNbs,
@@ -654,7 +609,6 @@ export default {
               value: Number(field.value)
             }));
             break;
-
           case 'Units Costs':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -662,7 +616,6 @@ export default {
               value: Number(field.value)
             }));
             break;
-
           case 'Periodic Costs':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -672,7 +625,6 @@ export default {
               ending_period: field.endingPeriod === '' ? 'None' : Number(field.endingPeriod)
             }));
             break;
-
           case 'Starting Benefits':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -680,7 +632,6 @@ export default {
               value: Number(field.value)
             }));
             break;
-
           case 'Periodic Benefits':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -690,7 +641,6 @@ export default {
               ending_period: field.endingPeriod === '' ? 'None' : Number(field.endingPeriod)
             }));
             break;
-
           case 'Others':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -699,7 +649,6 @@ export default {
               type: field.type
             }));
             break;
-
           case 'Constraints':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -712,8 +661,6 @@ export default {
           finalData.features[section.title.replace(/\s+/g, '_').toLowerCase()] = fieldsData;
         }
       });
-
-      console.log(finalData);
 
       return finalData;
     },
@@ -738,7 +685,7 @@ export default {
       URL.revokeObjectURL(fileURL);
     },
     applyForm() {
-      let invalidFormNames = []; // To keep track of names of invalid forms
+      let invalidFormNames = [];
       this.snackbar = false;
 
       // Iterate over each form reference and validate
@@ -755,7 +702,7 @@ export default {
       });
 
       if (invalidFormNames.length === 0) {
-        // All forms are valid, proceed with your logic
+        // All forms are valid
         const finalArrayData = this.forms.map(form => this.formatFormData(form));
         const jsonData = JSON.stringify(finalArrayData, null, 2);
 
@@ -768,7 +715,6 @@ export default {
         });
       } else {
         // One or more forms are invalid
-        // Construct a message that includes the names of the invalid forms
         const invalidFormsString = invalidFormNames.join(', ');
         this.snackbarText = `Errors found in:${invalidFormsString}`;
         this.snackbarTextEnd = `Please review these sections.`;
