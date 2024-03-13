@@ -28,7 +28,9 @@
                  no-gutters>
 
             <v-col class="py-0" cols="4">
-              <v-file-input v-model="files" accept="application/JSON" label="Upload json" prepend-icon="mdi-paperclip"
+              <v-file-input v-model="files" accept="application/JSON" density="compact" label="Upload json"
+                            prepend-icon="mdi-paperclip"
+                            variant="outlined"
                             @change="handleFileUpload"></v-file-input>
             </v-col>
             <v-col cols="12">
