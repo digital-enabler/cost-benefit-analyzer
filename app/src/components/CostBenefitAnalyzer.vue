@@ -46,8 +46,8 @@
       </v-window>
 
       <!--   Json content dialog   -->
-      <v-dialog v-model="showDialog" :persistent="false" max-width="600px">
-        <v-card>
+      <v-dialog v-model="showDialog" :persistent="false" max-width="800px">
+        <v-card class="text-caption">
           <v-card-title class="bg-primary">JSON Content Preview</v-card-title>
           <v-card-text>
             <v-textarea

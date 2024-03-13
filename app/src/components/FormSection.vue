@@ -36,12 +36,12 @@
         <v-window v-model="currentTabIndex">
           <!-- Dynamically Generated Forms -->
           <v-window-item v-for="(form, formIndex) in forms" :key="`formItem-${formIndex}`">
-            <v-row align="center" justify="start">
+            <v-row align="center" class="pt-2" justify="start">
               <v-col cols="4" sm="3">
                 <v-select
                   v-model="safeSelectedTemplates[formIndex].scenarioType"
                   :items="formOptions"
-                  class="pt-2 pl-0"
+                  class="pl-0"
                   hide-details
                   item-title="text"
                   density="compact"
@@ -56,8 +56,10 @@
                 <v-select
                   v-model="selectedTemplates[formIndex].templateType"
                   :items="templateOptions"
-                  class="pt-0 pl-0"
+                  class="pl-0"
                   hide-details
+                  density="compact"
+                  variant="outlined"
                   item-title="text"
                   item-value="value"
                   label="Select template"
