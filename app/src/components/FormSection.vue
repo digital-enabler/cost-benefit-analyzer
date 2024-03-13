@@ -2,7 +2,7 @@
   <v-container class="fill-height pt-0" fluid>
     <v-responsive class="fill-height">
       <upload-response v-if="uploadResponse"
-                       :upload-response="uploadResponse"></upload-response>
+                       :download-data="finalArrayData" :upload-response="uploadResponse"></upload-response>
       <v-sheet v-else>
         <v-row align="center" class="mb-5">
           <v-col cols="11">
@@ -110,10 +110,9 @@
                              :key="`fieldSet-${sectionIndex}-${fieldSetIndex}`">
                           <v-text-field v-if="section.title !== 'Others'"
                                         v-model="fieldSet.name"
-                                        :readonly="fieldSet.disabled"
                                         :rules="section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [rules.nameRequiredIfValueFilled(fieldSet.value)] : [rules.required]"
                                         density="compact"
-                                        label="Name"
+                                        :label="section.title === 'Features' ? 'Scenario Name' : 'Name'"
                                         variant="outlined"></v-text-field>
                           <v-select v-if="section.title === 'Features'"
                                     v-model="fieldSet.objective"
@@ -261,6 +260,7 @@ export default {
       othersNameOptions: ['units_resource', 'period'],
       currentTabIndex: 0,
       uploadResponse: null,
+      finalArrayData: null,
       selectedTemplates: [{scenarioType: null, templateType: null}],
       templateOptions: [
         {text: 'Inland Wetlands', value: 'inland-wetlands'},
@@ -530,8 +530,8 @@ export default {
           type: 'parameter'
         };
 
-        if (section.hasStartingPeriod) newField.startingPeriod = 0;
-        if (section.hasEndingPeriod) newField.endingPeriod = 0;
+        if (section.hasStartingPeriod) newField.startingPeriod = 10;
+        if (section.hasEndingPeriod) newField.endingPeriod = 10;
 
         section.fields.push(newField);
       }
@@ -668,6 +668,7 @@ export default {
     },
     prepareFormDataForDownload() {
       const finalArrayData = this.forms.map(form => this.formatFormData(form));
+      this.finalArrayData = JSON.stringify(finalArrayData, null, 2);
       return JSON.stringify(finalArrayData, null, 2); // Convert the array to a JSON string
     },
     downloadJson() {
@@ -690,6 +691,7 @@ export default {
       let invalidFormNames = [];
       this.snackbar = false;
 
+
       // Iterate over each form reference and validate
       this.forms.forEach((form, index) => {
         const refName = `form-${index}`;
@@ -707,6 +709,7 @@ export default {
         // All forms are valid
         const finalArrayData = this.forms.map(form => this.formatFormData(form));
         const jsonData = JSON.stringify(finalArrayData, null, 2);
+        this.finalArrayData = jsonData;
 
         const file = new Blob([jsonData], {type: 'application/json'});
         const formData = new FormData();

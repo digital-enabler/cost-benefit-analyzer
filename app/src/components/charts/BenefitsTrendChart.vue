@@ -26,30 +26,38 @@ export default defineComponent({
       height: '100%',
     });
 
+    const generateRandomColor = () => {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgb(${r},${g},${b})`;
+    }
+
     const chartData = computed(() => {
       const labels = props.benefitsData.map(item => `Year ${item.index}`);
-      const annualBenefitsData = props.benefitsData.map(item => item.values.find(val => val.name === 'annual_benefits')?.value || 0);
-      const startingBenefitsData = props.benefitsData.map(item => item.values.find(val => val.name === 'starting_benefits')?.value || 0);
+      const datasets = [];
 
-      return {
-        labels,
-        datasets: [
-          {
-            label: 'Annual Benefits',
-            data: annualBenefitsData,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgb(54, 162, 235)',
-            borderWidth: 1,
-          },
-          {
-            label: 'Starting Benefits',
-            data: startingBenefitsData,
-            backgroundColor: 'rgba(255, 206, 86, 0.5)',
-            borderColor: 'rgb(255, 206, 86)',
-            borderWidth: 1,
+      props.benefitsData.forEach((yearData, index) => {
+        // Filter out the unwanted keys
+        const filteredValues = yearData.values.filter(val => !['period', 'benefits_sum', 'benefits_cum_sum'].includes(val.name));
+
+        filteredValues.forEach(val => {
+          let dataset = datasets.find(d => d.label === val.name);
+          if (!dataset) {
+            const color = generateRandomColor(); // Generate a random color for the dataset
+            dataset = {
+              label: val.name,
+              data: new Array(props.benefitsData.length).fill(0),
+              backgroundColor: color, // Use the generated random color for the bar
+              borderColor: color, // Use the same color for the border
+            };
+            datasets.push(dataset);
           }
-        ]
-      };
+          dataset.data[index] = val.value;
+        });
+      });
+
+      return {labels, datasets};
     });
 
     const chartOptions = reactive({

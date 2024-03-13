@@ -12,7 +12,7 @@
             </v-tabs>
           </v-col>
           <v-col class="text-right" cols="4" sm="6">
-            <v-btn class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-download"
+            <v-btn v-if="downloadData" class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-download"
                    variant="text" @click="downloadJson">download json
             </v-btn>
             <v-btn class="bg-primary text-uppercase" color="white" prepend-icon="mdi-download"
@@ -145,6 +145,10 @@ export default {
       type: Array,
       required: true
     },
+    downloadData: {
+      type: String,
+      required: false
+    }
   },
   setup(props) {
     const currentTab = ref('');
@@ -154,8 +158,7 @@ export default {
     const reportContent = ref(null);
 
     const downloadJson = () => {
-      const jsonData = JSON.stringify(props.uploadResponse, null, 2); // Pretty print JSON
-      const blob = new Blob([jsonData], {type: 'application/json'});
+      const blob = new Blob([props.downloadData], {type: 'application/json'});
       const url = URL.createObjectURL(blob);
 
       // Create a temporary link to trigger the download
