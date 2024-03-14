@@ -9,15 +9,10 @@
 <script>
 import {ref} from "vue";
 import {useApp} from "@/mixins/app.js";
-import CostBenefitChart from "@/components/charts/CostBenefitChart.vue";
-import CostsTrendBarChart from "@/components/charts/CostsTrendBarChart.vue";
-import BenefitsTrendBarChart from "@/components/charts/BenefitsTrendChart.vue";
-import PresentValueBarChart from "@/components/charts/PresentValueBarChart.vue";
 
 
 export default {
   name: "CostBenefitAnalyzer",
-  components: {PresentValueBarChart, BenefitsTrendBarChart, CostsTrendBarChart, CostBenefitChart},
   setup() {
     const {optimization} = useApp();
     const tab = ref('one');

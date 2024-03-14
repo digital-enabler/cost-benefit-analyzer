@@ -11,8 +11,8 @@
     </template>
     <template v-slot:append>
       <v-btn color="primary" variant="tonal">
-        <v-icon>mdi-logout</v-icon>
-        Logout
+        <v-icon>mdi-login</v-icon>
+        Login
       </v-btn>
     </template>
     <v-app-bar-title class="font-weight-bold text-h5">
@@ -22,14 +22,15 @@
       {{ title }}
     </v-app-bar-title>
   </v-app-bar>
-  <v-navigation-drawer v-model="drawer" :rail="rail" color="primary" permanent @click="rail = false">
+  <v-navigation-drawer v-model="drawer" :rail="rail" class="border-e-0" color="primary" permanent @click="rail = false">
     <v-list ref="navDrawer" :nav="true">
       <v-list-item :active="false" :link="true" prepend-icon="mdi-home" title="Home" to="/"
                    @click="updateTitle('Home')"/>
       <v-list-item :active="false" :link="true" prepend-icon="mdi-xml" title="Simulation"
                    to="/simulation" @click="updateTitle('Simulation')"/>
       <v-list-item :active="false" :link="true" prepend-icon="mdi-chart-bar"
-                   title="Cost benefit analyzer" to="/cost-benefit-analyzer" @click="updateTitle('Cost benefit analyzer')"/>
+                   title="Cost benefit analyzer" to="/cost-benefit-analyzer"
+                   @click="updateTitle('Cost benefit analyzer')"/>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -41,7 +42,7 @@ import {ref} from "vue";
 export default {
   name: "AppBar",
   setup() {
-    const title = ref('Home');
+    const title = ref('Cost benefit analyzer');
     const drawer = ref(true);
     const rail = ref(true);
 

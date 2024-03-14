@@ -34,14 +34,6 @@ export default defineComponent({
     }
 
 
-    const colorMapping = {
-      // Define color mappings for each cost type
-      "Labour costs": "#1E88E5",
-      "Material costs": "#D32F2F",
-      "Equipment costs": "#7CB342",
-      // Add more mappings as needed
-    };
-
     const chartData = computed(() => {
       const labels = props.costData.map(item => `Year ${item.index}`);
       const datasets = [];
