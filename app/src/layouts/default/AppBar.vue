@@ -7,7 +7,7 @@
         variant="text"
         @click.stop="rail = !rail"
       ></v-btn>
-      <img alt="logo" class="mr-15" height="50" src="../../assets/img.png"/>
+      <img alt="logo" class="mr-15" height="50" src="../../assets/img.ico"/>
     </template>
     <template v-slot:append>
       <v-btn color="primary" variant="tonal">
