@@ -82,7 +82,7 @@ export default defineComponent({
         y: {
           title: {
             display: true,
-            text: 'Cumulative Costs'
+            text: 'Value'
           }
         },
         x: {
