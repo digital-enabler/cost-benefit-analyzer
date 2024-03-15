@@ -26,7 +26,7 @@
         <img
           alt="eng-logo"
           width="38"
-          src="../../assets/core-images_eng_logo_minimal_white.svg"/>
+          src="/core-images_eng_logo_minimal_white.svg"/>
         &emsp;
         {{ normalizedCopyright }}
       </v-card-text>
