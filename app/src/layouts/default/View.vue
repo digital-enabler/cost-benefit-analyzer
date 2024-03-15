@@ -23,9 +23,9 @@
       <v-card-text
         class="text-white text-caption d-flex justify-center align-center pa-1"
       >
-        <v-img
+        <img
           alt="eng-logo"
-          max-width="38"
+          width="38"
           src="../../assets/core-images_eng_logo_minimal_white.svg"/>
         &emsp;
         {{ normalizedCopyright }}
