@@ -1,0 +1,126 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@8.2.1
+
+defaults: &defaults
+  environment:
+    DOCKER_IMAGE: cost-benefit-analyzer-ui
+    AWS_REGION: eu-south-1
+  docker:
+    - image: cimg/base:stable
+
+jobs:
+  build:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - aws-ecr/ecr-login: 
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          registry-id: AWS_ECR_REGISTRY_ID
+          region: $AWS_REGION
+      
+      - aws-ecr/build-image:
+          path: docker
+          repo: $DOCKER_IMAGE
+          tag: latest
+          region: $AWS_REGION
+          push-image: false
+      
+      - run:
+          name: Cache docker image
+          command: docker save ${AWS_ECR_REGISTRY_ID}.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE > image.tar
+
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - .
+
+  deploy:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+
+      - setup_remote_docker
+
+      - run:
+          name: Import docker image
+          command: docker load < image.tar
+
+      - aws-ecr/ecr-login: 
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          registry-id: AWS_ECR_REGISTRY_ID
+          region: $AWS_REGION
+
+      - run:
+          name: Select docker tag
+          command: |
+            echo 'export TAG="latest"' >> "$BASH_ENV"
+            if [ -n "$CIRCLE_TAG" ]; then
+                echo 'export TAG=$CIRCLE_TAG' >> "$BASH_ENV"
+            fi
+            if [ "$CIRCLE_BRANCH" == "beta" ]; then
+                echo 'export TAG="beta"' >> "$BASH_ENV"
+            fi
+            
+      - run:
+          name: Tag image
+          command: docker tag ${AWS_ECR_REGISTRY_ID}.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE ${AWS_ECR_REGISTRY_ID}.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$TAG
+
+      - aws-ecr/create-repo:
+          region: $AWS_REGION
+          repo-scan-on-push: false
+          repo: $DOCKER_IMAGE
+          
+      - run:
+          name: Set lifecycle policy
+          command: aws ecr put-lifecycle-policy --repository-name $DOCKER_IMAGE --lifecycle-policy-text "file://.circleci/policy.json"
+
+      - aws-ecr/push-image:
+          registry-id: AWS_ECR_REGISTRY_ID
+          repo: $DOCKER_IMAGE
+          tag: $TAG
+          region: $AWS_REGION
+
+workflows:
+  version: 2
+
+  build-and-deploy:
+    jobs:
+      - build:
+          context: digitalenabler-core
+      - deploy:
+          context: digitalenabler-core
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
+
+  build-and-deploy-tag:
+    jobs:
+      - build:
+          context: digitalenabler-core
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - deploy:
+          context: digitalenabler-core
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
