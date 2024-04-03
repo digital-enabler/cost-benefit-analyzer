@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   aws-ecr: circleci/aws-ecr@8.2.1
+  sonarcloud: sonarsource/sonarcloud@2.0
 
 defaults: &defaults
   environment:
@@ -16,6 +17,10 @@ jobs:
 
     steps:
       - checkout
+
+      - sonarcloud/scan:
+          cache_version: 1
+          project_root: ./app
 
       - setup_remote_docker
 
