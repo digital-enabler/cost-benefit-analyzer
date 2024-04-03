@@ -24,13 +24,14 @@
   </v-app-bar>
   <v-navigation-drawer v-model="drawer" :rail="rail" class="border-e-0" color="primary" permanent @click="rail = false">
     <v-list ref="navDrawer" :nav="true">
-      <v-list-item :active="false" :link="true" prepend-icon="mdi-home" title="Home" to="/"
+      <v-list-item :active="false" :link="true" prepend-icon="mdi-home" title="Home" to="/home"
                    @click="updateTitle('Home')"/>
-      <v-list-item :active="false" :link="true" prepend-icon="mdi-xml" title="Simulation"
-                   to="/simulation" @click="updateTitle('Simulation')"/>
       <v-list-item :active="false" :link="true" prepend-icon="mdi-chart-bar"
                    title="Cost benefit analyzer" to="/cost-benefit-analyzer"
                    @click="updateTitle('Cost benefit analyzer')"/>
+      <v-list-item :active="false" :link="true" prepend-icon="mdi-xml" title="Simulation"
+                   to="/simulation" @click="updateTitle('Simulation')"/>
+
     </v-list>
   </v-navigation-drawer>
 </template>

@@ -1,11 +1,12 @@
-// inlandWetlandsTemplate.js
-const inlandWetlandsTemplate = [
+// Forrest.js
+const forrest = [
   {
     title: 'Features',
     fields: [{
-      name: 'NBS Inland Wetlands',
+      name: 'NBS Forrest',
       description: 'NBS Sample Description',
       value: 0.03,
+      currency: 'euro',
       objective: 'net_benefit_maximization'
     }],
   },
@@ -15,28 +16,31 @@ const inlandWetlandsTemplate = [
       {
         name: "Overhead labour costs",
         description: "",
-        value: 2000
+        value: 8000
       },
       {
         name: "Overhead material costs",
         description: "",
-        value: 250
+        value: 1000
       },
       {
         name: "Material costs of landers",
         description: "",
-        value: 23750
+        value: 87503
       },
       {
         name: "Labour costs of landers",
         description: "",
-        value: 40000
+        value: 120000
       }
     ],
   },
   {
     title: 'Units Costs',
-    fields: [{name: '', description: '', value: 0, required: false}],
+    fields: [{
+      title: 'Units Costs',
+      fields: [{name: '', description: '', value: 0, required: false}],
+    }],
   },
   {
     title: 'Periodic Costs',
@@ -61,7 +65,7 @@ const inlandWetlandsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 2000,
+        value: 8000,
         startingPeriod: 1,
         endingPeriod: 1
       },
@@ -73,7 +77,7 @@ const inlandWetlandsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 15000,
+        value: 60000,
         startingPeriod: 1,
         endingPeriod: 1
       },
@@ -97,7 +101,7 @@ const inlandWetlandsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 3000,
+        value: 12000,
         startingPeriod: 2,
         endingPeriod: 2
       },
@@ -109,7 +113,7 @@ const inlandWetlandsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 15000,
+        value: 60000,
         startingPeriod: 2,
         endingPeriod: 2
       },
@@ -121,7 +125,7 @@ const inlandWetlandsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 75000,
+        value: 250000,
         startingPeriod: 3,
         endingPeriod: ''
       },
@@ -133,7 +137,7 @@ const inlandWetlandsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 10000,
+        value: 40000,
         startingPeriod: 3,
         endingPeriod: ''
       }
@@ -163,7 +167,7 @@ const inlandWetlandsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 120000,
+        value: 360000,
         startingPeriod: 3,
         endingPeriod: ''
       }
@@ -176,7 +180,7 @@ const inlandWetlandsTemplate = [
     fields: [
       {
         name: "units_resource",
-        description: "it should be present even if not used",
+        description: "",
         type: "parameter",
         value: 0
       },
@@ -191,4 +195,4 @@ const inlandWetlandsTemplate = [
   },
 ]
 
-export default inlandWetlandsTemplate;
+export default forrest;

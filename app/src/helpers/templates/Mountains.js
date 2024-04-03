@@ -1,11 +1,12 @@
-// reefEcosystemsTemplate.js
-const reefEcosystemsTemplate = [
+// mountains.js
+const mountains = [
   {
     title: 'Features',
     fields: [{
-      name: 'NBS Reef Ecosystems',
+      name: 'NBS Mountains',
       description: 'NBS Sample Description',
       value: 0.03,
+      currency: 'euro',
       objective: 'net_benefit_maximization'
     }],
   },
@@ -15,22 +16,22 @@ const reefEcosystemsTemplate = [
       {
         name: "Overhead labour costs",
         description: "",
-        value: 1000
+        value: 4000
       },
       {
         name: "Overhead material costs",
         description: "",
-        value: 100
+        value: 500
       },
       {
         name: "Material costs of landers",
         description: "",
-        value: 10000
+        value: 45750
       },
       {
         name: "Labour costs of landers",
         description: "",
-        value: 15000
+        value: 80000
       }
     ],
   },
@@ -53,8 +54,8 @@ const reefEcosystemsTemplate = [
           cumulative: 0
         },
         value: 0,
-        startingPeriod: 3,
-        endingPeriod: 3
+        startingPeriod: 2,
+        endingPeriod: 2
       },
       {
         name: "Material costs",
@@ -64,9 +65,9 @@ const reefEcosystemsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 1000,
-        startingPeriod: 1,
-        endingPeriod: 1
+        value: 4000,
+        startingPeriod: 2,
+        endingPeriod: 2
       },
       {
         name: "Equipment costs",
@@ -76,7 +77,7 @@ const reefEcosystemsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 11050,
+        value: 30000,
         startingPeriod: 1,
         endingPeriod: 1
       },
@@ -89,8 +90,8 @@ const reefEcosystemsTemplate = [
           cumulative: 0
         },
         value: 0,
-        startingPeriod: 2,
-        endingPeriod: 2
+        startingPeriod: 4,
+        endingPeriod: 4
       },
       {
         name: "Material costs phase2",
@@ -100,9 +101,9 @@ const reefEcosystemsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 4500,
-        startingPeriod: 2,
-        endingPeriod: 2
+        value: 6000,
+        startingPeriod: 4,
+        endingPeriod: 4
       },
       {
         name: "Equipment costs phase2",
@@ -112,9 +113,9 @@ const reefEcosystemsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 11530,
-        startingPeriod: 2,
-        endingPeriod: 2
+        value: 30000,
+        startingPeriod: 4,
+        endingPeriod: 4
       },
       {
         name: "Labour costs phase3-PostRestoration",
@@ -124,8 +125,8 @@ const reefEcosystemsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 44000,
-        startingPeriod: 3,
+        value: 150000,
+        startingPeriod: 6,
         endingPeriod: ''
       },
       {
@@ -136,8 +137,8 @@ const reefEcosystemsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 6000,
-        startingPeriod: 3,
+        value: 20000,
+        startingPeriod: 6,
         endingPeriod: ''
       }
     ],
@@ -166,8 +167,8 @@ const reefEcosystemsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 90000,
-        startingPeriod: 3,
+        value: 240000,
+        startingPeriod: 6,
         endingPeriod: ''
       }
     ],
@@ -179,7 +180,7 @@ const reefEcosystemsTemplate = [
     fields: [
       {
         name: "units_resource",
-        description: "it should be present even if not used",
+        description: "",
         type: "parameter",
         value: 0
       },
@@ -194,4 +195,4 @@ const reefEcosystemsTemplate = [
   },
 ]
 
-export default reefEcosystemsTemplate;
+export default mountains;

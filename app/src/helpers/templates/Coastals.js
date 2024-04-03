@@ -1,11 +1,12 @@
-// riverFloodPlainTemplate.js
-const riverFloodPlainTemplate = [
+// Coastals.js
+const coastals = [
   {
     title: 'Features',
     fields: [{
-      name: 'NBS River Flood and Plain',
+      name: 'NBS Coastals',
       description: 'NBS Sample Description',
       value: 0.03,
+      currency: 'euro',
       objective: 'net_benefit_maximization'
     }],
   },
@@ -15,31 +16,28 @@ const riverFloodPlainTemplate = [
       {
         name: "Overhead labour costs",
         description: "",
-        value: 8000
+        value: 2000
       },
       {
         name: "Overhead material costs",
         description: "",
-        value: 1000
+        value: 250
       },
       {
         name: "Material costs of landers",
         description: "",
-        value: 87503
+        value: 23750
       },
       {
         name: "Labour costs of landers",
         description: "",
-        value: 120000
+        value: 40000
       }
     ],
   },
   {
     title: 'Units Costs',
-    fields: [{
-      title: 'Units Costs',
-      fields: [{name: '', description: '', value: 0, required: false}],
-    }],
+    fields: [{name: '', description: '', value: 0, required: false}],
   },
   {
     title: 'Periodic Costs',
@@ -64,7 +62,7 @@ const riverFloodPlainTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 8000,
+        value: 2000,
         startingPeriod: 1,
         endingPeriod: 1
       },
@@ -76,7 +74,7 @@ const riverFloodPlainTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 60000,
+        value: 15000,
         startingPeriod: 1,
         endingPeriod: 1
       },
@@ -100,7 +98,7 @@ const riverFloodPlainTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 12000,
+        value: 3000,
         startingPeriod: 2,
         endingPeriod: 2
       },
@@ -112,7 +110,7 @@ const riverFloodPlainTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 60000,
+        value: 15000,
         startingPeriod: 2,
         endingPeriod: 2
       },
@@ -124,7 +122,7 @@ const riverFloodPlainTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 250000,
+        value: 75000,
         startingPeriod: 3,
         endingPeriod: ''
       },
@@ -136,7 +134,7 @@ const riverFloodPlainTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 40000,
+        value: 10000,
         startingPeriod: 3,
         endingPeriod: ''
       }
@@ -166,7 +164,7 @@ const riverFloodPlainTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 360000,
+        value: 120000,
         startingPeriod: 3,
         endingPeriod: ''
       }
@@ -179,7 +177,7 @@ const riverFloodPlainTemplate = [
     fields: [
       {
         name: "units_resource",
-        description: "it should be present even if not used",
+        description: "",
         type: "parameter",
         value: 0
       },
@@ -194,4 +192,4 @@ const riverFloodPlainTemplate = [
   },
 ]
 
-export default riverFloodPlainTemplate;
+export default coastals;

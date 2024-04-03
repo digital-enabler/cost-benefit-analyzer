@@ -2,7 +2,14 @@
 const newNbs = [
   {
     title: 'Features',
-    fields: [{name: '', description: '', value: 0, objective: 'net_benefit_maximization', valueRequired: false}],
+    fields: [{
+      name: '',
+      description: '',
+      value: 0,
+      currency: 'euro',
+      objective: 'net_benefit_maximization',
+      valueRequired: false
+    }],
   },
   {
     title: 'Starting Costs',

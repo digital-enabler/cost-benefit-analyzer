@@ -1,11 +1,12 @@
-// urbanGreenTemplate.js
-const urbanGreenTemplate = [
+// Water Management.js
+const waterManagement = [
   {
     title: 'Features',
     fields: [{
-      name: 'NBS Urban Green',
+      name: 'NBS Water Management',
       description: 'NBS Sample Description',
       value: 0.03,
+      currency: 'euro',
       objective: 'net_benefit_maximization'
     }],
   },
@@ -179,7 +180,7 @@ const urbanGreenTemplate = [
     fields: [
       {
         name: "units_resource",
-        description: "it should be present even if not used",
+        description: "",
         type: "parameter",
         value: 0
       },
@@ -194,4 +195,4 @@ const urbanGreenTemplate = [
   },
 ]
 
-export default urbanGreenTemplate;
+export default waterManagement;

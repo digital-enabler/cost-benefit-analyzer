@@ -115,6 +115,13 @@
                                         :label="section.title === 'Features' ? 'Scenario Name' : 'Name'"
                                         variant="outlined"></v-text-field>
                           <v-select v-if="section.title === 'Features'"
+                                    v-model="fieldSet.currency"
+                                    :items="currencyOptions"
+                                    :rules="[rules.required]"
+                                    class="mt-2"
+                                    density="compact"
+                                    label="Currency" outlined variant="outlined"></v-select>
+                          <v-select v-if="section.title === 'Features'"
                                     v-model="fieldSet.objective"
                                     class="mt-2"
                                     density="compact"
@@ -149,9 +156,9 @@
                           <v-range-slider
                             v-if="fieldSet.inputType === 'slider'"
                             v-model="fieldSet.value"
-                            :max="10"
+                            :max="50"
                             :min="1"
-                            :tick-labels="['0', '10']"
+                            :tick-labels="['1', '50']"
                             class="mt-4 ml-0 pl-0 v-col-6"
                             label="Value"
                             thumb-label="always"
@@ -173,7 +180,7 @@
                               v-model="fieldSet.type"
                               density="compact"
                               variant="outlined"
-                              :items="['parameter', 'variable']"
+                              :items="['parameter']"
                               label="Type"
                               @update:modelValue="handleTypeChange($event, sectionIndex, fieldSetIndex)"
                             ></v-select>
@@ -182,6 +189,7 @@
                             <v-text-field
                               v-if="section.title === 'Others'"
                               v-model="fieldSet.value"
+                              variant="outlined"
                               :label="fieldSet.type === 'parameter' ? 'Value' : 'Value (NonNegativeReals)'"
                               :readonly="fieldSet.type === 'variable'"
                               :rules="[rules.required]"
@@ -235,12 +243,12 @@
 
 import {useApp} from "@/mixins/app";
 import UploadResponse from "@/components/UploadResponse.vue";
-import mangroveForestsTemplate from "@/helpers/templates/mangroveForestsTemplate";
+import mountains from "@/helpers/templates/Mountains";
 import newNbs from "@/helpers/templates/newNbs";
-import reefEcosystemsTemplate from "@/helpers/templates/reefEcosystemsTemplate";
-import urbanGreenTemplate from "@/helpers/templates/urbanGreenTemplate";
-import riverFloodPlainTemplate from "@/helpers/templates/riverFloodPlainTemplate";
-import inlandWetlandsTemplate from "@/helpers/templates/inlandWetlandsTemplate";
+import agriculture from "@/helpers/templates/Agriculture";
+import waterManagement from "@/helpers/templates/Water Management";
+import forrest from "@/helpers/templates/Forrest";
+import coastals from "@/helpers/templates/Coastals";
 
 export default {
   components: {UploadResponse},
@@ -256,18 +264,19 @@ export default {
       snackbar: false,
       snackbarText: '',
       snackbarTextEnd: '',
-      objectiveOptions: ['bep_estimation', 'net_benefit_maximization'],
+      objectiveOptions: ['net_benefit_maximization'],
+      currencyOptions: ['euro', 'dollars', 'pound'],
       othersNameOptions: ['units_resource', 'period'],
       currentTabIndex: 0,
       uploadResponse: null,
       finalArrayData: null,
       selectedTemplates: [{scenarioType: null, templateType: null}],
       templateOptions: [
-        {text: 'Inland Wetlands', value: 'inland-wetlands'},
-        {text: 'Mangrove Forests', value: 'mangrove-forests'},
-        {text: 'Reef ecosystems', value: 'reef-ecosystems'},
-        {text: 'Urban green', value: 'urban-green'},
-        {text: 'River and floodplain', value: 'river-floodplain'},
+        {text: 'Coastals', value: 'coastals'},
+        {text: 'Mountains', value: 'mountains'},
+        {text: 'Agriculture', value: 'agriculture'},
+        {text: 'Forrest', value: 'forrest'},
+        {text: 'Water Management', value: 'waterManagement'},
         // Add more template options as needed
       ],
       forms: [this.createFormStructure()],
@@ -400,20 +409,20 @@ export default {
       const currentForm = this.forms[formIndex];
       let templateData;
       switch (templateType) {
-        case 'inland-wetlands':
-          templateData = JSON.parse(JSON.stringify(inlandWetlandsTemplate));
+        case 'coastals':
+          templateData = JSON.parse(JSON.stringify(coastals));
           break;
-        case 'mangrove-forests':
-          templateData = JSON.parse(JSON.stringify(mangroveForestsTemplate));
+        case 'mountains':
+          templateData = JSON.parse(JSON.stringify(mountains));
           break;
-        case 'reef-ecosystems':
-          templateData = JSON.parse(JSON.stringify(reefEcosystemsTemplate));
+        case 'agriculture':
+          templateData = JSON.parse(JSON.stringify(agriculture));
           break;
-        case 'urban-green':
-          templateData = JSON.parse(JSON.stringify(urbanGreenTemplate));
+        case 'waterManagement':
+          templateData = JSON.parse(JSON.stringify(waterManagement));
           break;
-        case 'river-floodplain':
-          templateData = JSON.parse(JSON.stringify(riverFloodPlainTemplate));
+        case 'forrest':
+          templateData = JSON.parse(JSON.stringify(forrest));
           break;
         default:
           console.error('Selected template data not found');
@@ -474,7 +483,7 @@ export default {
       currentForm.dynamicSections[constraintsSectionIndex].fields.push({
         name: variableName,
         description: '',
-        value: [0, 10],
+        value: variableName === 'period' ? [1, 50] : [0, 1000],
         inputType: 'slider',
         linkedToOthersFieldIndex: othersFieldIndex,
         disabled: true,
@@ -602,6 +611,7 @@ export default {
             finalData.label = section.fields.map(field => field.name).join(', ');
             finalData.description = section.fields.map(field => field.description).join(', ');
             finalData.features.objective = section.fields.map(field => field.objective).join(', ');
+            finalData.features.currency = section.fields.map(field => field.currency).join(', ');
             finalData.features.discount_rate = Number(section.fields.map(field => field.value));
             break;
           case 'Starting Costs':

@@ -1,11 +1,12 @@
-// mangroveForestsTemplate.js
-const mangroveForestsTemplate = [
+// agriculture.js
+const agriculture = [
   {
     title: 'Features',
     fields: [{
-      name: 'NBS Mangrove Forests',
+      name: 'NBS Agriculture',
       description: 'NBS Sample Description',
       value: 0.03,
+      currency: 'euro',
       objective: 'net_benefit_maximization'
     }],
   },
@@ -15,22 +16,22 @@ const mangroveForestsTemplate = [
       {
         name: "Overhead labour costs",
         description: "",
-        value: 4000
+        value: 1000
       },
       {
         name: "Overhead material costs",
         description: "",
-        value: 500
+        value: 100
       },
       {
         name: "Material costs of landers",
         description: "",
-        value: 45750
+        value: 10000
       },
       {
         name: "Labour costs of landers",
         description: "",
-        value: 80000
+        value: 15000
       }
     ],
   },
@@ -53,8 +54,8 @@ const mangroveForestsTemplate = [
           cumulative: 0
         },
         value: 0,
-        startingPeriod: 2,
-        endingPeriod: 2
+        startingPeriod: 3,
+        endingPeriod: 3
       },
       {
         name: "Material costs",
@@ -64,9 +65,9 @@ const mangroveForestsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 4000,
-        startingPeriod: 2,
-        endingPeriod: 2
+        value: 1000,
+        startingPeriod: 1,
+        endingPeriod: 1
       },
       {
         name: "Equipment costs",
@@ -76,7 +77,7 @@ const mangroveForestsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 30000,
+        value: 11050,
         startingPeriod: 1,
         endingPeriod: 1
       },
@@ -89,8 +90,8 @@ const mangroveForestsTemplate = [
           cumulative: 0
         },
         value: 0,
-        startingPeriod: 4,
-        endingPeriod: 4
+        startingPeriod: 2,
+        endingPeriod: 2
       },
       {
         name: "Material costs phase2",
@@ -100,9 +101,9 @@ const mangroveForestsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 6000,
-        startingPeriod: 4,
-        endingPeriod: 4
+        value: 4500,
+        startingPeriod: 2,
+        endingPeriod: 2
       },
       {
         name: "Equipment costs phase2",
@@ -112,9 +113,9 @@ const mangroveForestsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 30000,
-        startingPeriod: 4,
-        endingPeriod: 4
+        value: 11530,
+        startingPeriod: 2,
+        endingPeriod: 2
       },
       {
         name: "Labour costs phase3-PostRestoration",
@@ -124,8 +125,8 @@ const mangroveForestsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 150000,
-        startingPeriod: 6,
+        value: 44000,
+        startingPeriod: 3,
         endingPeriod: ''
       },
       {
@@ -136,8 +137,8 @@ const mangroveForestsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 20000,
-        startingPeriod: 6,
+        value: 6000,
+        startingPeriod: 3,
         endingPeriod: ''
       }
     ],
@@ -166,8 +167,8 @@ const mangroveForestsTemplate = [
           trend: "",
           cumulative: 0
         },
-        value: 240000,
-        startingPeriod: 6,
+        value: 90000,
+        startingPeriod: 3,
         endingPeriod: ''
       }
     ],
@@ -179,7 +180,7 @@ const mangroveForestsTemplate = [
     fields: [
       {
         name: "units_resource",
-        description: "it should be present even if not used",
+        description: "",
         type: "parameter",
         value: 0
       },
@@ -194,4 +195,4 @@ const mangroveForestsTemplate = [
   },
 ]
 
-export default mangroveForestsTemplate;
+export default agriculture;
