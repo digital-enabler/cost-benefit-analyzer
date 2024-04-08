@@ -169,12 +169,7 @@ export default {
       const bodyHeight = document.body.scrollHeight;
 
       // Check if the user is at the bottom of the page
-      if (scrollTop + windowHeight >= bodyHeight) {
-        console.log("At bottom");  // Debugging log
-        isAtBottom.value = true;
-      } else {
-        isAtBottom.value = false;
-      }
+      isAtBottom.value = scrollTop + windowHeight >= bodyHeight;
     };
 
     const scrollToTop = () => {
@@ -210,10 +205,3 @@ export default {
 };
 
 </script>
-
-<style scoped>
-.v-expansion-panel-text__wrapper {
-  padding: 0 !important;
-}
-</style>
-

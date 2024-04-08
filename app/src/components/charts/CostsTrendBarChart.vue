@@ -26,18 +26,11 @@ export default defineComponent({
       height: '100%',
     });
 
-    function generateRandomColor() {
-      const r = Math.floor(Math.random() * 256);
-      const g = Math.floor(Math.random() * 256);
-      const b = Math.floor(Math.random() * 256);
-      return `rgb(${r},${g},${b})`;
-    }
-
-
     const chartData = computed(() => {
       const labels = props.costData.map(item => `Year ${item.index}`);
       const datasets = [];
 
+      // Predefined color palette
       const colorPalette = [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
         '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',

@@ -32,7 +32,6 @@ export default {
 
       try {
         uploadResponse.value = await optimization(formData);
-        console.log("uploadResponse", uploadResponse)
         // Handle response here (e.g., show a success message)
       } catch (error) {
         console.error("Error uploading file:", error);

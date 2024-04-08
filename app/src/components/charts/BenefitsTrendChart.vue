@@ -30,6 +30,7 @@ export default defineComponent({
       const labels = props.benefitsData.map(item => `Year ${item.index}`);
       const datasets = [];
 
+      // Predefined color palette
       const colorPalette = [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
         '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',

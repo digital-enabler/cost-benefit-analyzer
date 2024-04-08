@@ -165,14 +165,16 @@ export default {
     const panel = ref(0);
     const reportContent = ref(null);
 
+    // Set the active tab to the first tab on mount
     onMounted(() => {
       setTabName(props.uploadResponse[0].label);
     });
 
+    // Set the active tab name
     const setTabName = (label) => {
       activeTab.value = label;
     };
-
+    // Download the JSON data
     const downloadJson = () => {
       const blob = new Blob([props.downloadData], {type: 'application/json'});
       const url = URL.createObjectURL(blob);
@@ -188,7 +190,7 @@ export default {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     };
-
+    // Download the report as a PDF
     const downloadReport = () => {
       if (reportContent.value) {
         const options = {

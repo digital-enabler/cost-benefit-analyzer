@@ -395,6 +395,7 @@ export default {
         dynamicSections: newNbs,
       };
     },
+    // Add a new form
     addNewForm() {
       // Create a new form structure and add it to the forms array
       const newFormName = `NBS Example Name ${this.forms.length + 1}`;
@@ -461,7 +462,6 @@ export default {
     resetForm(formIndex) {
       // Reset the dynamic sections of the current form to the initial structure
       const currentForm = this.forms[formIndex];
-
       currentForm.dynamicSections = JSON.parse(JSON.stringify(newNbs));
     },
     // Handle the name change for the 'Others' section
@@ -621,7 +621,7 @@ export default {
         }
       };
 
-      // Your logic to process each section and update finalData accordingly
+      // Iterate over each section in the form and format the data
       form.dynamicSections.forEach(section => {
         let fieldsData = [];
         if (["Starting Costs", "Units Costs", "Starting Benefits"].includes(section.title)) {
@@ -704,11 +704,13 @@ export default {
 
       return finalData;
     },
+    // Prepare the form data for download
     prepareFormDataForDownload() {
       const finalArrayData = this.forms.map(form => this.formatFormData(form));
       this.finalArrayData = JSON.stringify(finalArrayData, null, 2);
       return JSON.stringify(finalArrayData, null, 2); // Convert the array to a JSON string
     },
+    // Download the JSON file
     downloadJson() {
       const jsonData = this.prepareFormDataForDownload(); // Prepare the data
       // Logic to create a Blob from jsonData and trigger the download
@@ -727,7 +729,6 @@ export default {
     applyForm() {
       let invalidFormNames = [];
       this.snackbar = false;
-
 
       // Iterate over each form reference and validate
       this.forms.forEach((form, index) => {
