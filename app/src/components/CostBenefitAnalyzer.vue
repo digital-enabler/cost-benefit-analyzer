@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height background pt-0" fluid>
+  <v-container class="fill-height background pt-0 pb-0 mb-5" fluid>
     <v-progress-circular
       v-if="loader"
       class="progress"
@@ -71,13 +71,23 @@
 
         </v-card>
       </v-dialog>
+      <v-row v-if="isAtBottom" justify="end">
+        <v-tooltip>
+          <template v-slot:activator="{ props }">
+            <v-btn class="position-absolute" color="primary" icon="mdi-arrow-up-bold" style="bottom: 20px; right: 20px"
+                   v-bind="props"
+                   @click="scrollToTop"></v-btn>
+          </template>
+          <span>Scroll to top</span>
+        </v-tooltip>
+      </v-row>
     </v-responsive>
 
   </v-container>
 </template>
 
 <script>
-import {ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import {useApp} from "@/mixins/app.js";
 import FormSection from './FormSection.vue';
 import UploadResponse from "@/components/UploadResponse.vue";
@@ -98,6 +108,8 @@ export default {
     const showDialog = ref(false);
     const jsonContent = ref('');
     const resetTab = ref('');
+    const isAtBottom = ref(false);
+
     const resetDefineNbs = () => {
       let randomString = "";
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -151,6 +163,32 @@ export default {
       }
     };
 
+    const checkScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const bodyHeight = document.body.scrollHeight;
+
+      // Check if the user is at the bottom of the page
+      if (scrollTop + windowHeight >= bodyHeight) {
+        console.log("At bottom");  // Debugging log
+        isAtBottom.value = true;
+      } else {
+        isAtBottom.value = false;
+      }
+    };
+
+    const scrollToTop = () => {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+
+    onMounted(() => {
+      window.addEventListener('scroll', checkScroll);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('scroll', checkScroll);
+    });
+
     return {
       tab,
       handleFileUpload,
@@ -164,7 +202,9 @@ export default {
       jsonContent,
       closeDialog,
       resetTab,
-      resetDefineNbs
+      resetDefineNbs,
+      isAtBottom,
+      scrollToTop
     };
   }
 };

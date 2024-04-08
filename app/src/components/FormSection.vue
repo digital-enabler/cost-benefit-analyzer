@@ -8,27 +8,33 @@
           <v-col cols="11">
             <v-tabs v-model="currentTabIndex" background-color="primary">
               <v-tab v-for="(form, index) in forms" :key="`form-${index}`">
-                <v-tooltip location="top">
+                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}
+                <v-menu :location="'bottom'">
                   <template v-slot:activator="{ props }">
-                    <!--                  button to remove tab-->
-                    <v-btn v-if="forms.length > 1" class="mr-3" rounded size="18" small v-bind="props" variant="text"
-                           @click.stop="removeTab(index)">
-                      <v-icon size="18">mdi-trash-can-outline</v-icon>
+                    <v-btn
+                      icon="mdi-dots-vertical"
+                      size="small"
+                      v-bind="props"
+                      variant="text"
+                    >
                     </v-btn>
                   </template>
-                  <span>Remove Scenario</span>
-                </v-tooltip>
-                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}
+
+                  <v-list>
+                    <v-list-item prepend-icon="mdi-plus" @click="addNewForm">
+                      <v-list-item-title>Add new</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item v-if="forms.length > 1" prepend-icon="mdi-trash-can-outline"
+                                 @click.stop="removeTab(index)">
+                      <v-list-item-title>Remove</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item v-if="selectedTemplates[index].scenarioType" prepend-icon="mdi-content-copy"
+                                 @click="copyForm(index)">
+                      <v-list-item-title>Duplicate</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </v-tab>
-              <v-tooltip location="top">
-                <template v-slot:activator="{ props }">
-                  <!--button to add new tab-->
-                  <v-tab v-bind="props" @click="addNewForm">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-tab>
-                </template>
-                <span>Add New Scenario</span>
-              </v-tooltip>
             </v-tabs>
           </v-col>
           <!--Button to call API-->
@@ -84,7 +90,7 @@
                 <v-col v-if="section.fields.length > 0" cols="12">
                   <v-alert
                     :color="section.title.includes('Costs') ? 'red-lighten-1' : section.title.includes('Benefits') ? 'blue-lighten-1' : 'primary'"
-                    border="start" elevation="5" variant="outlined">
+                    border="start" elevation="1" variant="outlined">
                     <v-card border="none" class="mb-4" elevation="0" variant="elevated">
                       <template v-slot:prepend>
                         <v-card-title class="text-black"
@@ -209,7 +215,11 @@
                             </template>
                             <span>Remove {{ fieldSet.name === '' ? section.title : fieldSet.name }}</span>
                           </v-tooltip>
-                          <v-divider v-if="section.title !== 'Features'" class="my-3"></v-divider>
+                          <v-divider
+                            v-if="section.title !== 'Features' && fieldSetIndex < section.fields.length - 1"
+                            :color="section.title.includes('Costs') ? 'red-lighten-1' : section.title.includes('Benefits') ? 'blue-lighten-1' : 'primary'"
+                            :thickness="2"
+                            class="mt-3 mb-10 border-opacity-50"></v-divider>
                         </div>
                       </v-card-text>
                     </v-card>
@@ -267,6 +277,7 @@ export default {
       objectiveOptions: ['net_benefit_maximization'],
       currencyOptions: ['euro', 'dollars', 'pound'],
       othersNameOptions: ['units_resource', 'period'],
+      items: ['Add', 'Remove', 'Copy'],
       currentTabIndex: 0,
       uploadResponse: null,
       finalArrayData: null,
@@ -341,6 +352,7 @@ export default {
         }
       });
     },
+    // Check if the form at the currentTabIndex should be shown
     shouldShowForm() {
       const scenarioType = this.selectedTemplates[this.currentTabIndex]?.scenarioType ?? null;
 
@@ -349,6 +361,7 @@ export default {
     },
   },
   methods: {
+    // Check if the form at the specified index is valid
     isFormValid(formIndex) {
       const refName = `form-${formIndex}`;
       if (this.$refs[refName] && this.$refs[refName][0]) {
@@ -370,13 +383,13 @@ export default {
       // Remove the tab at the specified index
       this.forms.splice(index, 1);
       this.selectedTemplates.splice(index, 1);
-      // this.formValidities.splice(index, 1);
 
       // Adjust currentTabIndex if necessary
       if (this.currentTabIndex >= this.forms.length) {
         this.currentTabIndex = Math.max(this.forms.length - 1, 0);
       }
     },
+    // Create a new form structure
     createFormStructure() {
       return {
         dynamicSections: newNbs,
@@ -388,6 +401,21 @@ export default {
       const newForm = this.createFormStructure(newFormName);
       this.selectedTemplates.push({scenarioType: null, templateType: null});
       this.forms.push(newForm);
+      this.currentTabIndex = this.forms.length - 1;
+    },
+    // Copy the form at the specified index
+    copyForm(formIndex) {
+      const currentForm = this.forms[formIndex];
+      const newForm = JSON.parse(JSON.stringify(currentForm));
+
+      if (newForm.dynamicSections.some(section => section.title === 'Features')) {
+        const featuresSection = newForm.dynamicSections.find(section => section.title === 'Features');
+        if (featuresSection.fields.length > 0) {
+          featuresSection.fields[0].name += ' Copy';
+        }
+      }
+      this.forms.push(newForm);
+      this.selectedTemplates.push({...this.selectedTemplates[formIndex]});
       this.currentTabIndex = this.forms.length - 1;
     },
     // handle scenario type selection
@@ -683,14 +711,13 @@ export default {
     },
     downloadJson() {
       const jsonData = this.prepareFormDataForDownload(); // Prepare the data
-
       // Logic to create a Blob from jsonData and trigger the download
       const file = new Blob([jsonData], {type: 'application/json'});
       const fileURL = URL.createObjectURL(file);
 
       const downloadLink = document.createElement('a');
       downloadLink.href = fileURL;
-      downloadLink.download = 'data.json';
+      downloadLink.download = this.featureNames[this.currentTabIndex];
       document.body.appendChild(downloadLink);
       downloadLink.click();
 
@@ -741,11 +768,5 @@ export default {
 </script>
 
 <style scoped>
-.error-tab .v-tab--active {
-  color: rgb(176, 0, 32) !important; /* For active tab */
-}
 
-.error-tab {
-  color: rgb(176, 0, 32) !important; /* For inactive tabs */
-}
 </style>

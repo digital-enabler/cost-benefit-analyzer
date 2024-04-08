@@ -164,7 +164,6 @@ export default {
     const files = ref(null);
     const panel = ref(0);
     const reportContent = ref(null);
-    const loremIpsum = ref('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo. Quod autem in homine praestantissimum atque optimum est, id deseruit. Quae cum dixisset paulumque institisset, Quid est?');
 
     onMounted(() => {
       setTabName(props.uploadResponse[0].label);
