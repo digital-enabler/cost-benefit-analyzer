@@ -105,7 +105,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-/* Add any additional styling you need here */
-</style>
