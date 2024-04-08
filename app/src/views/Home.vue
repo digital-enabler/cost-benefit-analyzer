@@ -8,7 +8,3 @@
     <img alt="invest4nature" class="overflow-hidden" height="100%" src="/img_1.png" width="100%">
   </v-container>
 </template>
-
-<style scoped>
-
-</style>
