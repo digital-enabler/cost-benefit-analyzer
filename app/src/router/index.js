@@ -5,6 +5,7 @@ const routes = [
   {
     path: '/',
     component: () => import('@/layouts/default/Default.vue'),
+    redirect: '/home',
     children: [
       {
         path: '/cost-benefit-analyzer',
@@ -21,6 +22,14 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "simulation" */ '@/views/Simulation.vue'),
+      },
+      {
+        path: '/home',
+        name: 'Home',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "simulation" */ '@/views/Home.vue'),
       },
     ],
   },

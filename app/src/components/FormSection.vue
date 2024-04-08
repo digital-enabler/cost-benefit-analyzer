@@ -8,27 +8,33 @@
           <v-col cols="11">
             <v-tabs v-model="currentTabIndex" background-color="primary">
               <v-tab v-for="(form, index) in forms" :key="`form-${index}`">
-                <v-tooltip location="top">
+                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}
+                <v-menu :location="'bottom'">
                   <template v-slot:activator="{ props }">
-                    <!--                  button to remove tab-->
-                    <v-btn v-if="forms.length > 1" class="mr-3" rounded size="18" small v-bind="props" variant="text"
-                           @click.stop="removeTab(index)">
-                      <v-icon size="18">mdi-trash-can-outline</v-icon>
+                    <v-btn
+                      icon="mdi-dots-vertical"
+                      size="small"
+                      v-bind="props"
+                      variant="text"
+                    >
                     </v-btn>
                   </template>
-                  <span>Remove Scenario</span>
-                </v-tooltip>
-                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}
+
+                  <v-list>
+                    <v-list-item prepend-icon="mdi-plus" @click="addNewForm">
+                      <v-list-item-title>Add new</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item v-if="forms.length > 1" prepend-icon="mdi-trash-can-outline"
+                                 @click.stop="removeTab(index)">
+                      <v-list-item-title>Remove</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item v-if="selectedTemplates[index].scenarioType" prepend-icon="mdi-content-copy"
+                                 @click="copyForm(index)">
+                      <v-list-item-title>Duplicate</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </v-tab>
-              <v-tooltip location="top">
-                <template v-slot:activator="{ props }">
-                  <!--button to add new tab-->
-                  <v-tab v-bind="props" @click="addNewForm">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-tab>
-                </template>
-                <span>Add New Scenario</span>
-              </v-tooltip>
             </v-tabs>
           </v-col>
           <!--Button to call API-->
@@ -84,7 +90,7 @@
                 <v-col v-if="section.fields.length > 0" cols="12">
                   <v-alert
                     :color="section.title.includes('Costs') ? 'red-lighten-1' : section.title.includes('Benefits') ? 'blue-lighten-1' : 'primary'"
-                    border="start" elevation="5" variant="outlined">
+                    border="start" elevation="1" variant="outlined">
                     <v-card border="none" class="mb-4" elevation="0" variant="elevated">
                       <template v-slot:prepend>
                         <v-card-title class="text-black"
@@ -114,6 +120,13 @@
                                         density="compact"
                                         :label="section.title === 'Features' ? 'Scenario Name' : 'Name'"
                                         variant="outlined"></v-text-field>
+                          <v-select v-if="section.title === 'Features'"
+                                    v-model="fieldSet.currency"
+                                    :items="currencyOptions"
+                                    :rules="[rules.required]"
+                                    class="mt-2"
+                                    density="compact"
+                                    label="Currency" outlined variant="outlined"></v-select>
                           <v-select v-if="section.title === 'Features'"
                                     v-model="fieldSet.objective"
                                     class="mt-2"
@@ -149,9 +162,9 @@
                           <v-range-slider
                             v-if="fieldSet.inputType === 'slider'"
                             v-model="fieldSet.value"
-                            :max="10"
+                            :max="50"
                             :min="1"
-                            :tick-labels="['0', '10']"
+                            :tick-labels="['1', '50']"
                             class="mt-4 ml-0 pl-0 v-col-6"
                             label="Value"
                             thumb-label="always"
@@ -173,7 +186,7 @@
                               v-model="fieldSet.type"
                               density="compact"
                               variant="outlined"
-                              :items="['parameter', 'variable']"
+                              :items="['parameter']"
                               label="Type"
                               @update:modelValue="handleTypeChange($event, sectionIndex, fieldSetIndex)"
                             ></v-select>
@@ -182,6 +195,7 @@
                             <v-text-field
                               v-if="section.title === 'Others'"
                               v-model="fieldSet.value"
+                              variant="outlined"
                               :label="fieldSet.type === 'parameter' ? 'Value' : 'Value (NonNegativeReals)'"
                               :readonly="fieldSet.type === 'variable'"
                               :rules="[rules.required]"
@@ -201,7 +215,11 @@
                             </template>
                             <span>Remove {{ fieldSet.name === '' ? section.title : fieldSet.name }}</span>
                           </v-tooltip>
-                          <v-divider v-if="section.title !== 'Features'" class="my-3"></v-divider>
+                          <v-divider
+                            v-if="section.title !== 'Features' && fieldSetIndex < section.fields.length - 1"
+                            :color="section.title.includes('Costs') ? 'red-lighten-1' : section.title.includes('Benefits') ? 'blue-lighten-1' : 'primary'"
+                            :thickness="2"
+                            class="mt-3 mb-10 border-opacity-50"></v-divider>
                         </div>
                       </v-card-text>
                     </v-card>
@@ -235,12 +253,12 @@
 
 import {useApp} from "@/mixins/app";
 import UploadResponse from "@/components/UploadResponse.vue";
-import mangroveForestsTemplate from "@/helpers/templates/mangroveForestsTemplate";
-import newNbs from "@/helpers/templates/newNbs";
-import reefEcosystemsTemplate from "@/helpers/templates/reefEcosystemsTemplate";
-import urbanGreenTemplate from "@/helpers/templates/urbanGreenTemplate";
-import riverFloodPlainTemplate from "@/helpers/templates/riverFloodPlainTemplate";
-import inlandWetlandsTemplate from "@/helpers/templates/inlandWetlandsTemplate";
+import mountains from "@/helpers/templates/Mountains.json";
+import newNbs from "@/helpers/templates/newNbs.json";
+import agriculture from "@/helpers/templates/Agriculture.json";
+import waterManagement from "@/helpers/templates/Water Management.json";
+import forrest from "@/helpers/templates/Forrest.json";
+import coastals from "@/helpers/templates/Coastals.json";
 
 export default {
   components: {UploadResponse},
@@ -256,18 +274,20 @@ export default {
       snackbar: false,
       snackbarText: '',
       snackbarTextEnd: '',
-      objectiveOptions: ['bep_estimation', 'net_benefit_maximization'],
+      objectiveOptions: ['net_benefit_maximization'],
+      currencyOptions: ['euro', 'dollars', 'pound'],
       othersNameOptions: ['units_resource', 'period'],
+      items: ['Add', 'Remove', 'Copy'],
       currentTabIndex: 0,
       uploadResponse: null,
       finalArrayData: null,
       selectedTemplates: [{scenarioType: null, templateType: null}],
       templateOptions: [
-        {text: 'Inland Wetlands', value: 'inland-wetlands'},
-        {text: 'Mangrove Forests', value: 'mangrove-forests'},
-        {text: 'Reef ecosystems', value: 'reef-ecosystems'},
-        {text: 'Urban green', value: 'urban-green'},
-        {text: 'River and floodplain', value: 'river-floodplain'},
+        {text: 'Coastals', value: 'coastals'},
+        {text: 'Mountains', value: 'mountains'},
+        {text: 'Agriculture', value: 'agriculture'},
+        {text: 'Forrest', value: 'forrest'},
+        {text: 'Water Management', value: 'waterManagement'},
         // Add more template options as needed
       ],
       forms: [this.createFormStructure()],
@@ -332,6 +352,7 @@ export default {
         }
       });
     },
+    // Check if the form at the currentTabIndex should be shown
     shouldShowForm() {
       const scenarioType = this.selectedTemplates[this.currentTabIndex]?.scenarioType ?? null;
 
@@ -340,6 +361,7 @@ export default {
     },
   },
   methods: {
+    // Check if the form at the specified index is valid
     isFormValid(formIndex) {
       const refName = `form-${formIndex}`;
       if (this.$refs[refName] && this.$refs[refName][0]) {
@@ -361,24 +383,40 @@ export default {
       // Remove the tab at the specified index
       this.forms.splice(index, 1);
       this.selectedTemplates.splice(index, 1);
-      // this.formValidities.splice(index, 1);
 
       // Adjust currentTabIndex if necessary
       if (this.currentTabIndex >= this.forms.length) {
         this.currentTabIndex = Math.max(this.forms.length - 1, 0);
       }
     },
+    // Create a new form structure
     createFormStructure() {
       return {
         dynamicSections: newNbs,
       };
     },
+    // Add a new form
     addNewForm() {
       // Create a new form structure and add it to the forms array
       const newFormName = `NBS Example Name ${this.forms.length + 1}`;
       const newForm = this.createFormStructure(newFormName);
       this.selectedTemplates.push({scenarioType: null, templateType: null});
       this.forms.push(newForm);
+      this.currentTabIndex = this.forms.length - 1;
+    },
+    // Copy the form at the specified index
+    copyForm(formIndex) {
+      const currentForm = this.forms[formIndex];
+      const newForm = JSON.parse(JSON.stringify(currentForm));
+
+      if (newForm.dynamicSections.some(section => section.title === 'Features')) {
+        const featuresSection = newForm.dynamicSections.find(section => section.title === 'Features');
+        if (featuresSection.fields.length > 0) {
+          featuresSection.fields[0].name += ' Copy';
+        }
+      }
+      this.forms.push(newForm);
+      this.selectedTemplates.push({...this.selectedTemplates[formIndex]});
       this.currentTabIndex = this.forms.length - 1;
     },
     // handle scenario type selection
@@ -400,20 +438,20 @@ export default {
       const currentForm = this.forms[formIndex];
       let templateData;
       switch (templateType) {
-        case 'inland-wetlands':
-          templateData = JSON.parse(JSON.stringify(inlandWetlandsTemplate));
+        case 'coastals':
+          templateData = JSON.parse(JSON.stringify(coastals));
           break;
-        case 'mangrove-forests':
-          templateData = JSON.parse(JSON.stringify(mangroveForestsTemplate));
+        case 'mountains':
+          templateData = JSON.parse(JSON.stringify(mountains));
           break;
-        case 'reef-ecosystems':
-          templateData = JSON.parse(JSON.stringify(reefEcosystemsTemplate));
+        case 'agriculture':
+          templateData = JSON.parse(JSON.stringify(agriculture));
           break;
-        case 'urban-green':
-          templateData = JSON.parse(JSON.stringify(urbanGreenTemplate));
+        case 'waterManagement':
+          templateData = JSON.parse(JSON.stringify(waterManagement));
           break;
-        case 'river-floodplain':
-          templateData = JSON.parse(JSON.stringify(riverFloodPlainTemplate));
+        case 'forrest':
+          templateData = JSON.parse(JSON.stringify(forrest));
           break;
         default:
           console.error('Selected template data not found');
@@ -424,7 +462,6 @@ export default {
     resetForm(formIndex) {
       // Reset the dynamic sections of the current form to the initial structure
       const currentForm = this.forms[formIndex];
-
       currentForm.dynamicSections = JSON.parse(JSON.stringify(newNbs));
     },
     // Handle the name change for the 'Others' section
@@ -474,7 +511,7 @@ export default {
       currentForm.dynamicSections[constraintsSectionIndex].fields.push({
         name: variableName,
         description: '',
-        value: [0, 10],
+        value: variableName === 'period' ? [1, 50] : [0, 1000],
         inputType: 'slider',
         linkedToOthersFieldIndex: othersFieldIndex,
         disabled: true,
@@ -584,7 +621,7 @@ export default {
         }
       };
 
-      // Your logic to process each section and update finalData accordingly
+      // Iterate over each section in the form and format the data
       form.dynamicSections.forEach(section => {
         let fieldsData = [];
         if (["Starting Costs", "Units Costs", "Starting Benefits"].includes(section.title)) {
@@ -602,6 +639,7 @@ export default {
             finalData.label = section.fields.map(field => field.name).join(', ');
             finalData.description = section.fields.map(field => field.description).join(', ');
             finalData.features.objective = section.fields.map(field => field.objective).join(', ');
+            finalData.features.currency = section.fields.map(field => field.currency).join(', ');
             finalData.features.discount_rate = Number(section.fields.map(field => field.value));
             break;
           case 'Starting Costs':
@@ -666,21 +704,22 @@ export default {
 
       return finalData;
     },
+    // Prepare the form data for download
     prepareFormDataForDownload() {
       const finalArrayData = this.forms.map(form => this.formatFormData(form));
       this.finalArrayData = JSON.stringify(finalArrayData, null, 2);
       return JSON.stringify(finalArrayData, null, 2); // Convert the array to a JSON string
     },
+    // Download the JSON file
     downloadJson() {
       const jsonData = this.prepareFormDataForDownload(); // Prepare the data
-
       // Logic to create a Blob from jsonData and trigger the download
       const file = new Blob([jsonData], {type: 'application/json'});
       const fileURL = URL.createObjectURL(file);
 
       const downloadLink = document.createElement('a');
       downloadLink.href = fileURL;
-      downloadLink.download = 'data.json';
+      downloadLink.download = this.featureNames[this.currentTabIndex];
       document.body.appendChild(downloadLink);
       downloadLink.click();
 
@@ -690,7 +729,6 @@ export default {
     applyForm() {
       let invalidFormNames = [];
       this.snackbar = false;
-
 
       // Iterate over each form reference and validate
       this.forms.forEach((form, index) => {
@@ -729,13 +767,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.error-tab .v-tab--active {
-  color: rgb(176, 0, 32) !important; /* For active tab */
-}
-
-.error-tab {
-  color: rgb(176, 0, 32) !important; /* For inactive tabs */
-}
-</style>
