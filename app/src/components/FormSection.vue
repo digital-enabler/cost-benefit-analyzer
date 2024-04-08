@@ -253,12 +253,12 @@
 
 import {useApp} from "@/mixins/app";
 import UploadResponse from "@/components/UploadResponse.vue";
-import mountains from "@/helpers/templates/Mountains";
-import newNbs from "@/helpers/templates/newNbs";
-import agriculture from "@/helpers/templates/Agriculture";
-import waterManagement from "@/helpers/templates/Water Management";
-import forrest from "@/helpers/templates/Forrest";
-import coastals from "@/helpers/templates/Coastals";
+import mountains from "@/helpers/templates/Mountains.json";
+import newNbs from "@/helpers/templates/newNbs.json";
+import agriculture from "@/helpers/templates/Agriculture.json";
+import waterManagement from "@/helpers/templates/Water Management.json";
+import forrest from "@/helpers/templates/Forrest.json";
+import coastals from "@/helpers/templates/Coastals.json";
 
 export default {
   components: {UploadResponse},
