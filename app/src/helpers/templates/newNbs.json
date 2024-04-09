@@ -90,7 +90,7 @@
       {
         "name": "units_resource",
         "description": "",
-        "value": 10,
+        "value": 0,
         "type": "parameter"
       },
       {

@@ -10,6 +10,7 @@ const routes = [
       {
         path: '/cost-benefit-analyzer',
         name: 'CostBenefitAnalyzer',
+        meta: {title: 'Cost benefit analyzer'},
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -18,6 +19,7 @@ const routes = [
       {
         path: '/simulation',
         name: 'Simulation',
+        meta: {title: 'Simulation'},
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -26,6 +28,7 @@ const routes = [
       {
         path: '/home',
         name: 'Home',
+        meta: {title: 'Home'},
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.

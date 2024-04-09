@@ -257,8 +257,9 @@ import mountains from "@/helpers/templates/Mountains.json";
 import newNbs from "@/helpers/templates/newNbs.json";
 import agriculture from "@/helpers/templates/Agriculture.json";
 import waterManagement from "@/helpers/templates/Water Management.json";
-import forrest from "@/helpers/templates/Forrest.json";
+import forest from "@/helpers/templates/Forest.json";
 import coastals from "@/helpers/templates/Coastals.json";
+import urban from "@/helpers/templates/Urban.json";
 
 export default {
   components: {UploadResponse},
@@ -286,7 +287,8 @@ export default {
         {text: 'Coastals', value: 'coastals'},
         {text: 'Mountains', value: 'mountains'},
         {text: 'Agriculture', value: 'agriculture'},
-        {text: 'Forrest', value: 'forrest'},
+        {text: 'Forest', value: 'forest'},
+        {text: 'Urban', value: 'urban'},
         {text: 'Water Management', value: 'waterManagement'},
         // Add more template options as needed
       ],
@@ -450,8 +452,11 @@ export default {
         case 'waterManagement':
           templateData = JSON.parse(JSON.stringify(waterManagement));
           break;
-        case 'forrest':
-          templateData = JSON.parse(JSON.stringify(forrest));
+        case 'forest':
+          templateData = JSON.parse(JSON.stringify(forest));
+          break;
+        case 'urban':
+          templateData = JSON.parse(JSON.stringify(urban));
           break;
         default:
           console.error('Selected template data not found');

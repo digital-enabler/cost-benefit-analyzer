@@ -41,22 +41,19 @@ export default defineComponent({
           {
             label: 'Costs',
             data: [costsData], // Only provide value for 'Costs', set others to null
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: '#ff0000',
             borderWidth: 1,
           },
           {
             label: 'Benefits',
             data: [benefitsData], // Only provide value for 'Benefits', set others to null
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: '#3366E6',
             borderWidth: 1,
           },
           {
             label: 'Net Benefit',
             data: [netBenefitData], // Only provide value for 'Net Benefit', set others to null
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgb(75, 192, 192)',
             borderWidth: 1,
           }
         ]

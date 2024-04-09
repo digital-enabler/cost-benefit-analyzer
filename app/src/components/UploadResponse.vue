@@ -8,7 +8,7 @@
             <v-tabs v-model="currentTab" class="mb-5" @update:modelValue="panel = 0">
               <v-tab v-for="(response, index) in uploadResponse" :key="`tab-${index}`"
                      v-model="activeTab"
-                     :value="`tab-${index}`"
+                     :value="`${index}`"
                      @click="setTabName(response.label)">
                 {{ response.label }}
               </v-tab>
@@ -26,17 +26,29 @@
         <div ref="reportContent">
           <v-window v-model="currentTab">
             <v-window-item v-for="(response, index) in uploadResponse" :key="`tab-item-${index}`"
-                           :value="`tab-${index}`">
+                           :value="`${index}`">
               <v-card class="ma-2">
-                <v-card-text>
-                  {{ response.description }}
-                </v-card-text>
+                <v-row>
+                  <!-- First Half of the Description -->
+                  <v-col cols="6">
+                    <v-card-text>
+                      {{ firstHalfOfDescription }}
+                    </v-card-text>
+                  </v-col>
+
+                  <!-- Second Half of the Description -->
+                  <v-col cols="6">
+                    <v-card-text>
+                      {{ secondHalfOfDescription }}
+                    </v-card-text>
+                  </v-col>
+                </v-row>
               </v-card>
               <v-row>
                 <v-col cols="6">
-                  <v-card class="ma-2 pa-2">
+                  <v-card class="ma-2 pa-2" height="416px">
                     <v-expansion-panels v-model="panel">
-                      <v-expansion-panel class="mb-2" elevation="0">
+                      <v-expansion-panel class="mb-0" elevation="0">
                         <v-expansion-panel-title class="bg-blue text-h6 rounded py-2 pl-3 pr-2"
                                                  collapse-icon="mdi-minus" expand-icon="mdi-plus">
                           Summary
@@ -140,7 +152,7 @@ import CostsTrendBarChart from "@/components/charts/CostsTrendBarChart.vue";
 import BenefitsTrendBarChart from "@/components/charts/BenefitsTrendChart.vue";
 import CostBenefitChart from "@/components/charts/CostBenefitChart.vue";
 import {useApp} from "@/mixins/app";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import html2pdf from "html2pdf.js";
 
 export default {
@@ -164,10 +176,35 @@ export default {
     const files = ref(null);
     const panel = ref(0);
     const reportContent = ref(null);
+    const splitThreshold = 100;
 
     // Set the active tab to the first tab on mount
     onMounted(() => {
       setTabName(props.uploadResponse[0].label);
+    });
+
+    const currentResponse = computed(() => {
+      console.log(currentTab.value);
+      return props.uploadResponse[currentTab.value] || {};
+    });
+
+    // Computed property for the first half of the description
+    const firstHalfOfDescription = computed(() => {
+      if (currentResponse.value.description?.length <= splitThreshold) {
+        return currentResponse.value.description;
+      }
+      const breakpoint = Math.floor(currentResponse.value.description?.length / 2);
+      const lastSpace = currentResponse.value.description.lastIndexOf(' ', breakpoint);
+      return currentResponse.value.description.substring(0, lastSpace);
+    });
+
+    const secondHalfOfDescription = computed(() => {
+      if (currentResponse.value.description?.length <= splitThreshold) {
+        return ''; // Return empty string if the description is too short to split
+      }
+      const breakpoint = Math.floor(currentResponse.value.description?.length / 2);
+      const lastSpace = currentResponse.value.description.lastIndexOf(' ', breakpoint);
+      return currentResponse.value.description.substring(lastSpace + 1);
     });
 
     // Set the active tab name
@@ -214,7 +251,10 @@ export default {
       currentTab,
       activeTab,
       downloadJson,
-      setTabName
+      setTabName,
+      firstHalfOfDescription,
+      secondHalfOfDescription,
+      splitThreshold
     };
   }
 };
