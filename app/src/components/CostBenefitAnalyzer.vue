@@ -13,7 +13,6 @@
       <v-tabs
         v-model="tab"
         bg-color="primary"
-        class="mb-5"
         slider-color="secondary"
       >
         <v-tab value="one">
@@ -22,12 +21,12 @@
         <v-tab value="two">Upload json</v-tab>
       </v-tabs>
 
-      <v-window v-model="tab">
+      <v-window v-model="tab" class="pt-5">
         <v-window-item value="two">
-          <v-row :align="'center'" :align-content="'center'" :dense="true"
+          <v-row :dense="true" align="center"
                  no-gutters>
 
-            <v-col class="py-0" cols="4">
+            <v-col cols="4">
               <v-file-input v-model="files" accept="application/JSON" density="compact" label="Upload json"
                             prepend-icon="mdi-paperclip"
                             variant="outlined"

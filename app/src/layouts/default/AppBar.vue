@@ -10,16 +10,18 @@
       <img alt="logo" class="mr-15" height="50" src="/img.png"/>
     </template>
     <template v-slot:append>
-      <v-btn color="primary" variant="tonal">
+      <v-btn class="bg-primary" color="white" variant="text">
         <v-icon>mdi-login</v-icon>
         Login
       </v-btn>
     </template>
-    <v-app-bar-title class="font-weight-bold text-h5">
-      <v-icon class="mb-1" size="36">
-        {{ title === 'Home' ? 'mdi-home' : title === 'Simulation' ? 'mdi-xml' : 'mdi-chart-bar' }}
-      </v-icon>
-      {{ title }}
+    <v-app-bar-title class="font-weight-bold text-h5 text-dark">
+      <template v-slot:text>
+        <v-icon class="mb-1" size="36">
+          {{ title === 'Home' ? 'mdi-home' : title === 'Simulation' ? 'mdi-xml' : 'mdi-chart-bar' }}
+        </v-icon>
+        {{ title }}
+      </template>
     </v-app-bar-title>
   </v-app-bar>
   <v-navigation-drawer v-model="drawer" :rail="rail" class="border-e-0" color="primary" permanent @click="rail = false">
@@ -27,7 +29,8 @@
       <template v-for="(item, index) in navItems" :key="index">
         <v-tooltip v-if="rail" location="right">
           <template v-slot:activator="{ props }">
-            <v-list-item :active="false" :link="true" :prepend-icon="item.icon" :title="rail ? item.title : 'test'"
+            <v-list-item :active="false" :link="true" :prepend-icon="item.icon"
+                         :title="rail ? item.title : 'test'"
                          :to="item.route" v-bind="props">
             </v-list-item>
           </template>
