@@ -19,9 +19,6 @@
                     <span>Rename Scenario</span> <!-- Tooltip text -->
                   </v-tooltip>
                 </div>
-<!--                <span v-if="editableTabIndex !== index" @click="enableEdit(index)" class="edit-cursor">-->
-<!--                  {{ featureNames[index] || `NBS Example Name ${index + 1}` }}-->
-<!--                </span>-->
                 <v-text-field
                   v-else
                   @keyup.enter="saveEdit(index)"
@@ -30,7 +27,6 @@
                   dense
                   variant="plain"
                   ref="editFields"
-                  :ref="'editField-' + index"
                   @blur="saveEdit(index)"
                 ></v-text-field>
                 <v-menu :location="'bottom'" v-if="editableTabIndex === null">
@@ -672,13 +668,8 @@ export default {
             finalData.features.currency = section.fields.map(field => field.currency).join(', ');
             finalData.features.discount_rate = Number(section.fields.map(field => field.value));
             break;
+          case 'Starting Benefits':
           case 'Starting Costs':
-            fieldsData = section.fields.map(field => ({
-              name: field.name,
-              description: field.description,
-              value: Number(field.value)
-            }));
-            break;
           case 'Units Costs':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -687,21 +678,6 @@ export default {
             }));
             break;
           case 'Periodic Costs':
-            fieldsData = section.fields.map(field => ({
-              name: field.name,
-              description: field.description,
-              value: Number(field.value),
-              starting_period: Number(field.startingPeriod),
-              ending_period: field.endingPeriod === '' ? 'None' : Number(field.endingPeriod)
-            }));
-            break;
-          case 'Starting Benefits':
-            fieldsData = section.fields.map(field => ({
-              name: field.name,
-              description: field.description,
-              value: Number(field.value)
-            }));
-            break;
           case 'Periodic Benefits':
             fieldsData = section.fields.map(field => ({
               name: field.name,

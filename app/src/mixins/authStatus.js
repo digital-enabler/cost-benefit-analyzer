@@ -8,11 +8,7 @@ export function useAuth() {
      const response = await axios.get(apiUrl + '/invest4nature/me', {withCredentials: true});
       return response.data; // User is authenticated
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return false; // User is not authenticated
-      } else {
-        return false; // Treat other errors as unauthenticated
-      }
+      return !(error.response && error.response.status === 401);
     }
   }
 

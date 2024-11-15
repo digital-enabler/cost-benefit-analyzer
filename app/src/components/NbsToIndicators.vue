@@ -45,7 +45,7 @@
            <div class="text-caption mt-2">
              * Indicators are specific for Urban Landscape.
              <p>
-               Reference: <a target="_blank" class="text-decoration-none" href="https://www.regreen-project.eu">
+               Reference: <a target="_blank" rel="noopener" class="text-decoration-none" href="https://www.regreen-project.eu">
                REGREEN project
              </a>
              </p>
@@ -186,8 +186,7 @@ export default {
     };
 
     const handleCalculateIndicators = async () => {
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      const {valid} = await form.value?.validate();
+      const {valid} = await form.value.validate();
       showChart.value = false;
       if (valid) {
         loading.value = true;
@@ -239,8 +238,7 @@ export default {
     };
 
     const extractNBSData = async () => {
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      const {valid} = await extractorForm.value?.validate();
+      const {valid} = await extractorForm.value.validate();
       if (valid) {
         loading.value = true;
         try {
