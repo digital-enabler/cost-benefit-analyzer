@@ -49,7 +49,7 @@
   </v-app-bar>
   <v-navigation-drawer v-if="isLoggedIn" disable-route-watcher v-model="drawer" :rail="rail" class="border-e-0" color="primary" permanent>
     <v-list-item-title v-if="rail">
-      <img alt="logo" class="mx-2 mt-2 mb-2" height="50" src="/output-onlinepngtools%20(1).png"/>
+      <img alt="logo" class="mx-2 mt-2 mb-2" height="50" src="/white-mini-logo.png"/>
     </v-list-item-title>
     <v-divider opacity="0.5"></v-divider>
     <v-list ref="navDrawer" :nav="true" dense>
