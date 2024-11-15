@@ -61,13 +61,13 @@ export default defineComponent({
           {
             label: 'Costs',
             data: costsData,
-            backgroundColor: '#8b0000', // Change to red with lower opacity
+            backgroundColor: '#ff0000', // Change to red with lower opacity
             borderColor: '#ff0000', // Change to red
           },
           {
             label: 'Benefits',
             data: benefitsData,
-            backgroundColor: '#00008B',
+            backgroundColor: '#3366E6',
             borderColor: '#3366E6',
           },
         ]
