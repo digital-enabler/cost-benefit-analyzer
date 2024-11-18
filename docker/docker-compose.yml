@@ -11,7 +11,7 @@ services:
       idm.auth-server-url: "https://idm.digital-enabler.eng.it/auth"
       idm.realm: "invest4nature"
       idm.client-id: "middleware-app"
-      idm.client-secret: "hkAx1lwRMIXnfgKqftSr5JjuzgR8kgux"
+      idm.client-secret: ""
       etcd.enabled: "false"
       application.frontend-url: "http://localhost:3000"
       application.backend-url: "http://localhost:8080"
