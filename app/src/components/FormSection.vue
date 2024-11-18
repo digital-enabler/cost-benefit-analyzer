@@ -8,8 +8,28 @@
           <v-col cols="11">
             <v-tabs v-model="currentTabIndex" background-color="primary">
               <v-tab v-for="(form, index) in forms" :key="`form-${index}`">
-                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}
-                <v-menu :location="'bottom'">
+<!--                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}-->
+                <div v-if="editableTabIndex !== index">
+                  <v-tooltip location="top">
+                    <template v-slot:activator="{ props }">
+                      <span v-bind="props" @click="enableEdit(index)" class="edit-cursor">
+                        {{ featureNames[index] || `NBS Example Name ${index + 1}` }}
+                      </span>
+                    </template>
+                    <span>Rename Scenario</span> <!-- Tooltip text -->
+                  </v-tooltip>
+                </div>
+                <v-text-field
+                  v-else
+                  @keyup.enter="saveEdit(index)"
+                  min-width="150px"
+                  v-model="featureNames[index]"
+                  dense
+                  variant="plain"
+                  ref="editFields"
+                  @blur="saveEdit(index)"
+                ></v-text-field>
+                <v-menu :location="'bottom'" v-if="editableTabIndex === null">
                   <template v-slot:activator="{ props }">
                     <v-btn
                       icon="mdi-dots-vertical"
@@ -273,6 +293,7 @@ export default {
     return {
       valid: true,
       snackbar: false,
+      editableTabIndex: null,
       snackbarText: '',
       snackbarTextEnd: '',
       objectiveOptions: ['net_benefit_maximization'],
@@ -647,13 +668,8 @@ export default {
             finalData.features.currency = section.fields.map(field => field.currency).join(', ');
             finalData.features.discount_rate = Number(section.fields.map(field => field.value));
             break;
+          case 'Starting Benefits':
           case 'Starting Costs':
-            fieldsData = section.fields.map(field => ({
-              name: field.name,
-              description: field.description,
-              value: Number(field.value)
-            }));
-            break;
           case 'Units Costs':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -662,21 +678,6 @@ export default {
             }));
             break;
           case 'Periodic Costs':
-            fieldsData = section.fields.map(field => ({
-              name: field.name,
-              description: field.description,
-              value: Number(field.value),
-              starting_period: Number(field.startingPeriod),
-              ending_period: field.endingPeriod === '' ? 'None' : Number(field.endingPeriod)
-            }));
-            break;
-          case 'Starting Benefits':
-            fieldsData = section.fields.map(field => ({
-              name: field.name,
-              description: field.description,
-              value: Number(field.value)
-            }));
-            break;
           case 'Periodic Benefits':
             fieldsData = section.fields.map(field => ({
               name: field.name,
@@ -731,6 +732,24 @@ export default {
       document.body.removeChild(downloadLink);
       URL.revokeObjectURL(fileURL);
     },
+    enableEdit(index) {
+      this.editableTabIndex = index;
+      this.featureNames[index] = this.featureNames[index] || 'NBS Example Name';
+      this.$nextTick(() => {
+        const editField = this.$refs.editFields[index];
+        if (editField && editField.focus) {
+          editField.focus();
+        }
+      });
+    },
+    saveEdit(index) {
+      this.editableTabIndex = null;
+      const currentForm = this.forms[index];
+      const featuresSection = currentForm.dynamicSections.find(section => section.title === 'Features');
+      if (featuresSection && featuresSection.fields.length > 0) {
+        featuresSection.fields[0].name = this.featureNames[index];
+      }
+    },
     applyForm() {
       let invalidFormNames = [];
       this.snackbar = false;
@@ -772,3 +791,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.edit-cursor:hover {
+  cursor: text;
+}
+</style>

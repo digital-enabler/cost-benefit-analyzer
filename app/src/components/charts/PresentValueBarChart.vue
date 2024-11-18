@@ -68,7 +68,7 @@ export default defineComponent({
           beginAtZero: true,
           title: {
             display: true,
-            text: 'Present value - (' + discountRate + '% discount rate, ' + horizon + 'year horizon, ' + ')',
+            text: 'Present value - (' + discountRate + '% discount rate, ' + horizon + ' year horizon)',
           }
         },
       },

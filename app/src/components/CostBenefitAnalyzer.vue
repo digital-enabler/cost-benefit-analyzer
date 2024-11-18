@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height background pt-0 pb-0 mb-5" fluid>
+  <v-container class="fill-height pt-0 pb-0 mb-5" fluid>
     <v-progress-circular
       v-if="loader"
       class="progress"
@@ -12,11 +12,10 @@
     <v-responsive v-else class="fill-height">
       <v-tabs
         v-model="tab"
-        bg-color="primary"
         slider-color="secondary"
       >
-        <v-tab value="one">
-          <v-btn class="bg-primary" color="white" variant="text" @click="resetDefineNbs(tab)">Define NBS</v-btn>
+        <v-tab value="one" @click="resetDefineNbs(tab)">
+          Define NBS
         </v-tab>
         <v-tab value="two">Upload json</v-tab>
       </v-tabs>

@@ -1,6 +1,6 @@
 FROM node:16.14.0-alpine3.14 as build-stage
 WORKDIR /app
-ENV VITE_API_URL='https://cost-benefit-backend.dev.dev-digital-enabler.eng.it'
+ENV VITE_MIDDLEWARE_URL='https://middleware-api.invest4nature.digital-enabler.eng.it'
 COPY app/package*.json ./
 
 RUN npm install
