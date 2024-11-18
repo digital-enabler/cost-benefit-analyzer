@@ -117,7 +117,7 @@
           <v-list>
             <v-list-item class="mb-3">
               <v-list-item-title>Case study URL</v-list-item-title>
-              <v-list-item-subtitle><a :href="selectedCard.metadatas?.link" target="_blank">{{ selectedCard.metadatas?.link }}</a></v-list-item-subtitle>
+              <v-list-item-subtitle><a v-bind="{ href: safeLink || '#' }" target="_blank" rel="noopener noreferrer">{{ selectedCard.metadatas?.link }}</a></v-list-item-subtitle>
             </v-list-item>
             <v-list-item class="mb-3">
               <v-list-item-title>Description</v-list-item-title>
@@ -157,11 +157,11 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import 'leaflet/dist/leaflet.css';
 import {LMap, LMarker, LPopup, LTileLayer} from '@vue-leaflet/vue-leaflet';
 import {Icon} from 'leaflet';
-
+import DOMPurify from "dompurify";
 // Importing icon files directly
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -191,6 +191,18 @@ Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
+});
+
+const safeLink = computed(() => {
+  const link = selectedCard.value.metadatas?.link || "";
+  try {
+    const sanitized = DOMPurify.sanitize(link, { ALLOWED_ATTR: ["href"], ALLOWED_TAGS: ["a"] });
+    const url = new URL(sanitized);
+    return url.href;
+  } catch (error) {
+    console.error("Invalid URL:", link);
+    return null;
+  }
 });
 
 // Method to handle the Apply button click
