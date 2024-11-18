@@ -33,13 +33,13 @@
             </v-col>
             <v-col cols="12">
               <upload-response v-if="uploadResponse" :main-tab="tab"
-                               :upload-response="uploadResponse"></upload-response>
+                               :upload-response="uploadResponse" @startOver="resetUploadJson"></upload-response>
             </v-col>
           </v-row>
         </v-window-item>
 
         <v-window-item value="one">
-          <form-section :reset-tab="resetTab"
+          <form-section :reset-tab="resetTab" @startOver="resetDefineNbs"
           ></form-section>
         </v-window-item>
 
@@ -101,7 +101,6 @@ export default {
     const tab = ref('one');
     const files = ref(null);
     const uploadResponse = ref(null);
-    const panel = ref(0);
     const loader = ref(false);
     const showDialog = ref(false);
     const jsonContent = ref('');
@@ -121,6 +120,12 @@ export default {
         randomString += (i === 0 ? "" : " ") + word;
       }
       resetTab.value = randomString;
+    }
+
+    const resetUploadJson = () => {
+      uploadResponse.value = null;
+      files.value = null;
+      tab.value = 'two';
     }
 
     // handle file upload
@@ -188,7 +193,6 @@ export default {
       files,
       uploadResponse,
       optimization,
-      panel,
       loader,
       applyUpload,
       showDialog,
@@ -196,6 +200,7 @@ export default {
       closeDialog,
       resetTab,
       resetDefineNbs,
+      resetUploadJson,
       isAtBottom,
       scrollToTop
     };

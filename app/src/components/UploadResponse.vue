@@ -15,12 +15,30 @@
             </v-tabs>
           </v-col>
           <v-col class="text-right" cols="4" sm="6">
-            <v-btn v-if="downloadData" class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-download"
-                   variant="text" @click="downloadJson">download json
+            <v-btn class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-refresh"
+                   variant="text" @click="emitStartOver">start over
             </v-btn>
-            <v-btn class="bg-primary text-uppercase" color="white" prepend-icon="mdi-download"
-                   variant="text" @click="downloadReport">download report
-            </v-btn>
+            <v-menu v-model="menu" transition="scale-transition" offset-y>
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="primary"
+                  v-bind="props"
+                  :append-icon="menu ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                  class="text-uppercase"
+                >
+                  Download
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item prepend-icon="mdi-download" v-if="downloadData" @click="downloadJson">
+                  <v-list-item-title>JSON</v-list-item-title>
+                </v-list-item>
+                <v-list-item prepend-icon="mdi-download" @click="downloadReport">
+                  <v-list-item-title>PDF</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+
           </v-col>
         </v-row>
         <div ref="reportContent">
@@ -158,7 +176,7 @@ import html2pdf from "html2pdf.js";
 export default {
   name: "UploadResponse",
   components: {PresentValueBarChart, CostsTrendBarChart, BenefitsTrendBarChart, CostBenefitChart},
-  emits: ['uploadResponseUpdated'],
+  emits: ['startOver'],
   props: {
     uploadResponse: {
       type: Array,
@@ -169,7 +187,7 @@ export default {
       required: false
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const currentTab = ref('');
     const activeTab = ref('');
     const {optimization} = useApp();
@@ -177,6 +195,7 @@ export default {
     const panel = ref(0);
     const reportContent = ref(null);
     const splitThreshold = 100;
+    const menu = ref(false);
 
     // Set the active tab to the first tab on mount
     onMounted(() => {
@@ -206,6 +225,10 @@ export default {
       const lastSpace = currentResponse.value.description.lastIndexOf(' ', breakpoint);
       return currentResponse.value.description.substring(lastSpace + 1);
     });
+
+    const emitStartOver = () => {
+      emit('startOver');
+    }
 
     // Set the active tab name
     const setTabName = (label) => {
@@ -244,6 +267,7 @@ export default {
 
     return {
       files,
+      menu,
       optimization,
       reportContent,
       downloadReport,
@@ -254,7 +278,8 @@ export default {
       setTabName,
       firstHalfOfDescription,
       secondHalfOfDescription,
-      splitThreshold
+      splitThreshold,
+      emitStartOver
     };
   }
 };

@@ -2,13 +2,12 @@
   <v-container class="fill-height pt-0" fluid>
     <v-responsive class="fill-height">
       <upload-response v-if="uploadResponse"
-                       :download-data="finalArrayData" :upload-response="uploadResponse"></upload-response>
+                       :download-data="finalArrayData" :upload-response="uploadResponse" @startOver="startOver"></upload-response>
       <v-sheet v-else>
         <v-row align="center" class="mb-5">
           <v-col cols="11">
             <v-tabs v-model="currentTabIndex" background-color="primary">
               <v-tab v-for="(form, index) in forms" :key="`form-${index}`">
-<!--                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}-->
                 <div v-if="editableTabIndex !== index">
                   <v-tooltip location="top">
                     <template v-slot:activator="{ props }">
@@ -384,6 +383,9 @@ export default {
     },
   },
   methods: {
+    startOver(){
+      this.$emit('startOver');
+    },
     // Check if the form at the specified index is valid
     isFormValid(formIndex) {
       const refName = `form-${formIndex}`;
