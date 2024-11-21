@@ -10,6 +10,8 @@
                 density="compact"
                 v-model="selectedFeature"
                 :items="nbsFeatures"
+                hint="Choose a feature to analyze its significance across NBS. This will be the basis for comparison."
+                persistent-hint
                 label="Select a feature"
                 variant="outlined"
                 :rules="[v => !!v || 'Feature is required']"
@@ -19,11 +21,20 @@
                 :min="3"
                 :max="10"
                 label="#Top Most NBS"
+                hint="Specify the number of top-performing NBS to include in the radar chart (minimum 3)."
+                persistent-hint
                 step="1"
                 thumb-label="always"
                 class="mt-4"
               ></v-slider>
-              <v-btn width="100%" class="mt-2" color="primary" @click="handleExtractMostSignificantNBS">Extract Most Significant NBS</v-btn>
+              <v-btn class="mt-2 mr-2" color="primary" @click="handleExtractMostSignificantNBS">Extract Most Significant NBS</v-btn>
+              <v-btn
+                class="mt-2"
+                color="primary"
+                @click="resetFields"
+              >
+                Start Over
+              </v-btn>
             </v-card-text>
           </v-card>
         </v-form>
@@ -163,6 +174,14 @@ export default {
       }
     };
 
+    const resetFields = () => {
+      selectedFeature.value = '';
+      topMostNbs.value = 5;
+      chartData.value = { labels: [], datasets: [] };
+      showChart.value = false;
+      form.value.reset();
+    };
+
     return {
       nbsFeatures,
       selectedFeature,
@@ -174,6 +193,7 @@ export default {
       loading,
       form,
       handleExtractMostSignificantNBS,
+      resetFields
     };
   },
 };

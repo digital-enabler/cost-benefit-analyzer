@@ -11,29 +11,7 @@
       <img v-if="!rail" alt="logo" class="mr-5" height="50" src="/img.png"/>
     </template>
     <template v-slot:append>
-      <v-menu v-if="isLoggedIn">
-        <template v-slot:activator="{ props }">
-          <v-btn
-            class="mt-2 mr-5 bg-primary"
-            color="white"
-            dark
-            v-bind="props"
-          >
-            <v-icon class="mr-2">mdi-account</v-icon>
-            {{ isLoggedIn?.username }}
-            <v-icon>mdi-chevron-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list class="bg-primary text-white">
-          <v-list-item @click="logout">
-            <v-list-item-title>
-              <v-icon>mdi-logout</v-icon>
-              Logout
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn v-else @click="login" class="bg-primary" color="white" variant="text">
+      <v-btn v-if="!isLoggedIn" @click="login" class="bg-primary" color="white" variant="text">
         <v-icon>mdi-login</v-icon>
         Login
       </v-btn>
@@ -65,6 +43,71 @@
         </v-list-item>
       </template>
     </v-list>
+    <template v-slot:append>
+      <v-menu v-if="isLoggedIn" location="right">
+        <template v-slot:activator="{ props }">
+          <v-list class="mb-7">
+            <v-list-item class="px-2" v-bind="props">
+              <template v-slot:prepend>
+                <v-avatar size="36">
+                  <v-icon size="x-large" class="opacity-60" color="white">mdi-face-man</v-icon>
+                </v-avatar>
+              </template>
+              <v-list-item-title v-if="isLoggedIn.username">
+                {{ isLoggedIn.username }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ isLoggedIn.email }}
+              </v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
+        </template>
+        <v-list class="mb-3">
+          <v-menu location="right">
+            <template v-slot:activator="{ props }">
+              <v-list>
+                <v-list-item v-bind="props">
+                  <template v-slot:prepend>
+                        <v-icon v-bind="props">mdi-apps</v-icon>
+                  </template>
+
+                  <v-list-item-title>
+                    Settings
+                  </v-list-item-title>
+                  <template v-slot:append>
+                    <v-icon>mdi-chevron-right</v-icon>
+                  </template>
+                </v-list-item>
+              </v-list>
+            </template>
+            <v-list>
+              <v-list-item @click="hideGuide">
+                <v-list-item-title>
+                  <v-icon>mdi-eye-off</v-icon>
+                  Disable guide on startup
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            min-width="460"
+            location="right"
+          >
+            <template v-slot:activator>
+              <v-list-item @click="logout">
+                <template v-slot:prepend>
+                  <v-icon>mdi-logout</v-icon>
+                </template>
+
+                <v-list-item-title>Logout</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-menu>
+        </v-list>
+      </v-menu>
+    </template>
 
   </v-navigation-drawer>
   <v-snackbar location="top right" color="primary" v-model="showSnackbar" :timeout="3000">
@@ -90,6 +133,7 @@ export default {
     const {checkStatus, logout,login } = useAuth(); // Import the logout function
     const title = ref(route.meta.title || 'Cost benefit analyzer'); // Default title
     const drawer = ref(true);
+    const menu = ref(false);
     const rail = ref(true);
     const navItems = ref([
       {title: 'Home', icon: 'mdi-home', route: '/home'},
@@ -106,6 +150,10 @@ export default {
       isLoggedIn.value = await checkStatus();
     };
 
+    const hideGuide = () => {
+      sessionStorage.setItem('showSidebar', 'false');
+    };
+
     onMounted(() => {
       checkLoginStatus();
     });
@@ -115,15 +163,17 @@ export default {
     });
 
     return {
+      hideGuide,
       showSnackbar,
       snackbarMessage,
       logout,
+      menu,
       login,
       isLoggedIn,
       title,
       drawer,
       rail,
-      navItems
+      navItems,
     };
   }
 };

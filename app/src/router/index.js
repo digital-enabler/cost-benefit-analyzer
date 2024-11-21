@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/',
     component: () => import('@/layouts/default/Default.vue'),
-    redirect: '/home',
+    redirect: '/cost-benefit-analyzer',
     children: [
       {
         path: '/cost-benefit-analyzer',
