@@ -163,7 +163,7 @@
                           <v-textarea v-if="section.title !== 'Others'" v-model="fieldSet.description"
                                       density="compact"
                                       class="mb-2"
-                                      :hint="'Enter a description for the ' + fieldSet.name"
+                                      :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
                                       persistent-hint
                                       label="Description" variant="outlined"></v-textarea>
                           <!--                          period cost and periodic benefit are required-->
@@ -215,7 +215,7 @@
                               variant="outlined"
                               @update:model-value="handleNameChange($event, sectionIndex, fieldSetIndex)"
                             ></v-select>
-                            <v-textarea v-model="fieldSet.description" class="mb-1" :hint="'Enter a description for the ' + fieldSet.name"
+                            <v-textarea v-model="fieldSet.description" class="mb-1" :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
                                         persistent-hint density="compact" label="Description"
                                         variant="outlined"></v-textarea>
                             <v-select
@@ -234,7 +234,7 @@
                               v-model="fieldSet.value"
                               variant="outlined"
                               class="mb-1"
-                              :hint="'Enter a value for the ' + fieldSet.name"
+                              :hint="'Enter a value for the ' + (fieldSet.name || section.title)"
                               persistent-hint
                               :label="fieldSet.type === 'parameter' ? 'Value' : 'Value (NonNegativeReals)'"
                               :readonly="fieldSet.type === 'variable'"
