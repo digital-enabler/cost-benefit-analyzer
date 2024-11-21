@@ -93,7 +93,7 @@
               </v-col>
               <v-col class="text-left" cols="3" sm="6">
                 <v-btn v-if="shouldShowForm" class="mr-2" color="primary"
-                       @click="applyForm">Apply
+                       @click="applyForm">Calculate
                 </v-btn>
                 <v-btn v-if="shouldShowForm" :disabled="!isFormValid(currentTabIndex)"
                        color="primary" @click="downloadJson">Download

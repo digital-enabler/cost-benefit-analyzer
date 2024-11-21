@@ -17,7 +17,7 @@
     <v-card-title class="text-h6">Actions</v-card-title>
     <v-divider class="mb-2"></v-divider>
     <ul>
-      <li><strong>Apply:</strong> Click the "Apply" button to generate recommendations.</li>
+      <li><strong>Calculate:</strong> Click the "Calculate" button to generate recommendations.</li>
       <li><strong>Explore Results:</strong> View the results on a map or in the cards displayed on the right.</li>
       <li><strong>More Details:</strong> Click "More Details" on any card to view detailed information.</li>
     </ul>
