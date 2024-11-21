@@ -44,9 +44,10 @@
       </template>
     </v-list>
     <template v-slot:append>
+      <v-divider></v-divider>
       <v-menu v-if="isLoggedIn" location="right">
         <template v-slot:activator="{ props }">
-          <v-list class="mb-7">
+          <v-list class="mb-8">
             <v-list-item class="px-2" v-bind="props">
               <template v-slot:prepend>
                 <v-avatar size="36">
@@ -60,6 +61,7 @@
                 {{ isLoggedIn.email }}
               </v-list-item-subtitle>
             </v-list-item>
+            <v-divider></v-divider>
           </v-list>
         </template>
         <v-list class="mb-3">
