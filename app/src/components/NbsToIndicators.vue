@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="12" md="6">
+      <v-col cols="12">
         <v-form ref="form" v-model="isValid" lazy-validation>
           <v-card>
             <v-card-title>Explore the features of NBS</v-card-title>
@@ -9,6 +9,8 @@
               <v-autocomplete
                 class="mt-2 mb-5"
                 density="compact"
+                hint="Select one or more NBS scenarios for analysis."
+                persistent-hint
                 v-model="selectedNbs"
                 :items="nbsList"
                 label="Select an NBS or a composition of NBS"
@@ -23,9 +25,11 @@
                 </template>
               </v-autocomplete>
               <v-select
-                class="mt-2"
+                class="mt-2 mb-5"
                 density="compact"
                 v-model="selectedServices"
+                hint="Choose the ecosystem services to visualize, such as provisioning, regulating, or cultural services"
+                persistent-hint
                 :items="nbsServices"
                 multiple
                 label="Select the information to visualize"
@@ -34,14 +38,23 @@
               ></v-select>
               <v-select
                 density="compact"
-                class="mt-2"
+                class="mt-2 mb-5"
+                hint="Choose a calculation policy for aggregating data: minimum, mean, or maximum values"
+                persistent-hint
                 v-model="selectedCalculationPolicy"
                 :items="calculationPolicies"
                 label="Select the calculation policy"
                 variant="outlined"
                 :rules="[v => !!v || 'Calculation policy is required']"
               ></v-select>
-              <v-btn width="100%" class="mt-2" color="primary" @click="handleCalculateIndicators">Calculate Indicators</v-btn>
+              <v-btn class="mt-2 mr-2" color="primary" @click="handleCalculateIndicators">Calculate Indicators</v-btn>
+              <v-btn
+                class="mt-2"
+                color="primary"
+                @click="resetFields"
+              >
+                Start Over
+              </v-btn>
            <div class="text-caption mt-2">
              * Indicators are specific for Urban Landscape.
              <p>
@@ -251,6 +264,12 @@ export default {
         }
       }
     };
+    const resetFields = () => {
+      selectedServices.value = ['Provisioning', 'Regulating', 'Cultural/Social', 'Biodiversity'];
+      selectedNbs.value = [];
+      selectedCalculationPolicy.value = 'mean';
+      showChart.value = false;
+    };
 
     return {
       nbsList,
@@ -263,6 +282,7 @@ export default {
       chartOptions,
       isValid,
       isExtractorValid,
+      resetFields,
       showChart,
       loading,
       showNbsExtractor,
