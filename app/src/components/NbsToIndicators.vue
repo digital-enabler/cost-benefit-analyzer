@@ -1,5 +1,15 @@
 <template>
   <v-container fluid>
+    <v-row justify="end">
+      <v-col cols="12" class="text-right">
+        <v-switch
+          color="primary"
+          v-model="showHints"
+          label="Show Hints"
+          hide-details
+        ></v-switch>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col cols="12">
         <v-form ref="form" v-model="isValid" lazy-validation>
@@ -10,7 +20,7 @@
                 class="mt-2 mb-5"
                 density="compact"
                 hint="Select one or more NBS scenarios for analysis."
-                persistent-hint
+                :persistent-hint="showHints"
                 v-model="selectedNbs"
                 :items="nbsList"
                 label="Select an NBS or a composition of NBS"
@@ -29,7 +39,7 @@
                 density="compact"
                 v-model="selectedServices"
                 hint="Choose the ecosystem services to visualize, such as provisioning, regulating, or cultural services"
-                persistent-hint
+                :persistent-hint="showHints"
                 :items="nbsServices"
                 multiple
                 label="Select the information to visualize"
@@ -40,7 +50,7 @@
                 density="compact"
                 class="mt-2 mb-5"
                 hint="Choose a calculation policy for aggregating data: minimum, mean, or maximum values"
-                persistent-hint
+                :persistent-hint="showHints"
                 v-model="selectedCalculationPolicy"
                 :items="calculationPolicies"
                 label="Select the calculation policy"
@@ -150,6 +160,7 @@ export default {
     const isValid = ref(false);
     const isExtractorValid = ref(false);
     const showChart = ref(false);
+    const showHints = ref(true);
     const extractedNbsData = ref(null);
     const loading = ref(false);
     const showNbsExtractor = ref(false);
@@ -272,6 +283,7 @@ export default {
     };
 
     return {
+      showHints,
       nbsList,
       nbsServices,
       calculationPolicies,

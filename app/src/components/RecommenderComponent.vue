@@ -35,6 +35,16 @@
       <v-icon size="36">mdi-information-outline</v-icon>
     </v-btn>
     <v-card-title>Explore the features of Map Recommendations</v-card-title>
+    <v-row justify="end">
+      <v-col cols="12" class="text-right">
+        <v-switch
+          color="primary"
+          v-model="showHints"
+          label="Show Hints"
+          hide-details
+        ></v-switch>
+      </v-col>
+    </v-row>
     <v-row justify="center" v-if="!isLoading">
       <v-col cols="12">
         <v-alert
@@ -47,7 +57,7 @@
               variant="outlined"
               class="my-3"
               hint="Provide a brief description of the Nature-Based Solution (NBS). This helps in generating more relevant recommendations."
-              persistent-hint
+              :persistent-hint="showHints"
               rows="4"
               persistent-placeholder
               placeholder="You will get more accurate results if you provide a NBS description"
@@ -56,7 +66,7 @@
               density="compact"
               width="250"
               hint="Specify the maximum number of results to display. Choose a number between 5 and 15."
-              persistent-hint
+              :persistent-hint="showHints"
               :max="15"
               :min="5"
               class="mb-5"
@@ -69,7 +79,7 @@
               v-model="searchKeywords"
               label="Focus on sentence"
               hint="Enter specific keywords or phrases to refine the results, such as 'ocean environment'."
-              persistent-hint
+              :persistent-hint="showHints"
               placeholder="ocean environment"
               persistent-placeholder
               variant="outlined"
@@ -219,6 +229,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {useApp} from "@/mixins/app";
 
 const description = ref('');
+const showHints = ref(true);
 const outputCount = ref(10); // Default value set to 10
 const searchKeywords = ref('');
 const mapCenter = ref([50.8503, 4.3517]);

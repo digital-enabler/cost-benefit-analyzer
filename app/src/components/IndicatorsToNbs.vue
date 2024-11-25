@@ -1,5 +1,15 @@
 <template>
   <v-container fluid>
+    <v-row justify="end">
+      <v-col cols="12" class="text-right">
+        <v-switch
+          color="primary"
+          v-model="showHints"
+          label="Show Hints"
+          hide-details
+        ></v-switch>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col cols="12">
         <v-form ref="form" v-model="isValid" lazy-validation>
@@ -11,7 +21,7 @@
                 v-model="selectedFeature"
                 :items="nbsFeatures"
                 hint="Choose a feature to analyze its significance across NBS. This will be the basis for comparison."
-                persistent-hint
+                :persistent-hint="showHints"
                 label="Select a feature"
                 variant="outlined"
                 :rules="[v => !!v || 'Feature is required']"
@@ -22,7 +32,7 @@
                 :max="10"
                 label="#Top Most NBS"
                 hint="Specify the number of top-performing NBS to include in the radar chart (minimum 3)."
-                persistent-hint
+                :persistent-hint="showHints"
                 step="1"
                 thumb-label="always"
                 class="mt-4"
@@ -80,6 +90,7 @@ export default {
     const nbsFeatures = ref([]);
     const selectedFeature = ref('');
     const topMostNbs = ref(5);
+    const showHints = ref(true);
     const chartData = ref({
       labels: [],
       datasets: [],
@@ -183,6 +194,7 @@ export default {
     };
 
     return {
+      showHints,
       nbsFeatures,
       selectedFeature,
       topMostNbs,

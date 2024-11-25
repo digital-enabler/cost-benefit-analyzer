@@ -106,6 +106,7 @@
                   color="primary"
                   v-model="showHints"
                   label="Show Hints"
+                  hide-details
                 ></v-switch>
               </v-col>
             </v-row>
