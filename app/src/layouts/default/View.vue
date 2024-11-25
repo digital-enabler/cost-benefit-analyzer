@@ -4,7 +4,7 @@
   </v-main>
 
 
-  <v-footer :app="true" color="primary" height="40">
+  <v-footer :app="true" color="primary" height="40" style="z-index: 1000000">
     <v-card
       class="text-left d-flex align-center"
       color="primary"
