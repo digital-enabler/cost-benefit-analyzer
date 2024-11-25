@@ -100,6 +100,15 @@
                 </v-btn>
               </v-col>
             </v-row>
+            <v-row v-if="shouldShowForm" justify="end">
+              <v-col cols="12" class="text-right">
+                <v-switch
+                  color="primary"
+                  v-model="showHints"
+                  label="Show Hints"
+                ></v-switch>
+              </v-col>
+            </v-row>
             <v-form v-if="shouldShowForm"
                     :ref="'form-' + formIndex">
               <!-- Dynamically Generated Sections -->
@@ -135,11 +144,11 @@
                              :key="`fieldSet-${sectionIndex}-${fieldSetIndex}`">
                           <v-text-field v-if="section.title !== 'Others'"
                                         v-model="fieldSet.name"
-                                        class="mb-2"
+                                        class="mb-4"
                                         :rules="section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [rules.nameRequiredIfValueFilled(fieldSet.value)] : [rules.required]"
                                         density="compact"
                                         hint="Enter a descriptive name"
-                                        persistent-hint
+                                        :persistent-hint="showHints"
                                         :label="section.title === 'Features' ? 'Scenario Name' : 'Name'"
                                         variant="outlined"></v-text-field>
                           <v-select v-if="section.title === 'Features'"
@@ -147,47 +156,47 @@
                                     :items="currencyOptions"
                                     :rules="[rules.required]"
                                     hint="Choose a currency to be used for the values"
-                                    persistent-hint
-                                    class="mb-2"
+                                    :persistent-hint="showHints"
+                                    class="mb-4"
                                     density="compact"
                                     label="Currency" outlined variant="outlined"></v-select>
                           <v-select v-if="section.title === 'Features'"
                                     v-model="fieldSet.objective"
-                                    class="mb-2"
+                                    class="mb-4"
                                     density="compact"
                                     hint="Choose an objective type to be used"
-                                    persistent-hint
+                                    :persistent-hint="showHints"
                                     variant="outlined"
                                     :items="objectiveOptions"
                                     :rules="[rules.required]" label="Objective Type" outlined></v-select>
                           <v-textarea v-if="section.title !== 'Others'" v-model="fieldSet.description"
                                       density="compact"
-                                      class="mb-2"
+                                      class="mb-4"
                                       :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
-                                      persistent-hint
+                                      :persistent-hint="showHints"
                                       label="Description" variant="outlined"></v-textarea>
                           <!--                          period cost and periodic benefit are required-->
                           <v-text-field v-if="section.title !== 'Others' && section.title !== 'Constraints'"
                                         v-model="fieldSet.value"
+                                        class="mb-4"
                                         :rules="section.title === 'Features' || section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [] : [rules.required]"
                                         :label="section.title === 'Features' ? 'Discount rate' : 'Value'"
-                                        class="mb-2"
                                         :hint="section.title === 'Features' ? 'Enter a discount rate in absolute value' : 'Enter a value in the chosen currency'"
-                                        persistent-hint
+                                        :persistent-hint="showHints"
                                         :step="section.title === 'Features' ? '0.01' : '100'" density="compact"
                                         type="number" variant="outlined"></v-text-field>
                           <v-text-field v-if="section.hasStartingPeriod" v-model="fieldSet.startingPeriod"
-                                        :rules="[rules.required]" class="w-50 d-inline-block pr-1 mb-1"
+                                        :rules="[rules.required]" class="w-50 d-inline-block pr-1 mb-4"
                                         density="compact" label="Starting Period" type="number"
                                         hint="Choose a starting month"
-                                        persistent-hint
+                                        :persistent-hint="showHints"
                                         variant="outlined"></v-text-field>
                           <v-text-field v-if="section.hasEndingPeriod"
                                         v-model="fieldSet.endingPeriod"
                                         :rules="[v => rules.validateEndingPeriod(v, form, section, fieldSet)]"
                                         class="w-50 d-inline-block"
                                         hint="Choose an ending month"
-                                        persistent-hint
+                                        :persistent-hint="showHints"
                                         density="compact" label="Ending Period"
                                         placeholder="None"
                                         type="number"
@@ -210,19 +219,19 @@
                               :items="availableOthersOptions[sectionIndex]"
                               :rules="[rules.required]"
                               density="compact"
-                              class="mb-1"
+                              class="mb-4"
                               label="Name"
                               variant="outlined"
                               @update:model-value="handleNameChange($event, sectionIndex, fieldSetIndex)"
                             ></v-select>
-                            <v-textarea v-model="fieldSet.description" class="mb-1" :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
-                                        persistent-hint density="compact" label="Description"
+                            <v-textarea v-model="fieldSet.description" class="mb-4" :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
+                                        :persistent-hint="showHints" density="compact" label="Description"
                                         variant="outlined"></v-textarea>
                             <v-select
                               v-model="fieldSet.type"
                               density="compact"
                               variant="outlined"
-                              class="mb-1"
+                              class="mb-4"
                               :items="['parameter']"
                               label="Type"
                               @update:modelValue="handleTypeChange($event, sectionIndex, fieldSetIndex)"
@@ -233,9 +242,9 @@
                               v-if="section.title === 'Others'"
                               v-model="fieldSet.value"
                               variant="outlined"
-                              class="mb-1"
+                              class="mb-4"
                               :hint="'Enter a value for the ' + (fieldSet.name || section.title)"
-                              persistent-hint
+                              :persistent-hint="showHints"
                               :label="fieldSet.type === 'parameter' ? 'Value' : 'Value (NonNegativeReals)'"
                               :readonly="fieldSet.type === 'variable'"
                               :rules="[rules.required]"
@@ -314,6 +323,7 @@ export default {
       valid: true,
       snackbar: false,
       editableTabIndex: null,
+      showHints: true,
       snackbarText: '',
       snackbarTextEnd: '',
       objectiveOptions: ['net_benefit_maximization'],
