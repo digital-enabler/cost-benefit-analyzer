@@ -1,7 +1,18 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-col cols="12">
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="8" class="text-right">
+        <v-switch
+          color="primary"
+          v-model="showHints"
+          label="Show Hints"
+          hide-details
+          @click="handleHints"
+        ></v-switch>
+      </v-col>
+    </v-row>
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="8">
         <v-form ref="form" v-model="isValid" lazy-validation>
           <v-card>
             <v-card-title>Compare a feature among different NBS</v-card-title>
@@ -10,6 +21,9 @@
                 density="compact"
                 v-model="selectedFeature"
                 :items="nbsFeatures"
+                class="mb-10"
+                hint="Choose a feature to analyze its significance across NBS. This will be the basis for comparison."
+                :persistent-hint="showHints"
                 label="Select a feature"
                 variant="outlined"
                 :rules="[v => !!v || 'Feature is required']"
@@ -19,11 +33,20 @@
                 :min="3"
                 :max="10"
                 label="#Top Most NBS"
+                class="mb-4"
+                hint="Specify the number of top-performing NBS to include in the radar chart (minimum 3)."
+                :persistent-hint="showHints"
                 step="1"
                 thumb-label="always"
-                class="mt-4"
               ></v-slider>
-              <v-btn width="100%" class="mt-2" color="primary" @click="handleExtractMostSignificantNBS">Extract Most Significant NBS</v-btn>
+              <v-btn class="mt-2 mr-2" color="primary" @click="handleExtractMostSignificantNBS">Extract Most Significant NBS</v-btn>
+              <v-btn
+                class="mt-2"
+                color="primary"
+                @click="resetFields"
+              >
+                Start Over
+              </v-btn>
             </v-card-text>
           </v-card>
         </v-form>
@@ -40,7 +63,7 @@
         ></v-progress-circular>
       </v-col>
       <!-- Chart -->
-      <v-col cols="12" offset="3" md="6" v-else-if="showChart && !loading">
+      <v-col cols="8" v-else-if="showChart && !loading">
         <v-card outlined>
           <v-card-title>Extracted NBS</v-card-title>
           <v-card-text>
@@ -62,6 +85,11 @@ export default {
   name: 'TabThree',
   components: {
     ReusableChart,
+  },
+  props: {
+    showSidebar:{
+      type: Boolean
+    }
   },
   setup() {
     const { getNbsMapInfo, extractMostSignificantNBS } = useApp();
@@ -100,6 +128,11 @@ export default {
     const showChart = ref(false);
     const loading = ref(false);
     const form = ref(null);
+    const showHints = ref(sessionStorage.getItem('toNbsHints') !== 'true');
+
+    const handleHints = ()  => {
+      sessionStorage.setItem('toNbsHints', String(showHints.value));
+    }
 
     const fetchNbsMapInfo = async () => {
       try {
@@ -163,7 +196,16 @@ export default {
       }
     };
 
+    const resetFields = () => {
+      selectedFeature.value = '';
+      topMostNbs.value = 5;
+      chartData.value = { labels: [], datasets: [] };
+      showChart.value = false;
+      form.value.reset();
+    };
+
     return {
+      showHints,
       nbsFeatures,
       selectedFeature,
       topMostNbs,
@@ -174,6 +216,8 @@ export default {
       loading,
       form,
       handleExtractMostSignificantNBS,
+      resetFields,
+      handleHints
     };
   },
 };

@@ -1,16 +1,61 @@
 <template>
   <v-container fluid>
-    <v-row justify="center" v-if="!isLoading">
-      <v-col cols="12">
-        <v-alert
-          :color="'primary'"
-          border="start" elevation="1" variant="outlined">
-          <v-card>
+    <v-navigation-drawer
+      temporary
+      border
+      class="pa-2"
+      :scrim="false"
+      v-model="showSidebar"
+      location="right"
+      width="500"
+      elevation="0"
+    >
+      <v-card>
+        <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
+          Guide for Map Recommendations
+          <v-btn variant="text" @click="showSidebar = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <component :is="getGuideContent()"></component>
+        </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+
+    <v-btn
+      v-if="!showSidebar"
+      variant="text"
+      color="primary"
+      class="position-absolute"
+      style="top: 75px; right: 10px; z-index: 1000;"
+      @click="showSidebar = true"
+    >
+      <v-icon size="36">mdi-information-outline</v-icon>
+    </v-btn>
+    <v-card-title>Explore the features of Map Recommendations</v-card-title>
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="8" class="text-right">
+        <v-switch
+          color="primary"
+          v-model="showHints"
+          label="Show Hints"
+          hide-details
+        ></v-switch>
+      </v-col>
+    </v-row>
+    <v-row :justify="showSidebar === true ? 'start' : 'center'" v-if="!isLoading">
+      <v-col :cols="8">
+          <v-card class="mr-2">
+            <v-card-text>
             <v-textarea
               v-model="description"
               label="NBS Description"
               variant="outlined"
               class="my-3"
+              hint="Provide a brief description of the Nature-Based Solution (NBS). This helps in generating more relevant recommendations."
+              :persistent-hint="showHints"
               rows="4"
               persistent-placeholder
               placeholder="You will get more accurate results if you provide a NBS description"
@@ -18,8 +63,11 @@
             <v-number-input
               density="compact"
               width="250"
+              hint="Specify the maximum number of results to display. Choose a number between 5 and 15."
+              :persistent-hint="showHints"
               :max="15"
               :min="5"
+              class="mb-5"
               variant="outlined"
               v-model="outputCount"
               label="Max Number of Outputs"
@@ -28,26 +76,35 @@
               density="compact"
               v-model="searchKeywords"
               label="Focus on sentence"
+              hint="Enter specific keywords or phrases to refine the results, such as 'ocean environment'."
+              :persistent-hint="showHints"
               placeholder="ocean environment"
               persistent-placeholder
               variant="outlined"
               width="250"
             ></v-text-field>
-            <v-btn :disabled="isLoading" @click="applySettings" color="primary" class="mt-4">
-              Apply
+            <v-btn :disabled="isLoading" @click="applySettings" color="primary" class="mt-4 mr-2">
+              Calculate
             </v-btn>
+            <v-btn
+              class="mt-4"
+              color="primary"
+              @click="resetFields"
+            >
+              Start Over
+            </v-btn>
+            </v-card-text>
           </v-card>
-        </v-alert>
       </v-col>
     </v-row>
 
     <v-row v-if="!isLoading">
-      <v-col offset="3" cols="6" v-if="responseData.length === 0 && applyClicked">
+      <v-col :offset="showSidebar === true ? 1 : 3" cols="6" v-if="responseData.length === 0 && applyClicked">
         <v-alert type="info">
           {{ responseData.length }} results found.
         </v-alert>
       </v-col>
-      <v-col cols="9" v-if="responseData.length > 0">
+      <v-col :cols="showSidebar === true ? 6 : 9" v-if="responseData.length > 0">
         <div class="map-container">
           <l-map ref="mapRef" :zoom="mapZoom" :center="mapCenter" :options="{ scrollWheelZoom: false }">
             <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
@@ -65,7 +122,7 @@
           </l-map>
         </div>
       </v-col>
-      <v-col cols="3" class="cards-container py-8" v-if="responseData.length > 0">
+      <v-col :cols="showSidebar === true ? 2 : 3" class="cards-container py-8 px-0 pr-5" v-if="responseData.length > 0">
         <v-row>
           <v-col cols="12">
             <v-alert type="success">
@@ -157,6 +214,7 @@
 </template>
 
 <script setup>
+import GuideMapRecommendation from '@/components/guides/Recommender.vue';
 import {computed, ref} from 'vue';
 import 'leaflet/dist/leaflet.css';
 import {LMap, LMarker, LPopup, LTileLayer} from '@vue-leaflet/vue-leaflet';
@@ -169,6 +227,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {useApp} from "@/mixins/app";
 
 const description = ref('');
+const showHints = ref(true);
 const outputCount = ref(10); // Default value set to 10
 const searchKeywords = ref('');
 const mapCenter = ref([50.8503, 4.3517]);
@@ -184,6 +243,8 @@ const snackbar = ref(false);
 const snackbarText = ref('');
 const mapRef = ref(null);
 const highlightedCard = ref(null);
+const getGuideContent = () => GuideMapRecommendation;
+const showSidebar = ref(sessionStorage.getItem('showSidebar') !== 'false');
 
 // Setting default icon for markers
 delete Icon.Default.prototype._getIconUrl;
@@ -289,6 +350,18 @@ const centerMapOnMarker = (marker) => {
   } else {
     console.error('Invalid coordinates:', { lat, lng });
   }
+};
+
+const resetFields = () => {
+  description.value = '';
+  outputCount.value = 10; // Reset to default
+  searchKeywords.value = '';
+  responseData.value = [];
+  markers.value = [];
+  applyClicked.value = false;
+  highlightedCard.value = null;
+  mapCenter.value = [50.8503, 4.3517]; // Reset to initial map center
+  mapZoom.value = 3; // Reset zoom
 };
 
 </script>

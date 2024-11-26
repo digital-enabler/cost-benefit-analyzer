@@ -1,14 +1,13 @@
 <template>
   <v-container class="fill-height pt-0" fluid>
     <v-responsive class="fill-height">
-      <upload-response v-if="uploadResponse"
-                       :download-data="finalArrayData" :upload-response="uploadResponse"></upload-response>
+      <upload-response v-if="uploadResponse" :show-sidebar="showSidebar"
+                       :download-data="finalArrayData" :upload-response="uploadResponse" @startOver="startOver"></upload-response>
       <v-sheet v-else>
         <v-row align="center" class="mb-5">
-          <v-col cols="11">
+          <v-col :cols="showSidebar === true ? 8 : 12">
             <v-tabs v-model="currentTabIndex" background-color="primary">
               <v-tab v-for="(form, index) in forms" :key="`form-${index}`">
-<!--                {{ featureNames[index] || `NBS Example Name ${index + 1}` }}-->
                 <div v-if="editableTabIndex !== index">
                   <v-tooltip location="top">
                     <template v-slot:activator="{ props }">
@@ -63,7 +62,7 @@
           <!-- Dynamically Generated Forms -->
           <v-window-item v-for="(form, formIndex) in forms" :key="`formItem-${formIndex}`">
             <v-row align="center" class="pt-2" justify="start">
-              <v-col cols="4" sm="3">
+              <v-col cols="4" sm="2">
                 <v-select
                   v-model="safeSelectedTemplates[formIndex].scenarioType"
                   :items="formOptions"
@@ -78,7 +77,7 @@
                 ></v-select>
               </v-col>
               <!-- Template Type Dropdown, shown only for NBS Template scenario -->
-              <v-col v-if="selectedTemplates[formIndex]?.scenarioType === 'nbsTemplate'" cols="4" sm="3">
+              <v-col v-if="selectedTemplates[formIndex]?.scenarioType === 'nbsTemplate'" cols="4" sm="2">
                 <v-select
                   v-model="selectedTemplates[formIndex].templateType"
                   :items="templateOptions"
@@ -94,11 +93,22 @@
               </v-col>
               <v-col class="text-left" cols="3" sm="6">
                 <v-btn v-if="shouldShowForm" class="mr-2" color="primary"
-                       @click="applyForm">Apply
+                       @click="applyForm">Calculate
                 </v-btn>
                 <v-btn v-if="shouldShowForm" :disabled="!isFormValid(currentTabIndex)"
                        color="primary" @click="downloadJson">Download
                 </v-btn>
+              </v-col>
+            </v-row>
+            <v-row v-if="shouldShowForm" :justify="showSidebar === true ? 'start' : 'center'">
+              <v-col cols="8" class="text-right">
+                <v-switch
+                  color="primary"
+                  v-model="showHints"
+                  label="Show Hints"
+                  hide-details
+                  @click="handleHints($event)"
+                ></v-switch>
               </v-col>
             </v-row>
             <v-form v-if="shouldShowForm"
@@ -106,8 +116,8 @@
               <!-- Dynamically Generated Sections -->
               <v-row v-for="(section, sectionIndex) in form.dynamicSections"
                      :key="`section-${formIndex}-${sectionIndex}`"
-                     justify="center">
-                <v-col v-if="section.fields.length > 0" cols="12">
+                     :justify="showSidebar === true ? 'start' : 'center'">
+                <v-col v-if="section.fields.length > 0" :cols="8">
                   <v-alert
                     :color="section.title.includes('Costs') ? 'red-lighten-1' : section.title.includes('Benefits') ? 'blue-lighten-1' : 'primary'"
                     border="start" elevation="1" variant="outlined">
@@ -136,44 +146,59 @@
                              :key="`fieldSet-${sectionIndex}-${fieldSetIndex}`">
                           <v-text-field v-if="section.title !== 'Others'"
                                         v-model="fieldSet.name"
+                                        class="mb-4"
                                         :rules="section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [rules.nameRequiredIfValueFilled(fieldSet.value)] : [rules.required]"
                                         density="compact"
+                                        hint="Enter a descriptive name"
+                                        :persistent-hint="showHints"
                                         :label="section.title === 'Features' ? 'Scenario Name' : 'Name'"
                                         variant="outlined"></v-text-field>
                           <v-select v-if="section.title === 'Features'"
                                     v-model="fieldSet.currency"
                                     :items="currencyOptions"
                                     :rules="[rules.required]"
-                                    class="mt-2"
+                                    hint="Choose a currency to be used for the values"
+                                    :persistent-hint="showHints"
+                                    class="mb-4"
                                     density="compact"
                                     label="Currency" outlined variant="outlined"></v-select>
                           <v-select v-if="section.title === 'Features'"
                                     v-model="fieldSet.objective"
-                                    class="mt-2"
+                                    class="mb-4"
                                     density="compact"
+                                    hint="Choose an objective type to be used"
+                                    :persistent-hint="showHints"
                                     variant="outlined"
                                     :items="objectiveOptions"
                                     :rules="[rules.required]" label="Objective Type" outlined></v-select>
                           <v-textarea v-if="section.title !== 'Others'" v-model="fieldSet.description"
                                       density="compact"
-                                      class="mt-2"
+                                      class="mb-4"
+                                      :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
+                                      :persistent-hint="showHints"
                                       label="Description" variant="outlined"></v-textarea>
                           <!--                          period cost and periodic benefit are required-->
                           <v-text-field v-if="section.title !== 'Others' && section.title !== 'Constraints'"
                                         v-model="fieldSet.value"
+                                        class="mb-4"
                                         :rules="section.title === 'Features' || section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [] : [rules.required]"
                                         :label="section.title === 'Features' ? 'Discount rate' : 'Value'"
-                                        class="mb-2"
+                                        :hint="section.title === 'Features' ? 'Enter a discount rate in absolute value' : 'Enter a value in the chosen currency'"
+                                        :persistent-hint="showHints"
                                         :step="section.title === 'Features' ? '0.01' : '100'" density="compact"
                                         type="number" variant="outlined"></v-text-field>
                           <v-text-field v-if="section.hasStartingPeriod" v-model="fieldSet.startingPeriod"
-                                        :rules="[rules.required]" class="w-50 d-inline-block pr-1"
+                                        :rules="[rules.required]" class="w-50 d-inline-block pr-1 mb-4"
                                         density="compact" label="Starting Period" type="number"
+                                        hint="Choose a starting month"
+                                        :persistent-hint="showHints"
                                         variant="outlined"></v-text-field>
                           <v-text-field v-if="section.hasEndingPeriod"
                                         v-model="fieldSet.endingPeriod"
                                         :rules="[v => rules.validateEndingPeriod(v, form, section, fieldSet)]"
                                         class="w-50 d-inline-block"
+                                        hint="Choose an ending month"
+                                        :persistent-hint="showHints"
                                         density="compact" label="Ending Period"
                                         placeholder="None"
                                         type="number"
@@ -196,16 +221,19 @@
                               :items="availableOthersOptions[sectionIndex]"
                               :rules="[rules.required]"
                               density="compact"
+                              class="mb-4"
                               label="Name"
                               variant="outlined"
                               @update:model-value="handleNameChange($event, sectionIndex, fieldSetIndex)"
                             ></v-select>
-                            <v-textarea v-model="fieldSet.description" density="compact" label="Description"
+                            <v-textarea v-model="fieldSet.description" class="mb-4" :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
+                                        :persistent-hint="showHints" density="compact" label="Description"
                                         variant="outlined"></v-textarea>
                             <v-select
                               v-model="fieldSet.type"
                               density="compact"
                               variant="outlined"
+                              class="mb-4"
                               :items="['parameter']"
                               label="Type"
                               @update:modelValue="handleTypeChange($event, sectionIndex, fieldSetIndex)"
@@ -216,6 +244,9 @@
                               v-if="section.title === 'Others'"
                               v-model="fieldSet.value"
                               variant="outlined"
+                              class="mb-4"
+                              :hint="'Enter a value for the ' + (fieldSet.name || section.title)"
+                              :persistent-hint="showHints"
                               :label="fieldSet.type === 'parameter' ? 'Value' : 'Value (NonNegativeReals)'"
                               :readonly="fieldSet.type === 'variable'"
                               :rules="[rules.required]"
@@ -280,6 +311,7 @@ import waterManagement from "@/helpers/templates/Water Management.json";
 import forest from "@/helpers/templates/Forest.json";
 import coastals from "@/helpers/templates/Coastals.json";
 import urban from "@/helpers/templates/Urban.json";
+import {ref} from "vue";
 
 export default {
   components: {UploadResponse},
@@ -287,6 +319,9 @@ export default {
   props: {
     resetTab: {
       type: String
+    },
+    showSidebar: {
+      type: Boolean
     }
   },
   data() {
@@ -294,6 +329,7 @@ export default {
       valid: true,
       snackbar: false,
       editableTabIndex: null,
+      showHints: ref(sessionStorage.getItem('cbaHints') !== 'true'),
       snackbarText: '',
       snackbarTextEnd: '',
       objectiveOptions: ['net_benefit_maximization'],
@@ -384,6 +420,12 @@ export default {
     },
   },
   methods: {
+    handleHints(){
+      sessionStorage.setItem('cbaHints', this.showHints);
+    },
+    startOver(){
+      this.$emit('startOver');
+    },
     // Check if the form at the specified index is valid
     isFormValid(formIndex) {
       const refName = `form-${formIndex}`;

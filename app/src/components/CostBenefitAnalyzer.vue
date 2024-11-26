@@ -1,5 +1,38 @@
 <template>
   <v-container class="fill-height pt-0 pb-0 mb-5" fluid>
+    <v-navigation-drawer
+      temporary
+      class="pa-2"
+      border
+      :scrim="false"
+      v-model="showSidebar"
+      location="right"
+      width="500"
+      elevation="0"
+    >
+      <v-card>
+        <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
+          Welcome to the Cost Benefit Analyzer
+          <v-btn variant="text" @click="showSidebar = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <component :is="getGuideContent()" />
+        </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+
+    <v-btn
+      variant="text"
+      color="primary"
+      class="position-absolute"
+      style="top: 75px; right: 10px; z-index: 1000;"
+      @click="showSidebar = true"
+    >
+      <v-icon size="36">mdi-information-outline</v-icon>
+    </v-btn>
     <v-progress-circular
       v-if="loader"
       class="progress"
@@ -17,56 +50,50 @@
         <v-tab value="one" @click="resetDefineNbs(tab)">
           Define NBS
         </v-tab>
-        <v-tab value="two">Upload json</v-tab>
+        <v-tab value="two">Upload file</v-tab>
       </v-tabs>
 
       <v-window v-model="tab" class="pt-5">
         <v-window-item value="two">
           <v-row :dense="true" align="center"
                  no-gutters>
-
             <v-col cols="4">
-              <v-file-input v-model="files" accept="application/JSON" density="compact" label="Upload json"
+              <v-file-input v-model="files" accept="application/JSON" hint="accepts only .json files" persistent-hint density="compact" label="Upload a configuration file"
                             prepend-icon="mdi-paperclip"
                             variant="outlined"
                             @change="handleFileUpload"></v-file-input>
             </v-col>
             <v-col cols="12">
-              <upload-response v-if="uploadResponse" :main-tab="tab"
-                               :upload-response="uploadResponse"></upload-response>
+              <upload-response v-if="uploadResponse" :main-tab="tab" :show-sidebar="showSidebar"
+                               :upload-response="uploadResponse" @startOver="resetUploadJson"></upload-response>
             </v-col>
           </v-row>
         </v-window-item>
 
         <v-window-item value="one">
-          <form-section :reset-tab="resetTab"
+          <form-section :reset-tab="resetTab" @startOver="resetDefineNbs" :show-sidebar="showSidebar"
           ></form-section>
         </v-window-item>
 
       </v-window>
 
       <!--   Json content dialog   -->
-      <v-dialog v-model="showDialog" :persistent="false" max-width="800px">
+      <v-dialog v-model="showDialog" :persistent="false" max-width="800px" height="720px">
         <v-card class="text-caption">
           <v-card-title class="bg-primary">JSON Content Preview</v-card-title>
           <v-card-text>
             <v-textarea
               v-model="jsonContent"
-              :rows-max="15"
+              variant="plain"
               auto-grow
               hide-details
               readonly
-              rows="10"
             ></v-textarea>
           </v-card-text>
-          <v-card-actions>
-            <v-card :rounded="0" class="text-white" color="transparent" elevation="0" location="bottom right"
-                    position="fixed">
+          <v-card-actions class="position-fixed bottom-0 right-0">
               <v-btn color="primary" variant="text" @click="applyUpload">Apply</v-btn>
               <v-btn color="primary" variant="text" @click="closeDialog">Cancel</v-btn>
-            </v-card>
           </v-card-actions>
-
         </v-card>
       </v-dialog>
       <v-row v-if="isAtBottom" justify="end">
@@ -89,6 +116,7 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import {useApp} from "@/mixins/app.js";
 import FormSection from './FormSection.vue';
 import UploadResponse from "@/components/UploadResponse.vue";
+import CostBenefitAnalyzerGuide from "@/components/guides/CostBenefitAnalyzer.vue";
 
 
 export default {
@@ -101,12 +129,13 @@ export default {
     const tab = ref('one');
     const files = ref(null);
     const uploadResponse = ref(null);
-    const panel = ref(0);
     const loader = ref(false);
     const showDialog = ref(false);
     const jsonContent = ref('');
     const resetTab = ref('');
     const isAtBottom = ref(false);
+    const showSidebar = ref(sessionStorage.getItem('showSidebar') !== 'false');
+    const getGuideContent = () => CostBenefitAnalyzerGuide;
 
     const resetDefineNbs = () => {
       let randomString = "";
@@ -121,6 +150,12 @@ export default {
         randomString += (i === 0 ? "" : " ") + word;
       }
       resetTab.value = randomString;
+    }
+
+    const resetUploadJson = () => {
+      uploadResponse.value = null;
+      files.value = null;
+      tab.value = 'two';
     }
 
     // handle file upload
@@ -188,7 +223,6 @@ export default {
       files,
       uploadResponse,
       optimization,
-      panel,
       loader,
       applyUpload,
       showDialog,
@@ -196,8 +230,11 @@ export default {
       closeDialog,
       resetTab,
       resetDefineNbs,
+      resetUploadJson,
       isAtBottom,
-      scrollToTop
+      scrollToTop,
+      showSidebar,
+      getGuideContent
     };
   }
 };

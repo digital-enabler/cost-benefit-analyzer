@@ -1,10 +1,9 @@
 <template>
-  <v-row :align="'center'" :align-content="'center'" :dense="true"
-         :no-gutters="true">
-    <v-col cols="12">
+  <v-row :align="'center'" :align-content="'center'">
+    <v-col :cols="showSidebar === true ? 8 : 12">
       <v-card class="" elevation="0">
-        <v-row :align="'start'" :dense="true" :no-gutters="true">
-          <v-col cols="8" sm="6">
+        <v-row>
+          <v-col :cols="showSidebar === true ? 7 : 8">
             <v-tabs v-model="currentTab" class="mb-5" @update:modelValue="panel = 0">
               <v-tab v-for="(response, index) in uploadResponse" :key="`tab-${index}`"
                      v-model="activeTab"
@@ -14,13 +13,31 @@
               </v-tab>
             </v-tabs>
           </v-col>
-          <v-col class="text-right" cols="4" sm="6">
-            <v-btn v-if="downloadData" class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-download"
-                   variant="text" @click="downloadJson">download json
+          <v-col class="text-right" :cols="showSidebar === true ? 5 : 4">
+            <v-btn class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-refresh"
+                   variant="text" @click="emitStartOver">start over
             </v-btn>
-            <v-btn class="bg-primary text-uppercase" color="white" prepend-icon="mdi-download"
-                   variant="text" @click="downloadReport">download report
-            </v-btn>
+            <v-menu v-model="menu" transition="scale-transition" offset-y>
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="primary"
+                  v-bind="props"
+                  :append-icon="menu ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                  class="text-uppercase mr-1"
+                >
+                  Download
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item prepend-icon="mdi-download" v-if="downloadData" @click="downloadJson">
+                  <v-list-item-title>JSON</v-list-item-title>
+                </v-list-item>
+                <v-list-item prepend-icon="mdi-download" @click="downloadReport">
+                  <v-list-item-title>PDF</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+
           </v-col>
         </v-row>
         <div ref="reportContent">
@@ -45,7 +62,7 @@
                 </v-row>
               </v-card>
               <v-row>
-                <v-col cols="6">
+                <v-col :cols="showSidebar === true ? 12 : 6">
                   <v-card class="ma-2 pa-2" height="416px">
                     <v-expansion-panels v-model="panel">
                       <v-expansion-panel class="mb-0" elevation="0">
@@ -104,13 +121,11 @@
                   </v-card>
                 </v-col>
 
-                <v-col cols="6">
+                <v-col :cols="showSidebar === true ? 12 : 6">
                   <v-card class="pa-2 ma-2">
                     <present-value-bar-chart
                       :present-value-data="response?.features.present_value"></present-value-bar-chart>
                   </v-card>
-                </v-col>
-                <v-col cols="6">
                 </v-col>
               </v-row>
               <v-row>
@@ -158,7 +173,7 @@ import html2pdf from "html2pdf.js";
 export default {
   name: "UploadResponse",
   components: {PresentValueBarChart, CostsTrendBarChart, BenefitsTrendBarChart, CostBenefitChart},
-  emits: ['uploadResponseUpdated'],
+  emits: ['startOver'],
   props: {
     uploadResponse: {
       type: Array,
@@ -167,9 +182,13 @@ export default {
     downloadData: {
       type: String,
       required: false
+    },
+    showSidebar: {
+      type: Boolean,
+      required: false
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const currentTab = ref('');
     const activeTab = ref('');
     const {optimization} = useApp();
@@ -177,6 +196,7 @@ export default {
     const panel = ref(0);
     const reportContent = ref(null);
     const splitThreshold = 100;
+    const menu = ref(false);
 
     // Set the active tab to the first tab on mount
     onMounted(() => {
@@ -206,6 +226,10 @@ export default {
       const lastSpace = currentResponse.value.description.lastIndexOf(' ', breakpoint);
       return currentResponse.value.description.substring(lastSpace + 1);
     });
+
+    const emitStartOver = () => {
+      emit('startOver');
+    }
 
     // Set the active tab name
     const setTabName = (label) => {
@@ -244,6 +268,7 @@ export default {
 
     return {
       files,
+      menu,
       optimization,
       reportContent,
       downloadReport,
@@ -254,7 +279,8 @@ export default {
       setTabName,
       firstHalfOfDescription,
       secondHalfOfDescription,
-      splitThreshold
+      splitThreshold,
+      emitStartOver
     };
   }
 };
