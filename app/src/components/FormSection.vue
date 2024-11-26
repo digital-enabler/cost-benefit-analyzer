@@ -1,11 +1,11 @@
 <template>
   <v-container class="fill-height pt-0" fluid>
     <v-responsive class="fill-height">
-      <upload-response v-if="uploadResponse"
+      <upload-response v-if="uploadResponse" :show-sidebar="showSidebar"
                        :download-data="finalArrayData" :upload-response="uploadResponse" @startOver="startOver"></upload-response>
       <v-sheet v-else>
         <v-row align="center" class="mb-5">
-          <v-col cols="11">
+          <v-col :cols="showSidebar === true ? 8 : 12">
             <v-tabs v-model="currentTabIndex" background-color="primary">
               <v-tab v-for="(form, index) in forms" :key="`form-${index}`">
                 <div v-if="editableTabIndex !== index">
@@ -62,7 +62,7 @@
           <!-- Dynamically Generated Forms -->
           <v-window-item v-for="(form, formIndex) in forms" :key="`formItem-${formIndex}`">
             <v-row align="center" class="pt-2" justify="start">
-              <v-col cols="4" sm="3">
+              <v-col cols="4" sm="2">
                 <v-select
                   v-model="safeSelectedTemplates[formIndex].scenarioType"
                   :items="formOptions"
@@ -77,7 +77,7 @@
                 ></v-select>
               </v-col>
               <!-- Template Type Dropdown, shown only for NBS Template scenario -->
-              <v-col v-if="selectedTemplates[formIndex]?.scenarioType === 'nbsTemplate'" cols="4" sm="3">
+              <v-col v-if="selectedTemplates[formIndex]?.scenarioType === 'nbsTemplate'" cols="4" sm="2">
                 <v-select
                   v-model="selectedTemplates[formIndex].templateType"
                   :items="templateOptions"
@@ -100,13 +100,14 @@
                 </v-btn>
               </v-col>
             </v-row>
-            <v-row v-if="shouldShowForm" justify="end">
-              <v-col cols="12" class="text-right">
+            <v-row v-if="shouldShowForm" :justify="showSidebar === true ? 'start' : 'center'">
+              <v-col cols="8" class="text-right">
                 <v-switch
                   color="primary"
                   v-model="showHints"
                   label="Show Hints"
                   hide-details
+                  @click="handleHints($event)"
                 ></v-switch>
               </v-col>
             </v-row>
@@ -115,8 +116,8 @@
               <!-- Dynamically Generated Sections -->
               <v-row v-for="(section, sectionIndex) in form.dynamicSections"
                      :key="`section-${formIndex}-${sectionIndex}`"
-                     justify="center">
-                <v-col v-if="section.fields.length > 0" cols="12">
+                     :justify="showSidebar === true ? 'start' : 'center'">
+                <v-col v-if="section.fields.length > 0" :cols="8">
                   <v-alert
                     :color="section.title.includes('Costs') ? 'red-lighten-1' : section.title.includes('Benefits') ? 'blue-lighten-1' : 'primary'"
                     border="start" elevation="1" variant="outlined">
@@ -310,6 +311,7 @@ import waterManagement from "@/helpers/templates/Water Management.json";
 import forest from "@/helpers/templates/Forest.json";
 import coastals from "@/helpers/templates/Coastals.json";
 import urban from "@/helpers/templates/Urban.json";
+import {ref} from "vue";
 
 export default {
   components: {UploadResponse},
@@ -317,6 +319,9 @@ export default {
   props: {
     resetTab: {
       type: String
+    },
+    showSidebar: {
+      type: Boolean
     }
   },
   data() {
@@ -324,7 +329,7 @@ export default {
       valid: true,
       snackbar: false,
       editableTabIndex: null,
-      showHints: true,
+      showHints: ref(sessionStorage.getItem('cbaHints') !== 'true'),
       snackbarText: '',
       snackbarTextEnd: '',
       objectiveOptions: ['net_benefit_maximization'],
@@ -415,6 +420,9 @@ export default {
     },
   },
   methods: {
+    handleHints(){
+      sessionStorage.setItem('cbaHints', this.showHints);
+    },
     startOver(){
       this.$emit('startOver');
     },

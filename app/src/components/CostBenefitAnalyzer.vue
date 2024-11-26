@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height pt-0 pb-0 mb-5" fluid>
     <v-navigation-drawer
-      permanent
+      temporary
       class="pa-2"
       border
       :scrim="false"
@@ -57,7 +57,6 @@
         <v-window-item value="two">
           <v-row :dense="true" align="center"
                  no-gutters>
-
             <v-col cols="4">
               <v-file-input v-model="files" accept="application/JSON" hint="accepts only .json files" persistent-hint density="compact" label="Upload a configuration file"
                             prepend-icon="mdi-paperclip"
@@ -65,41 +64,36 @@
                             @change="handleFileUpload"></v-file-input>
             </v-col>
             <v-col cols="12">
-              <upload-response v-if="uploadResponse" :main-tab="tab"
+              <upload-response v-if="uploadResponse" :main-tab="tab" :show-sidebar="showSidebar"
                                :upload-response="uploadResponse" @startOver="resetUploadJson"></upload-response>
             </v-col>
           </v-row>
         </v-window-item>
 
         <v-window-item value="one">
-          <form-section :reset-tab="resetTab" @startOver="resetDefineNbs"
+          <form-section :reset-tab="resetTab" @startOver="resetDefineNbs" :show-sidebar="showSidebar"
           ></form-section>
         </v-window-item>
 
       </v-window>
 
       <!--   Json content dialog   -->
-      <v-dialog v-model="showDialog" :persistent="false" max-width="800px">
+      <v-dialog v-model="showDialog" :persistent="false" max-width="800px" height="720px">
         <v-card class="text-caption">
           <v-card-title class="bg-primary">JSON Content Preview</v-card-title>
           <v-card-text>
             <v-textarea
               v-model="jsonContent"
-              :rows-max="15"
+              variant="plain"
               auto-grow
               hide-details
               readonly
-              rows="10"
             ></v-textarea>
           </v-card-text>
-          <v-card-actions>
-            <v-card :rounded="0" class="text-white" color="transparent" elevation="0" location="bottom right"
-                    position="fixed">
+          <v-card-actions class="position-fixed bottom-0 right-0">
               <v-btn color="primary" variant="text" @click="applyUpload">Apply</v-btn>
               <v-btn color="primary" variant="text" @click="closeDialog">Cancel</v-btn>
-            </v-card>
           </v-card-actions>
-
         </v-card>
       </v-dialog>
       <v-row v-if="isAtBottom" justify="end">

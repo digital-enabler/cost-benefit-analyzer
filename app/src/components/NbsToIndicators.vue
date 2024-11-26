@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-row justify="end">
-      <v-col cols="12" class="text-right">
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="showSidebar || !showNbsExtractor ? 8 : 12" class="text-right">
         <v-switch
           color="primary"
           v-model="showHints"
@@ -10,14 +10,14 @@
         ></v-switch>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="12">
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="8">
         <v-form ref="form" v-model="isValid" lazy-validation>
           <v-card>
             <v-card-title>Explore the features of NBS</v-card-title>
             <v-card-text>
               <v-autocomplete
-                class="mt-2 mb-5"
+                class="mt-2 mb-8"
                 density="compact"
                 hint="Select one or more NBS scenarios for analysis."
                 :persistent-hint="showHints"
@@ -35,7 +35,7 @@
                 </template>
               </v-autocomplete>
               <v-select
-                class="mt-2 mb-5"
+                class="mt-2 mb-8"
                 density="compact"
                 v-model="selectedServices"
                 hint="Choose the ecosystem services to visualize, such as provisioning, regulating, or cultural services"
@@ -78,10 +78,9 @@
         </v-form>
       </v-col>
 
-      <v-col cols="6">
+      <v-col :cols="showSidebar===true?8:4" v-if="showNbsExtractor">
         <v-expand-transition>
           <v-alert
-            v-if="showNbsExtractor"
             color="primary"
             border="start" elevation="1" variant="outlined">
           <v-form ref="extractorForm" v-model="isExtractorValid" lazy-validation>
@@ -95,6 +94,7 @@
                   placeholder="Input your NBS description"
                   persistent-placeholder
                   variant="outlined"
+                  rows="9"
                   :rules="[v => !!v || 'Description is required']"
                 ></v-textarea>
                 <h4 v-if="extractedNbsData" class="mb-2">The tool found these similarity scores:</h4>
@@ -122,9 +122,11 @@
           class="mx-auto"
         ></v-progress-circular>
       </v-col>
+    </v-row>
 
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
       <!-- Charts for Calculate Indicators result -->
-      <v-col cols="12" md="6"  v-for="(chart, index) in chartDataList" :key="index">
+      <v-col :cols="8"  v-for="(chart, index) in chartDataList" :key="index">
         <v-card v-if="!loading">
           <v-card-title>{{ chart.title }}</v-card-title>
           <v-card-text>
@@ -147,6 +149,11 @@ export default {
   components: {
     ReusableChart,
   },
+  props: {
+    showSidebar:{
+      type: Boolean
+    }
+  },
   setup() {
     const {getNbsMapInfo, calculateIndicators, extractNBS} = useApp();
 
@@ -160,13 +167,13 @@ export default {
     const isValid = ref(false);
     const isExtractorValid = ref(false);
     const showChart = ref(false);
-    const showHints = ref(true);
     const extractedNbsData = ref(null);
     const loading = ref(false);
     const showNbsExtractor = ref(false);
     const inputText = ref('');
     const form = ref(null);
     const extractorForm = ref(null);
+    const showHints = ref(sessionStorage.getItem('toNbsHints') !== 'true');
     const chartOptions = ref({
       responsive: true,
       maintainAspectRatio: false,
@@ -190,6 +197,9 @@ export default {
       },
     });
 
+    const handleHints = ()  => {
+      sessionStorage.setItem('toNbsHints', String(showHints.value));
+    }
 
     const fetchNbsMapInfo = async () => {
       try {
@@ -304,7 +314,8 @@ export default {
       inputText,
       form,
       extractorForm,
-      extractedNbsData
+      extractedNbsData,
+      handleHints
     }
   },
 }

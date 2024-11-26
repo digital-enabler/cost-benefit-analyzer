@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-navigation-drawer
-      permanent
+      temporary
       border
       class="pa-2"
       :scrim="false"
@@ -35,8 +35,8 @@
       <v-icon size="36">mdi-information-outline</v-icon>
     </v-btn>
     <v-card-title>Explore the features of Map Recommendations</v-card-title>
-    <v-row justify="end">
-      <v-col cols="12" class="text-right">
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="8" class="text-right">
         <v-switch
           color="primary"
           v-model="showHints"
@@ -45,12 +45,10 @@
         ></v-switch>
       </v-col>
     </v-row>
-    <v-row justify="center" v-if="!isLoading">
-      <v-col cols="12">
-        <v-alert
-          :color="'primary'"
-          border="start" elevation="1" variant="outlined">
-          <v-card>
+    <v-row :justify="showSidebar === true ? 'start' : 'center'" v-if="!isLoading">
+      <v-col :cols="8">
+          <v-card class="mr-2">
+            <v-card-text>
             <v-textarea
               v-model="description"
               label="NBS Description"
@@ -95,18 +93,18 @@
             >
               Start Over
             </v-btn>
+            </v-card-text>
           </v-card>
-        </v-alert>
       </v-col>
     </v-row>
 
     <v-row v-if="!isLoading">
-      <v-col offset="3" cols="6" v-if="responseData.length === 0 && applyClicked">
+      <v-col :offset="showSidebar === true ? 1 : 3" cols="6" v-if="responseData.length === 0 && applyClicked">
         <v-alert type="info">
           {{ responseData.length }} results found.
         </v-alert>
       </v-col>
-      <v-col cols="9" v-if="responseData.length > 0">
+      <v-col :cols="showSidebar === true ? 6 : 9" v-if="responseData.length > 0">
         <div class="map-container">
           <l-map ref="mapRef" :zoom="mapZoom" :center="mapCenter" :options="{ scrollWheelZoom: false }">
             <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>

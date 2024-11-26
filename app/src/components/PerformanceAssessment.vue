@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height background pt-0" fluid>
     <v-navigation-drawer
-      permanent
+      temporary
       border
       class="pa-2"
       :scrim="false"
@@ -42,7 +42,7 @@
       </v-tabs>
       <v-window v-model="activeTab">
         <v-window-item v-for="(tab, index) in tabs" :key="tab" :value="index">
-          <component :is="getComponent(tab)"></component>
+          <component :show-sidebar="showSidebar" :is="getComponent(tab)"></component>
         </v-window-item>
       </v-window>
     </v-responsive>

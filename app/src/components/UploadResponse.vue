@@ -1,10 +1,9 @@
 <template>
-  <v-row :align="'center'" :align-content="'center'" :dense="true"
-         :no-gutters="true">
-    <v-col cols="12">
+  <v-row :align="'center'" :align-content="'center'">
+    <v-col :cols="showSidebar === true ? 8 : 12">
       <v-card class="" elevation="0">
-        <v-row :align="'start'" :dense="true" :no-gutters="true">
-          <v-col cols="8" sm="6">
+        <v-row>
+          <v-col :cols="showSidebar === true ? 7 : 8">
             <v-tabs v-model="currentTab" class="mb-5" @update:modelValue="panel = 0">
               <v-tab v-for="(response, index) in uploadResponse" :key="`tab-${index}`"
                      v-model="activeTab"
@@ -14,7 +13,7 @@
               </v-tab>
             </v-tabs>
           </v-col>
-          <v-col class="text-right" cols="4" sm="6">
+          <v-col class="text-right" :cols="showSidebar === true ? 5 : 4">
             <v-btn class="bg-primary text-uppercase mr-2" color="white" prepend-icon="mdi-refresh"
                    variant="text" @click="emitStartOver">start over
             </v-btn>
@@ -24,7 +23,7 @@
                   color="primary"
                   v-bind="props"
                   :append-icon="menu ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                  class="text-uppercase"
+                  class="text-uppercase mr-1"
                 >
                   Download
                 </v-btn>
@@ -63,7 +62,7 @@
                 </v-row>
               </v-card>
               <v-row>
-                <v-col cols="6">
+                <v-col :cols="showSidebar === true ? 12 : 6">
                   <v-card class="ma-2 pa-2" height="416px">
                     <v-expansion-panels v-model="panel">
                       <v-expansion-panel class="mb-0" elevation="0">
@@ -122,13 +121,11 @@
                   </v-card>
                 </v-col>
 
-                <v-col cols="6">
+                <v-col :cols="showSidebar === true ? 12 : 6">
                   <v-card class="pa-2 ma-2">
                     <present-value-bar-chart
                       :present-value-data="response?.features.present_value"></present-value-bar-chart>
                   </v-card>
-                </v-col>
-                <v-col cols="6">
                 </v-col>
               </v-row>
               <v-row>
@@ -184,6 +181,10 @@ export default {
     },
     downloadData: {
       type: String,
+      required: false
+    },
+    showSidebar: {
+      type: Boolean,
       required: false
     }
   },

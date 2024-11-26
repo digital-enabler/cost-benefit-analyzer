@@ -1,17 +1,18 @@
 <template>
   <v-container fluid>
-    <v-row justify="end">
-      <v-col cols="12" class="text-right">
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="8" class="text-right">
         <v-switch
           color="primary"
           v-model="showHints"
           label="Show Hints"
           hide-details
+          @click="handleHints"
         ></v-switch>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="12">
+    <v-row :justify="showSidebar === true ? 'start' : 'center'">
+      <v-col :cols="8">
         <v-form ref="form" v-model="isValid" lazy-validation>
           <v-card>
             <v-card-title>Compare a feature among different NBS</v-card-title>
@@ -20,6 +21,7 @@
                 density="compact"
                 v-model="selectedFeature"
                 :items="nbsFeatures"
+                class="mb-10"
                 hint="Choose a feature to analyze its significance across NBS. This will be the basis for comparison."
                 :persistent-hint="showHints"
                 label="Select a feature"
@@ -31,11 +33,11 @@
                 :min="3"
                 :max="10"
                 label="#Top Most NBS"
+                class="mb-4"
                 hint="Specify the number of top-performing NBS to include in the radar chart (minimum 3)."
                 :persistent-hint="showHints"
                 step="1"
                 thumb-label="always"
-                class="mt-4"
               ></v-slider>
               <v-btn class="mt-2 mr-2" color="primary" @click="handleExtractMostSignificantNBS">Extract Most Significant NBS</v-btn>
               <v-btn
@@ -61,7 +63,7 @@
         ></v-progress-circular>
       </v-col>
       <!-- Chart -->
-      <v-col cols="12" offset="3" md="6" v-else-if="showChart && !loading">
+      <v-col cols="8" v-else-if="showChart && !loading">
         <v-card outlined>
           <v-card-title>Extracted NBS</v-card-title>
           <v-card-text>
@@ -84,13 +86,17 @@ export default {
   components: {
     ReusableChart,
   },
+  props: {
+    showSidebar:{
+      type: Boolean
+    }
+  },
   setup() {
     const { getNbsMapInfo, extractMostSignificantNBS } = useApp();
 
     const nbsFeatures = ref([]);
     const selectedFeature = ref('');
     const topMostNbs = ref(5);
-    const showHints = ref(true);
     const chartData = ref({
       labels: [],
       datasets: [],
@@ -122,6 +128,11 @@ export default {
     const showChart = ref(false);
     const loading = ref(false);
     const form = ref(null);
+    const showHints = ref(sessionStorage.getItem('toNbsHints') !== 'true');
+
+    const handleHints = ()  => {
+      sessionStorage.setItem('toNbsHints', String(showHints.value));
+    }
 
     const fetchNbsMapInfo = async () => {
       try {
@@ -205,7 +216,8 @@ export default {
       loading,
       form,
       handleExtractMostSignificantNBS,
-      resetFields
+      resetFields,
+      handleHints
     };
   },
 };
