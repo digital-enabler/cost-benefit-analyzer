@@ -122,7 +122,7 @@
           </l-map>
         </div>
       </v-col>
-      <v-col cols="3" class="cards-container py-8" v-if="responseData.length > 0">
+      <v-col :cols="showSidebar === true ? 2 : 3" class="cards-container py-8 px-0 pr-5" v-if="responseData.length > 0">
         <v-row>
           <v-col cols="12">
             <v-alert type="success">
