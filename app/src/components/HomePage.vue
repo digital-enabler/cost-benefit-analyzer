@@ -1,151 +1,127 @@
 <template>
   <v-container
-    class="h-100 homepage-cover d-flex flex-column"
+    class="homepage-cover"
     fluid
   >
     <!-- Header Section -->
-    <v-row align="start" justify="start" class="text-white flex-grow-1" dense>
-      <v-col cols="6">
-        <h1 class="text-h3 font-weight-medium text-primary">
-          The economics of nature-based solutions.
+    <v-row align="center" justify="start" class="text-white pa-15 mt-15" dense>
+      <v-col cols="12" offset-md="1" md="2">
+        <v-img height="250px" src="cropped-i4n-icon-01.png"></v-img>
+      </v-col>
+      <v-col cols="12" md="8">
+        <h1 class="text-h3 font-weight-medium text-center text-primary">
+          Invest4Nature Decision Support Service
         </h1>
-      </v-col>
-      <v-col offset="1">
-        <p class="text-body-2 text-justify">
-          Invest4Nature is an EU-funded project that contributes to the creation of a
-          market for nature-based solutions. A group of 15 partners from 11 European
-          countries prepare the grounds for investments in nature-based solutions by
-          evaluating its benefits and economic performance.
+        <p class="text-h5 text-center">
+          A tool to aid effective investment decision making.
         </p>
-        <p class="text-body-1 text-justify mt-1" v-if="!isLoggedIn">
-          If you are already a registered user, you can
-          <span class="text-primary font-weight-bold text-decoration-none cursor-pointer" @click="handleLoginClick">
-            login here
-          </span>.
-        </p>
+        <v-row justify="center">
+          <v-btn v-if="!isLoggedIn" prepend-icon="mdi-adjust" color="primary" class="mt-15" @click="handleLoginClick">Get Started</v-btn>
+        </v-row>
       </v-col>
     </v-row>
 
-    <!-- Cards Section -->
-    <v-row justify="space-around" dense>
-      <!-- First Card -->
+    <!-- Cost-Benefit Analyzer Section -->
+    <v-row align="center" class="pa-15">
       <v-col cols="12" md="4">
-        <v-card
-          height="520"
-          class="pa-3 tool"
-          elevation="2"
-        >
-          <v-img
-            src="cost-benefit-analyzer.png"
-            height="150px"
-            contain
-          ></v-img>
-          <v-card-title class="text-subtitle-1 font-weight-bold">Costs - Benefit Analyzer</v-card-title>
-          <v-card-text class="text-body-2 mb-10">
-            <h4 class="text-caption font-weight-medium mb-1">Purpose</h4>
-            <p>
-              The tool supports typical financial decision support methods, such as Cost-Benefit Analysis (CBA) and Cost-Effectiveness Analysis (CEA), providing advanced insights and investment guidelines.
-            </p>
-            <h4 class="text-caption font-weight-medium mb-1 mt-1">Typical Users</h4>
-            <p>
-              Urban and consultancy agencies planners; companies working with biodiversity; Nature-Based Enterprise; professional users.
-            </p>
-            <h4 class="text-caption font-weight-medium mb-1 mt-1">Prerequisites</h4>
-            <p>
-              An economic and financial background is a nice to have.
-            </p>
-          </v-card-text>
-          <v-card-actions class="mt-auto">
-            <v-btn color="primary" href="/cost-benefit-analyzer" block>
-              Open Cost Benefit Analyzer
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <v-img
+          src="cost-benefit-analyzer.png"
+          alt="Cost Benefit Analyzer"
+          contain
+        ></v-img>
       </v-col>
-
-      <!-- Second Card -->
-      <v-col cols="12" md="4">
-        <v-card
-          height="520"
-          class="pa-3 tool"
-          elevation="2"
-        >
-          <v-img
-            src="performance-assessment.webp"
-            height="150px"
-            contain
-          ></v-img>
-          <v-card-title class="text-subtitle-1 font-weight-bold">Performance Assessment</v-card-title>
-          <v-card-text class="text-body-2 text-justify">
-            <h4 class="text-caption font-weight-medium mb-1">Purpose</h4>
-            <p>
-              The tool allows for the exploration and analysis of qualitative indicators related to the benefits of an NBS solution. It is an effective approach to demonstrate how specific features and solutions are linked to addressing environmental or sustainability challenges.
-            </p>
-            <h4 class="text-caption font-weight-medium mb-1 mt-1">Typical Users</h4>
-            <p>
-              Urban and consultancy agencies planners; companies working with biodiversity; non-professional users.
-            </p>
-            <h4 class="text-caption font-weight-medium mb-1 mt-1">Prerequisites</h4>
-            <p>
-              No prerequisites needed.
-            </p>
-          </v-card-text>
-          <v-card-actions class="mt-auto">
-            <v-btn color="primary" href="/assessment" block>
-              Open Performance Assessment
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-
-      <!-- Third Card -->
-      <v-col cols="12" md="4">
-        <v-card
-          height="520"
-          class="pa-3 tool"
-          elevation="2"
-        >
-          <v-img
-            src="recommender.webp"
-            height="150px"
-            contain
-          ></v-img>
-          <v-card-title class="text-subtitle-1 font-weight-bold">Recommender System</v-card-title>
-          <v-card-text class="text-body-2 mb-10">
-            <h4 class="text-caption font-weight-medium mb-1">Purpose</h4>
-            <p>
-              The tool enables the exploration and analysis of recommendations for Nature-Based Solutions based on a simple free-text description of the NBS.
-            </p>
-            <h4 class="text-caption font-weight-medium mb-1 mt-1">Typical Users</h4>
-            <p>
-              Urban and consultancy agencies planners; companies working with biodiversity; non-professional users; researchers.
-            </p>
-            <h4 class="text-caption font-weight-medium mb-1 mt-1">Prerequisites</h4>
-            <p>
-              Just curiosity and desire to learn.
-            </p>
-          </v-card-text>
-          <v-card-actions class="mt-auto">
-            <v-btn color="primary" href="/recommender" block>
-              Open Recommender
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+      <v-col cols="12" md="8" class="text-white">
+        <h2 class="text-h4 font-weight-bold mb-3">Costs – Benefit Analyzer</h2>
+        <h3 class="font-weight-bold mb-2">Purpose</h3>
+        <p class="text-body-1">
+          The tool supports typical financial decision support methods, such as
+          Cost-Benefit Analysis (CBA) and Cost-Effectiveness Analysis (CEA),
+          providing advanced insights and investment guidelines.
+        </p>
+        <h3 class="font-weight-bold mt-4">Typical Users</h3>
+        <p class="text-body-1">
+          Urban and consultancy agency planners; companies working with
+          biodiversity; Nature-Based Enterprises; professional users.
+        </p>
+        <h3 class="font-weight-bold mt-4">Prerequisites</h3>
+        <p class="text-body-1">An economic and financial background is a nice to have.</p>
+        <v-btn color="primary" href="/cost-benefit-analyzer" class="mt-4">
+          Open Cost Benefit Analyzer
+        </v-btn>
       </v-col>
     </v-row>
+    <v-divider color="primary" opacity="0.5"></v-divider>
+
+    <!-- Performance Assessment Section -->
+    <v-row align="center" justify="center" class="pa-15">
+      <v-col cols="12" md="8" class="text-white">
+        <h2 class="text-h4 font-weight-bold mb-3">Performance Assessment</h2>
+        <h3 class="font-weight-bold mb-2">Purpose</h3>
+        <p class="text-body-1">
+          The tool allows for exploration and analysis of qualitative indicators
+          related to the benefits of an NBS solution. It is an effective
+          approach to demonstrate how specific features and solutions address
+          environmental challenges.
+        </p>
+        <h3 class=" font-weight-bold mt-4">Typical Users</h3>
+        <p class="text-body-1">
+          Urban and consultancy agency planners; companies working with
+          biodiversity; non-professional users.
+        </p>
+        <h3 class=" font-weight-bold mt-4">Prerequisites</h3>
+        <p class="text-body-1">No prerequisites needed.</p>
+        <v-btn color="primary" href="/assessment" class="mt-4">
+          Open Performance Assessment
+        </v-btn>
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-img
+          src="performance-assessment.webp"
+          alt="Performance Assessment"
+          contain
+        ></v-img>
+      </v-col>
+    </v-row>
+    <v-divider color="primary" opacity="0.5"></v-divider>
+
+    <!-- Recommender System Section -->
+    <v-row align="center" justify="center" class="pa-15">
+      <v-col cols="12" md="4">
+        <v-img
+          src="recommender.webp"
+          alt="Recommender System"
+          contain
+        ></v-img>
+      </v-col>
+      <v-col cols="12" md="8" class="text-white">
+        <h2 class="text-h4 font-weight-bold mb-3">Recommender System</h2>
+        <h3 class=" font-weight-bold mb-2">Purpose</h3>
+        <p class="text-body-1">
+          Enables the exploration and analysis of recommendations for
+          Nature-Based Solutions based on a simple free-text description of the
+          NBS.
+        </p>
+        <h4 class="text-subtitle-1 font-weight-bold mt-4">Typical Users</h4>
+        <p class="text-body-1">
+          Urban and consultancy agency planners; companies working with
+          biodiversity; non-professional users; researchers.
+        </p>
+        <h3 class=" font-weight-bold mt-4">Prerequisites</h3>
+        <p class="text-body-1">Just curiosity and desire to learn.</p>
+        <v-btn color="primary" href="/recommender" class="mt-4">
+          Open Recommender
+        </v-btn>
+      </v-col>
+    </v-row>
+
     <!-- Contact Section -->
-    <v-row justify="center" dense>
+    <v-row justify="center">
       <v-col cols="12">
         <v-card
           elevation="1"
           style="background: rgba(0, 0, 0, 0.8); color: white;"
         >
-          <v-card-title class="text-subtitle-1">
-            Support
-          </v-card-title>
-          <v-card-text class="text-body-2">
-            If you have any questions or need assistance, please reach out to our
-            support team at:
+          <v-card-text class="text-body-2 text-center">
             <a
               href="mailto:support@invest4nature.eu"
               style="color: #53b475; text-decoration: none; font-weight: bold;"
@@ -159,41 +135,31 @@
   </v-container>
 </template>
 
-
 <script setup>
 import {apiUrl} from "@/mixins/app";
-import {onMounted, ref} from "vue";
+import {ref, onMounted} from "vue";
 import {useAuth} from "@/mixins/authStatus";
 
 const isLoggedIn = ref(false);
-const {checkStatus } = useAuth();
+const {checkStatus} = useAuth();
 
 const checkLoginStatus = async () => {
   isLoggedIn.value = await checkStatus();
 };
 
 function handleLoginClick() {
-  // Redirect to login page
-  window.location.href = apiUrl + "/invest4nature/auth/login";
+  window.location.href = `${apiUrl}/invest4nature/auth/login`;
 }
 
 onMounted(() => {
   checkLoginStatus();
-})
+});
 </script>
 
 <style scoped>
-/* Optional additional styling for better aesthetics */
-.tool {
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.homepage-cover {
+  background: url('/i4n-keyvisuals-2022.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 
-.homepage-cover{
-  background: url('/i4n-keyvisuals-2022.jpg') no-repeat fixed center;
-  background-size: cover;
-  display: flex;
-  flex-direction: column;
-}
 </style>
