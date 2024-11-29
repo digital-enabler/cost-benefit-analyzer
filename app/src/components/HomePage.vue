@@ -23,14 +23,14 @@
 
     <!-- Cost-Benefit Analyzer Section -->
     <v-row align="center" class="pa-15">
-      <v-col cols="12" md="4">
+      <v-col cols="12" md="4" class="tool-opacity rounded-pill">
         <v-img
-          src="cost-benefit-analyzer.png"
+          src="cost-benefit-analyzer-removebg-preview.png"
           alt="Cost Benefit Analyzer"
           contain
         ></v-img>
       </v-col>
-      <v-col cols="12" md="8" class="text-white">
+      <v-col cols="12" md="8" class="text-white pl-15">
         <h2 class="text-h4 font-weight-bold mb-3">Costs – Benefit Analyzer</h2>
         <h3 class="font-weight-bold mb-2">Purpose</h3>
         <p class="text-body-1">
@@ -54,7 +54,7 @@
 
     <!-- Performance Assessment Section -->
     <v-row align="center" justify="center" class="pa-15">
-      <v-col cols="12" md="8" class="text-white">
+      <v-col cols="12" md="8" class="pr-15 text-white">
         <h2 class="text-h4 font-weight-bold mb-3">Performance Assessment</h2>
         <h3 class="font-weight-bold mb-2">Purpose</h3>
         <p class="text-body-1">
@@ -74,9 +74,9 @@
           Open Performance Assessment
         </v-btn>
       </v-col>
-      <v-col cols="12" md="4">
+      <v-col cols="12" md="4" class="rounded tool-opacity">
         <v-img
-          src="performance-assessment.webp"
+          src="performance-assessment-removebg-preview.png"
           alt="Performance Assessment"
           contain
         ></v-img>
@@ -86,14 +86,14 @@
 
     <!-- Recommender System Section -->
     <v-row align="center" justify="center" class="pa-15">
-      <v-col cols="12" md="4">
+      <v-col cols="12" md="4" class=" rounded-shaped rounded-circle tool-opacity">
         <v-img
-          src="recommender.webp"
+          src="recommender-removebg-preview.png"
           alt="Recommender System"
           contain
         ></v-img>
       </v-col>
-      <v-col cols="12" md="8" class="text-white">
+      <v-col cols="12" md="8" class="pl-15 text-white">
         <h2 class="text-h4 font-weight-bold mb-3">Recommender System</h2>
         <h3 class=" font-weight-bold mb-2">Purpose</h3>
         <p class="text-body-1">
@@ -160,6 +160,10 @@ onMounted(() => {
 .homepage-cover {
   background: url('/i4n-keyvisuals-2022.jpg') no-repeat center center fixed;
   background-size: cover;
+}
+
+.tool-opacity{
+  background-color: rgba(83, 180, 117, 0.6);
 }
 
 </style>
