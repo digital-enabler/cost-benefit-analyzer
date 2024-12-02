@@ -4,7 +4,7 @@
     fluid
   >
     <!-- Header Section -->
-    <v-row align="center" justify="start" class="text-white pa-15 mt-15" dense>
+    <v-row align="center" justify="start" class="text-shades-white pa-15 mt-15" dense>
       <v-col cols="12" offset-md="1" md="2">
         <v-img height="250px" src="cropped-i4n-icon-01.png"></v-img>
       </v-col>
@@ -20,9 +20,9 @@
         </v-row>
       </v-col>
     </v-row>
-
+    <v-container>
     <!-- Cost-Benefit Analyzer Section -->
-    <v-row align="center" class="pa-15">
+    <v-row align="center" class="pa-15" justify="center">
       <v-col cols="12" md="4" class="tool-opacity rounded-pill">
         <v-img
           src="cost-benefit-analyzer-removebg-preview.png"
@@ -30,7 +30,7 @@
           contain
         ></v-img>
       </v-col>
-      <v-col cols="12" md="8" class="text-white pl-15">
+      <v-col cols="12" md="8" class="text-shades-white pl-15 text-justify">
         <h2 class="text-h4 font-weight-bold mb-3">Costs – Benefit Analyzer</h2>
         <h3 class="font-weight-bold mb-2">Purpose</h3>
         <p class="text-body-1">
@@ -54,7 +54,7 @@
 
     <!-- Performance Assessment Section -->
     <v-row align="center" justify="center" class="pa-15">
-      <v-col cols="12" md="8" class="pr-15 text-white">
+      <v-col cols="12" md="8" class="pr-15 text-justify text-shades-white">
         <h2 class="text-h4 font-weight-bold mb-3">Performance Assessment</h2>
         <h3 class="font-weight-bold mb-2">Purpose</h3>
         <p class="text-body-1">
@@ -93,7 +93,7 @@
           contain
         ></v-img>
       </v-col>
-      <v-col cols="12" md="8" class="pl-15 text-white">
+      <v-col cols="12" md="8" class="pl-15 text-justify text-shades-white">
         <h2 class="text-h4 font-weight-bold mb-3">Recommender System</h2>
         <h3 class=" font-weight-bold mb-2">Purpose</h3>
         <p class="text-body-1">
@@ -113,6 +113,7 @@
         </v-btn>
       </v-col>
     </v-row>
+    </v-container>
 
     <!-- Contact Section -->
     <v-row justify="center">
