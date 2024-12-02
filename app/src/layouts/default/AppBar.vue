@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar :flat="true">
+  <v-app-bar :flat="true" v-if="isLoggedIn">
     <template v-slot:prepend>
       <v-btn
         v-if="isLoggedIn"
