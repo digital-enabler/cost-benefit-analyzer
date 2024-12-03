@@ -77,9 +77,9 @@
                                          max-height="25"
                                          min-height="25">
                               <div class="d-flex justify-space-between align-center my-0 py-0">
-                                <v-list-item-title class="text-caption">{{ item.name }}</v-list-item-title>
+                                <v-list-item-title class="text-caption">{{ item.name.replace(/_/g, ' ') }}</v-list-item-title>
                                 <v-list-item-subtitle class="text-caption">{{
-                                    item.value
+                                   typeof item.value === 'string' ? item.value.replace(/_/g, ' ').toUpperCase() : item.value
                                   }}
                                 </v-list-item-subtitle>
                               </div>
