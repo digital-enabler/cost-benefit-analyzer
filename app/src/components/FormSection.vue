@@ -100,8 +100,8 @@
                 </v-btn>
               </v-col>
             </v-row>
-            <v-row v-if="shouldShowForm" :justify="showSidebar === true ? 'start' : 'center'">
-              <v-col cols="8" class="text-right">
+            <v-row v-if="shouldShowForm" :justify="'start'">
+              <v-col cols="3" :offset-md="showSidebar === true ? 0 : 2" class="text-right">
                 <v-switch
                   color="primary"
                   v-model="showHints"
@@ -109,6 +109,9 @@
                   hide-details
                   @click="handleHints($event)"
                 ></v-switch>
+              </v-col>
+              <v-col cols="2" class="ma-1 text-primary">
+                <span class="text-h4">Configuration</span>
               </v-col>
             </v-row>
             <v-form v-if="shouldShowForm"
@@ -161,11 +164,16 @@
                                     :persistent-hint="showHints"
                                     class="mb-4"
                                     density="compact"
-                                    label="Currency" outlined variant="outlined"></v-select>
+                                    label="Currency"
+                                    variant="outlined">
+                          </v-select>
                           <v-select v-if="section.title === 'Features'"
                                     v-model="fieldSet.objective"
                                     class="mb-4"
                                     density="compact"
+                                    item-title="text"
+                                    item-value="value"
+                                    disabled
                                     hint="Choose an objective type to be used"
                                     :persistent-hint="showHints"
                                     variant="outlined"
@@ -221,6 +229,7 @@
                               :items="availableOthersOptions[sectionIndex]"
                               :rules="[rules.required]"
                               density="compact"
+                              disabled
                               class="mb-4"
                               label="Name"
                               variant="outlined"
@@ -233,6 +242,7 @@
                               v-model="fieldSet.type"
                               density="compact"
                               variant="outlined"
+                              disabled
                               class="mb-4"
                               :items="['parameter']"
                               label="Type"
@@ -332,9 +342,9 @@ export default {
       showHints: ref(sessionStorage.getItem('cbaHints') !== 'true'),
       snackbarText: '',
       snackbarTextEnd: '',
-      objectiveOptions: ['net_benefit_maximization'],
-      currencyOptions: ['euro', 'dollars', 'pound'],
-      othersNameOptions: ['units_resource', 'period'],
+      objectiveOptions: [{text: 'Net Benefit Maximization', value: 'net_benefit_maximization'}],
+      currencyOptions: ['Euro', 'US Dollar', 'British Pound', 'Czech Koruna', 'Danish Krone', 'Hungarian Forint', 'Polish zloty', 'Romanian LEU', 'Swedish Krona-SEK'],
+      othersNameOptions: [{text: 'Units Resource', value:'units_resource'}, {text: 'Period', value: 'period'}],
       items: ['Add', 'Remove', 'Copy'],
       currentTabIndex: 0,
       uploadResponse: null,
@@ -405,7 +415,7 @@ export default {
       return this.forms[this.currentTabIndex].dynamicSections.map(section => {
         if (section.title === 'Others') {
           const selectedNames = section.fields.map(f => f.name);
-          return this.othersNameOptions.filter(option => !selectedNames.includes(option));
+          return this.othersNameOptions.filter(option => !selectedNames.includes(option.value));
         } else {
           return [];
         }
@@ -818,6 +828,7 @@ export default {
         const file = new Blob([jsonData], {type: 'application/json'});
         const formData = new FormData();
         formData.append('file', file, 'data.json');
+        console.log(jsonData);
 
         this.useApp.optimization(formData).then((value) => {
           this.uploadResponse = value;
