@@ -169,6 +169,7 @@
                                     v-model="fieldSet.objective"
                                     class="mb-4"
                                     density="compact"
+                                    disabled
                                     hint="Choose an objective type to be used"
                                     :persistent-hint="showHints"
                                     variant="outlined"
