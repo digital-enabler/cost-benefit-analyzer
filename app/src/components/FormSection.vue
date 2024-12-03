@@ -100,8 +100,8 @@
                 </v-btn>
               </v-col>
             </v-row>
-            <v-row v-if="shouldShowForm" :justify="showSidebar === true ? 'start' : 'center'">
-              <v-col cols="8" class="text-right">
+            <v-row v-if="shouldShowForm" :justify="'start'">
+              <v-col cols="3" :offset-md="showSidebar === true ? 0 : 2" class="text-right">
                 <v-switch
                   color="primary"
                   v-model="showHints"
@@ -109,6 +109,9 @@
                   hide-details
                   @click="handleHints($event)"
                 ></v-switch>
+              </v-col>
+              <v-col cols="2" class="ma-1 text-primary">
+                <span class="text-h4">Configuration</span>
               </v-col>
             </v-row>
             <v-form v-if="shouldShowForm"
@@ -221,6 +224,7 @@
                               :items="availableOthersOptions[sectionIndex]"
                               :rules="[rules.required]"
                               density="compact"
+                              disabled
                               class="mb-4"
                               label="Name"
                               variant="outlined"
@@ -233,6 +237,7 @@
                               v-model="fieldSet.type"
                               density="compact"
                               variant="outlined"
+                              disabled
                               class="mb-4"
                               :items="['parameter']"
                               label="Type"
