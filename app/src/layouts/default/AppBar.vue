@@ -25,8 +25,7 @@
       </template>
     </v-app-bar-title>
   </v-app-bar>
-  <v-navigation-drawer v-if="isLoggedIn" disable-route-watcher v-model="drawer" :rail="rail" class="border-e-0" color="primary" permanent>
-    <v-divider opacity="0.5"></v-divider>
+  <v-navigation-drawer v-if="isLoggedIn" disable-route-watcher v-model="drawer" :rail="rail" class="border-0" color="primary" permanent>
     <v-list ref="navDrawer" :nav="true" dense>
       <template v-for="(item, index) in navItems" :key="index">
         <v-tooltip v-if="rail" location="right">

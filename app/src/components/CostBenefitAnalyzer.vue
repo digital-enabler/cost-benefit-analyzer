@@ -12,7 +12,7 @@
     >
       <v-card>
         <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
-          Welcome to the Cost Benefit Analyzer
+          About the Costs-Benefits Analyzer tool
           <v-btn variant="text" @click="showSidebar = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>

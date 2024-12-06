@@ -159,7 +159,7 @@ onMounted(() => {
 
 <style scoped>
 .homepage-cover {
-  background: url('/i4n-keyvisuals-2022.jpg') no-repeat center center fixed;
+  background: url('@/assets/i4n-keyvisuals-2022.jpg') no-repeat center center fixed;
   background-size: cover;
 }
 
