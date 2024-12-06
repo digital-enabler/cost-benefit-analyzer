@@ -47,7 +47,7 @@
         v-model="tab"
         slider-color="secondary"
       >
-        <v-tab value="one" @click="resetDefineNbs(tab)">
+        <v-tab value="one">
           Define NBS
         </v-tab>
         <v-tab value="two">Upload file</v-tab>
