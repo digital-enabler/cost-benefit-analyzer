@@ -16,7 +16,7 @@
           A tool to aid effective investment decision making.
         </p>
         <v-row justify="center">
-          <v-btn v-if="!isLoggedIn" prepend-icon="mdi-adjust" color="primary" class="mt-15" @click="handleLoginClick">Get Started</v-btn>
+          <v-btn v-if="!isLoggedIn && !loading" prepend-icon="mdi-adjust" color="primary" class="mt-15" @click="handleLoginClick">Get Started</v-btn>
         </v-row>
       </v-col>
     </v-row>
@@ -141,11 +141,13 @@ import {apiUrl} from "@/mixins/app";
 import {ref, onMounted} from "vue";
 import {useAuth} from "@/mixins/authStatus";
 
-const isLoggedIn = ref(false);
+const isLoggedIn = ref(true);
+const loading = ref(true);
 const {checkStatus} = useAuth();
 
 const checkLoginStatus = async () => {
   isLoggedIn.value = await checkStatus();
+  loading.value = false;
 };
 
 function handleLoginClick() {
@@ -154,7 +156,7 @@ function handleLoginClick() {
 
 onMounted(() => {
   checkLoginStatus();
-});
+})
 </script>
 
 <style scoped>
