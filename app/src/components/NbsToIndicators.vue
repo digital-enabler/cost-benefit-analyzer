@@ -19,7 +19,7 @@
               <v-autocomplete
                 class="mt-2 mb-8"
                 density="compact"
-                hint="Select one or more NBS scenarios for analysis."
+                hint="Select one or more NBS components for the scoring analysis."
                 :persistent-hint="showHints"
                 v-model="selectedNbs"
                 :items="nbsList"
@@ -38,7 +38,7 @@
                 class="mt-2 mb-8"
                 density="compact"
                 v-model="selectedServices"
-                hint="Choose the ecosystem services to visualize, such as provisioning, regulating, or cultural services"
+                hint="Choose the ecosystem services group to visualize"
                 :persistent-hint="showHints"
                 :items="nbsServices"
                 multiple
@@ -49,7 +49,7 @@
               <v-select
                 density="compact"
                 class="mt-2 mb-5"
-                hint="Choose a calculation policy for aggregating data: minimum, mean, or maximum values"
+                hint="Choose the calculation policy for the combination of NBS"
                 :persistent-hint="showHints"
                 v-model="selectedCalculationPolicy"
                 :items="calculationPolicies"
@@ -67,11 +67,6 @@
               </v-btn>
            <div class="text-caption mt-2">
              * Indicators are specific for Urban Landscape.
-             <p>
-               Reference: <a target="_blank" rel="noopener" class="text-decoration-none" href="https://www.regreen-project.eu">
-               REGREEN project
-             </a>
-             </p>
            </div>
             </v-card-text>
           </v-card>
@@ -93,6 +88,8 @@
                   v-model="inputText"
                   placeholder="Input your NBS description"
                   persistent-placeholder
+                  :persistent-hint="showHints"
+                  hint="Describe your NBS solution in a natural way. Be as descriptive as possible about the planned actions and the components used."
                   variant="outlined"
                   rows="9"
                   :rules="[v => !!v || 'Description is required']"
