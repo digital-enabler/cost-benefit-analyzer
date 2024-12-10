@@ -159,9 +159,9 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
 .homepage-cover {
-  background: url('@/assets/i4n-keyvisuals-2022.jpg') no-repeat center center fixed;
+  background: url('/homepage-cover.png') no-repeat center center fixed;
   background-size: cover;
 }
 
