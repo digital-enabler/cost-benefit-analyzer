@@ -152,7 +152,7 @@
                                         class="mb-4"
                                         :rules="section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [rules.nameRequiredIfValueFilled(fieldSet.value)] : [rules.required]"
                                         density="compact"
-                                        hint="Enter a descriptive name"
+                                        :hint="section.title === 'Features' ? 'Enter a name for your scenario analysis' : 'Enter a unique name'"
                                         :persistent-hint="showHints"
                                         :label="section.title === 'Features' ? 'Scenario Name' : 'Name'"
                                         variant="outlined"></v-text-field>
@@ -160,7 +160,7 @@
                                     v-model="fieldSet.currency"
                                     :items="currencyOptions"
                                     :rules="[rules.required]"
-                                    hint="Choose a currency to be used for the values"
+                                    hint="Select the reference currency. Remember that all cost/benefit values will be expressed in this currency"
                                     :persistent-hint="showHints"
                                     class="mb-4"
                                     density="compact"
@@ -174,7 +174,7 @@
                                     item-title="text"
                                     item-value="value"
                                     disabled
-                                    hint="Choose an objective type to be used"
+                                    hint="Choose the objective for your analysis "
                                     :persistent-hint="showHints"
                                     variant="outlined"
                                     :items="objectiveOptions"
@@ -182,7 +182,7 @@
                           <v-textarea v-if="section.title !== 'Others'" v-model="fieldSet.description"
                                       density="compact"
                                       class="mb-4"
-                                      :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
+                                      :hint="section.title === 'Features' ? 'Describe your NBS solution in natural way. Be as descriptive as possible, providing details about planned activities and also adding contextual information such as the location and timeline of your project. This text will be used by the internal search engine in future releases of the DS toolbox.' : 'Enter a description to categorize it better'"
                                       :persistent-hint="showHints"
                                       label="Description" variant="outlined"></v-textarea>
                           <!--                          period cost and periodic benefit are required-->
@@ -191,21 +191,21 @@
                                         class="mb-4"
                                         :rules="section.title === 'Features' || section.title === 'Units Costs' || section.title === 'Starting Costs' || section.title === 'Starting Benefits' ? [] : [rules.required]"
                                         :label="section.title === 'Features' ? 'Discount rate' : 'Value'"
-                                        :hint="section.title === 'Features' ? 'Enter a discount rate in absolute value' : 'Enter a value in the chosen currency'"
+                                        :hint="section.title === 'Features' ? 'Enter the discount rate in absolute value (e.g. 0.03 stays for 3%). For info about its meaning refer to the guide.' : 'The monetary term in the chosen currency'"
                                         :persistent-hint="showHints"
                                         :step="section.title === 'Features' ? '0.01' : '100'" density="compact"
                                         type="number" variant="outlined"></v-text-field>
                           <v-text-field v-if="section.hasStartingPeriod" v-model="fieldSet.startingPeriod"
                                         :rules="[rules.required]" class="w-50 d-inline-block pr-1 mb-4"
                                         density="compact" label="Starting Period" type="number"
-                                        hint="Choose a starting month"
+                                        hint="Select when it starts in the project lifetime (year basis)"
                                         :persistent-hint="showHints"
                                         variant="outlined"></v-text-field>
                           <v-text-field v-if="section.hasEndingPeriod"
                                         v-model="fieldSet.endingPeriod"
                                         :rules="[v => rules.validateEndingPeriod(v, form, section, fieldSet)]"
                                         class="w-50 d-inline-block"
-                                        hint="Choose an ending month"
+                                        hint="Select when it ends in the project lifetime (year basis)"
                                         :persistent-hint="showHints"
                                         density="compact" label="Ending Period"
                                         placeholder="None"
@@ -235,7 +235,7 @@
                               variant="outlined"
                               @update:model-value="handleNameChange($event, sectionIndex, fieldSetIndex)"
                             ></v-select>
-                            <v-textarea v-model="fieldSet.description" class="mb-4" :hint="'Enter a description for the ' + (fieldSet.name || section.title)"
+                            <v-textarea v-model="fieldSet.description" class="mb-4" :hint="fieldSet.name === 'units_resource' ? 'Enter a description for the unit resource considered in the analysis (e.g. number of trees planted)' : 'The description of the project lifetime (e.g. starting and ending date)'"
                                         :persistent-hint="showHints" density="compact" label="Description"
                                         variant="outlined"></v-textarea>
                             <v-select
@@ -255,7 +255,7 @@
                               v-model="fieldSet.value"
                               variant="outlined"
                               class="mb-4"
-                              :hint="'Enter a value for the ' + (fieldSet.name || section.title)"
+                              :hint="fieldSet.name === 'units_resource' ? 'The specific value number for the resource used (e.g. 300)' : 'The duration of the project in years for the purpose of analysis. Presents Values (PV) and related indicators (NPV, CBR) are calculated based on this.'"
                               :persistent-hint="showHints"
                               :label="fieldSet.type === 'parameter' ? 'Value' : 'Value (NonNegativeReals)'"
                               :readonly="fieldSet.type === 'variable'"

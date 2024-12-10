@@ -12,7 +12,7 @@
     >
       <v-card>
         <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
-          Welcome to the Cost Benefit Analyzer
+          About the Costs-Benefits Analyzer tool
           <v-btn variant="text" @click="showSidebar = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -47,7 +47,7 @@
         v-model="tab"
         slider-color="secondary"
       >
-        <v-tab value="one" @click="resetDefineNbs(tab)">
+        <v-tab value="one">
           Define NBS
         </v-tab>
         <v-tab value="two">Upload file</v-tab>
