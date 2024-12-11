@@ -29,9 +29,5 @@
       <li><strong>Markers:</strong> Hover over markers to view titles and click to open details.</li>
       <li><strong>Center Map:</strong> Click a card to center the map on the corresponding marker.</li>
     </ul>
-
-    <p class="mt-4 text-caption">
-      Hint: To stop this guide from automatically showing up, navigate to your Profile Settings and turn it off.
-    </p>
   </div>
 </template>

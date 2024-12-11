@@ -25,7 +25,7 @@
       <li><strong>The score number</strong>: the reference assessment is based on the following principles. Ecosystem service delivery is considered as if it represents a quantity per unit area of the Urban Green Infrastructure, e.g. per m2. This allows direct comparability across different components. The service delivery mapping is the following:</li>
     </ul>
     <br>
-    <ol>
+    <ol class="ml-15">
       <li>Negligible - zero or almost none</li>
       <li>Low</li>
       <li>Medium or extremely variable</li>

@@ -20,7 +20,6 @@
         <v-divider></v-divider>
         <v-card-text>
           <component :is="getGuideContent"></component>
-          <p class="mt-4 text-caption">Hint: To stop this guide from automatically showing up, navigate to your Profile Settings and turn it off.</p>
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
@@ -92,9 +91,9 @@ export default {
     const guideTitle = computed(() => {
       switch (activeTab.value) {
         case 0:
-          return 'About the Performance Assessment tool';
+          return 'Performance Assessment tool';
         case 1:
-          return 'About the Performance Assessment tool';
+          return 'Performance Assessment tool';
         default:
           return 'Welcome';
       }

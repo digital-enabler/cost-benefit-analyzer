@@ -4,7 +4,7 @@
       temporary
       class="pa-2"
       border
-      :scrim="false"
+      :scrim="!!$vuetify.display.smAndDown"
       v-model="showSidebar"
       location="right"
       width="500"
@@ -12,7 +12,7 @@
     >
       <v-card>
         <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
-          About the Costs-Benefits Analyzer tool
+          Costs-Benefits Analyzer tool
           <v-btn variant="text" @click="showSidebar = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
