@@ -92,9 +92,9 @@ export default {
     const guideTitle = computed(() => {
       switch (activeTab.value) {
         case 0:
-          return 'Welcome to Performance Assessment';
+          return 'About the Performance Assessment tool';
         case 1:
-          return 'Welcome to Performance Assessment';
+          return 'About the Performance Assessment tool';
         default:
           return 'Welcome';
       }
