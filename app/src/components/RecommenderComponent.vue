@@ -40,6 +40,7 @@
         <v-switch
           color="primary"
           v-model="showHints"
+          @click="handleHint"
           label="Show Hints"
           hide-details
         ></v-switch>
@@ -227,7 +228,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {useApp} from "@/mixins/app";
 
 const description = ref('');
-const showHints = ref(true);
+const showHints = ref(sessionStorage.getItem('rHints') !== 'true');
 const outputCount = ref(10); // Default value set to 10
 const searchKeywords = ref('');
 const mapCenter = ref([50.8503, 4.3517]);
@@ -253,6 +254,10 @@ Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
+
+const handleHint = () =>{
+  sessionStorage.setItem('rHints', String(showHints.value));
+}
 
 const safeLink = computed(() => {
   const link = selectedCard.value.metadatas?.link || "";

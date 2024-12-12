@@ -6,6 +6,7 @@
           color="primary"
           v-model="showHints"
           label="Show Hints"
+          @click="handleHints"
           hide-details
         ></v-switch>
       </v-col>
@@ -170,7 +171,7 @@ export default {
     const inputText = ref('');
     const form = ref(null);
     const extractorForm = ref(null);
-    const showHints = ref(sessionStorage.getItem('toNbsHints') !== 'true');
+    const showHints = ref(sessionStorage.getItem('nbsToHints') !== 'true');
     const chartOptions = ref({
       responsive: true,
       maintainAspectRatio: false,
@@ -195,7 +196,7 @@ export default {
     });
 
     const handleHints = ()  => {
-      sessionStorage.setItem('toNbsHints', String(showHints.value));
+      sessionStorage.setItem('nbsToHints', String(showHints.value));
     }
 
     const fetchNbsMapInfo = async () => {
