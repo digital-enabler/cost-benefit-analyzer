@@ -71,7 +71,7 @@
               class="mb-5"
               variant="outlined"
               v-model="outputCount"
-              label="Max Number of Outputs"
+              label="Desired Number of Output"
             ></v-number-input>
             <v-text-field
               density="compact"
@@ -85,7 +85,7 @@
               width="250"
             ></v-text-field>
             <v-btn :disabled="isLoading" @click="applySettings" color="primary" class="mt-4 mr-2">
-              Calculate
+              Search
             </v-btn>
             <v-btn
               class="mt-4"
