@@ -18,7 +18,7 @@
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text class="mb-5">
           <component :is="getGuideContent"></component>
         </v-card-text>
       </v-card>

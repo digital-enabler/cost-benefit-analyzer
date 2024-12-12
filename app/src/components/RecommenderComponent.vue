@@ -12,13 +12,13 @@
     >
       <v-card>
         <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
-          Guide for Map Recommendations
+            Recommender system tool
           <v-btn variant="text" @click="showSidebar = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text class="mb-5">
           <component :is="getGuideContent()"></component>
         </v-card-text>
       </v-card>
@@ -40,6 +40,7 @@
         <v-switch
           color="primary"
           v-model="showHints"
+          @click="handleHint"
           label="Show Hints"
           hide-details
         ></v-switch>
@@ -54,7 +55,7 @@
               label="NBS Description"
               variant="outlined"
               class="my-3"
-              hint="Provide a brief description of the Nature-Based Solution (NBS). This helps in generating more relevant recommendations."
+              hint="Provide a brief description of the Nature-Based Solution (NBS) for which you are looking for a recommendation."
               :persistent-hint="showHints"
               rows="4"
               persistent-placeholder
@@ -63,7 +64,7 @@
             <v-number-input
               density="compact"
               width="250"
-              hint="Specify the maximum number of results to display. Choose a number between 5 and 15."
+              hint="Specify the desired number of results to display. Choose a number between 5 and 15."
               :persistent-hint="showHints"
               :max="15"
               :min="5"
@@ -76,7 +77,7 @@
               density="compact"
               v-model="searchKeywords"
               label="Focus on sentence"
-              hint="Enter specific keywords or phrases to refine the results, such as 'ocean environment'."
+              hint="Enter specific keyword or phrase to refine the results, such as 'ocean environment'."
               :persistent-hint="showHints"
               placeholder="ocean environment"
               persistent-placeholder
@@ -227,7 +228,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {useApp} from "@/mixins/app";
 
 const description = ref('');
-const showHints = ref(true);
+const showHints = ref(sessionStorage.getItem('rHints') !== 'true');
 const outputCount = ref(10); // Default value set to 10
 const searchKeywords = ref('');
 const mapCenter = ref([50.8503, 4.3517]);
@@ -253,6 +254,10 @@ Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
+
+const handleHint = () =>{
+  sessionStorage.setItem('rHints', String(showHints.value));
+}
 
 const safeLink = computed(() => {
   const link = selectedCard.value.metadatas?.link || "";
