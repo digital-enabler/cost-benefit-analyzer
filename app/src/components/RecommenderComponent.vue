@@ -73,17 +73,22 @@
               v-model="outputCount"
               label="Desired Number of Output"
             ></v-number-input>
-            <v-text-field
-              density="compact"
-              v-model="searchKeywords"
-              label="Focus on sentence"
-              hint="Enter specific keyword or phrase to refine the results, such as 'ocean environment'."
-              :persistent-hint="showHints"
-              placeholder="ocean environment"
-              persistent-placeholder
-              variant="outlined"
-              width="250"
-            ></v-text-field>
+              <v-card class="pa-3 border-t">
+                <v-card-title>Narrow your search</v-card-title>
+                <v-divider></v-divider>
+                <br>
+                <v-text-field
+                  density="compact"
+                  v-model="searchKeywords"
+                  label="Focus on sentence"
+                  hint="Enter specific keyword or phrase to refine the results, such as 'ocean environment'."
+                  :persistent-hint="showHints"
+                  placeholder="ocean environment"
+                  persistent-placeholder
+                  variant="outlined"
+                  width="250"
+                ></v-text-field>
+              </v-card>
             <v-btn :disabled="isLoading" @click="applySettings" color="primary" class="mt-4 mr-2">
               Search
             </v-btn>
