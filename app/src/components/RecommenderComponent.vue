@@ -34,7 +34,6 @@
     >
       <v-icon size="36">mdi-information-outline</v-icon>
     </v-btn>
-    <v-card-title>Explore the features of Map Recommendations</v-card-title>
     <v-row :justify="showSidebar === true ? 'start' : 'center'">
       <v-col :cols="8" class="text-right">
         <v-switch
