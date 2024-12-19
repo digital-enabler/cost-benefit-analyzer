@@ -10,18 +10,80 @@
       width="500"
       elevation="0"
     >
-      <v-card>
-        <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
-          Costs-Benefits Analyzer tool
-          <v-btn variant="text" @click="showSidebar = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text>
-          <component :is="getGuideContent()" />
-        </v-card-text>
-      </v-card>
+        <v-tabs v-model="navTab">
+          <v-tab value="one">Guide</v-tab>
+          <v-tab value="two">Facilitator</v-tab>
+        </v-tabs>
+        <v-window v-model="navTab">
+        <v-window-item value="one">
+          <v-card>
+          <v-card-title class="text-h5 d-flex align-center justify-space-between w-100">
+            Costs-Benefits Analyzer tool
+            <v-btn variant="text" @click="showSidebar = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <component :is="getGuideContent()" />
+          </v-card-text>
+          </v-card>
+        </v-window-item>
+          <v-window-item value="two" class="pa-3">
+            <v-select @update:modelValue="handleCategoryChange" label="Type" v-model="selectedCategory" :items="categories" item-value="value" item-title="text" placeholder="Please select a type">
+            </v-select>
+            <v-select
+              label="Category"
+              v-if="selectedCategory"
+              v-model="selectedSubcategory"
+              @update:modelValue="handleSubcategoryChange"
+              :items="subcategories"
+              item-value="value"
+              item-title="text"
+              placeholder="Please select a category"
+              class="mt-3"
+            ></v-select>
+            <v-select
+              label="Subcategory"
+              v-if="selectedSubcategory"
+              v-model="selectedInnerCategory"
+              :items="innerCategories"
+              @update:modelValue="handleInnerCategoryChange"
+              item-value="value"
+              item-title="text"
+              placeholder="Please select a subcategory"
+              class="mt-3"
+            ></v-select>
+
+            <!-- Display details of the selected item -->
+            <v-card v-if="itemDetails" class="mt-5">
+              <v-card-title class="text-center text-primary">
+                <h3 class="text-h6">Subcategory Details</h3>
+              </v-card-title>
+              <v-card-text>
+                <v-row>
+                  <v-col cols="12" md="12">
+                    <strong>Description:</strong> {{ itemDetails.Description }}
+                  </v-col>
+                  <v-col cols="12" md="12">
+                    <strong>Currency:</strong> {{ itemDetails.Currency }}
+                  </v-col>
+                  <v-col cols="12" md="12">
+                    <strong>Establishment Costs:</strong>
+                    {{ itemDetails.Establishment_costs }} {{ itemDetails.Establishment_unit }}
+                  </v-col>
+                  <v-col cols="12" md="12">
+                    <strong>Maintenance Costs:</strong>
+                    {{ itemDetails.Maintenance_costs }} {{ itemDetails.Maintenance_unit }}
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="white" class="bg-primary" variant="text" @click="clearSelection">Clear Selection</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-window-item>
+        </v-window>
     </v-navigation-drawer>
 
     <v-btn
@@ -125,8 +187,17 @@ export default {
     UploadResponse, FormSection
   },
   setup() {
-    const {optimization} = useApp();
+    const {optimization, costBenefitMapInfo, costBenefitMap} = useApp();
+    const categories = ref([{text: 'Costs', value: 'costs'}, {text: 'Benefits', value: 'benefits'}]);
+    const selectedCategory = ref(null);
+    const subcategories = ref([]);
+    const selectedSubcategory = ref(null);
+    const innerCategories = ref([]);
+    const selectedInnerCategory = ref(null);
+    const fullResponse = ref(null);
+    const itemDetails = ref(null); //
     const tab = ref('one');
+    const navTab = ref('one');
     const files = ref(null);
     const uploadResponse = ref(null);
     const loader = ref(false);
@@ -209,8 +280,82 @@ export default {
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
+    const handleCategoryChange = (value) => {
+      selectedSubcategory.value = null;
+      selectedInnerCategory.value = null;
+      itemDetails.value = null;
+      innerCategories.value = [];
+      if (value && fullResponse.value) {
+        subcategories.value = Object.keys(fullResponse.value[value]).map((key) => ({
+          text: key.replace(/_/g, " "), // Convert keys like "green_roofs" to "green roofs" for display
+          value: key
+        }));
+      } else {
+        subcategories.value = [];
+        innerCategories.value = [];
+      }
+    };
+
+    const handleSubcategoryChange = (value) => {
+      selectedInnerCategory.value = null;
+      itemDetails.value = null;
+      innerCategories.value = [];
+      if (value && fullResponse.value && selectedCategory.value) {
+        innerCategories.value = fullResponse.value[selectedCategory.value][value].map((item) => ({
+          text: item,
+          value: item
+        }));
+      } else {
+        innerCategories.value = [];
+      }
+    };
+
+    const handleInnerCategoryChange = async (value) => {
+      if (value && selectedCategory.value && selectedSubcategory.value) {
+        try {
+          const response = await costBenefitMap(); // Call the costBenefitMap API
+          const categoryData = response[selectedCategory.value][selectedSubcategory.value];
+          const matchedItem = categoryData.find((item) => item.Description === value);
+
+          if (matchedItem) {
+            itemDetails.value = matchedItem; // Store the matched item's details for display
+          } else {
+            itemDetails.value = null; // Clear details if no match is found
+          }
+        } catch (error) {
+          console.error("Error fetching details from costBenefitMap:", error);
+        }
+      }
+    };
+
+    const clearSelection = () => {
+      selectedCategory.value = null;
+      selectedSubcategory.value = null;
+      selectedInnerCategory.value = null;
+      itemDetails.value = null;
+      subcategories.value = [];
+      innerCategories.value = [];
+    };
+
     onMounted(() => {
       window.addEventListener('scroll', checkScroll);
+
+      const fetchCategories = async () => {
+        try {
+          const response = await costBenefitMapInfo();
+          if (response?.nbs_costs_benefits_categories) {
+            fullResponse.value = response.nbs_costs_benefits_categories; // Store the API response
+            categories.value = [
+              { text: "Costs", value: "costs" },
+              { text: "Benefits", value: "benefits" }
+            ];
+          }
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+        }
+      };
+
+      fetchCategories();
     });
 
     onBeforeUnmount(() => {
@@ -219,7 +364,20 @@ export default {
 
     return {
       tab,
+      navTab,
+      categories,
+      subcategories,
+      innerCategories,
+      selectedCategory,
+      selectedSubcategory,
+      selectedInnerCategory,
+      fullResponse,
+      itemDetails,
       handleFileUpload,
+      handleCategoryChange,
+      handleSubcategoryChange,
+      handleInnerCategoryChange,
+      clearSelection,
       files,
       uploadResponse,
       optimization,
