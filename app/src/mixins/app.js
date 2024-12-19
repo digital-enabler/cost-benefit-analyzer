@@ -12,6 +12,25 @@ export function useApp() {
     }
   }
 
+  async function costBenefitMapInfo() {
+    try {
+      const response = await axios.get(apiUrl + "/invest4nature/optimizations/nbs_costs_benefits_map_info?with_subcategories=true", {withCredentials: true});
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function costBenefitMap() {
+    try {
+      const response = await axios.get(apiUrl + "/invest4nature/optimizations/nbs_costs_benefits_map", {withCredentials: true});
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
   async function extractNBS(text) {
     try {
       const response = await axios.post(apiUrl + "/invest4nature/indicators/extract", {text}, {withCredentials: true} );
@@ -57,5 +76,5 @@ export function useApp() {
     }
   }
 
-  return { optimization, recommend, extractNBS, getNbsMapInfo, calculateIndicators, extractMostSignificantNBS };
+  return { optimization, costBenefitMapInfo, costBenefitMap, recommend, extractNBS, getNbsMapInfo, calculateIndicators, extractMostSignificantNBS };
 }
