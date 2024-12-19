@@ -239,9 +239,6 @@ export default {
           showDialog.value = true;
         };
         reader.readAsText(file);
-      } else {
-        // Handle the case where the file is not JSON
-        alert("Please upload a JSON file.");
       }
     };
     // close the dialog
@@ -287,12 +284,9 @@ export default {
       innerCategories.value = [];
       if (value && fullResponse.value) {
         subcategories.value = Object.keys(fullResponse.value[value]).map((key) => ({
-          text: key.replace(/_/g, " "), // Convert keys like "green_roofs" to "green roofs" for display
+          text: key.replace(/_/g, " "),
           value: key
         }));
-      } else {
-        subcategories.value = [];
-        innerCategories.value = [];
       }
     };
 
@@ -305,8 +299,6 @@ export default {
           text: item,
           value: item
         }));
-      } else {
-        innerCategories.value = [];
       }
     };
 
@@ -318,9 +310,9 @@ export default {
           const matchedItem = categoryData.find((item) => item.Description === value);
 
           if (matchedItem) {
-            itemDetails.value = matchedItem; // Store the matched item's details for display
+            itemDetails.value = matchedItem;
           } else {
-            itemDetails.value = null; // Clear details if no match is found
+            itemDetails.value = null;
           }
         } catch (error) {
           console.error("Error fetching details from costBenefitMap:", error);
@@ -344,7 +336,7 @@ export default {
         try {
           const response = await costBenefitMapInfo();
           if (response?.nbs_costs_benefits_categories) {
-            fullResponse.value = response.nbs_costs_benefits_categories; // Store the API response
+            fullResponse.value = response.nbs_costs_benefits_categories;
             categories.value = [
               { text: "Costs", value: "costs" },
               { text: "Benefits", value: "benefits" }
