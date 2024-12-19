@@ -66,15 +66,12 @@
                     <strong>Description:</strong> {{ itemDetails.Description }}
                   </v-col>
                   <v-col cols="12" md="12">
-                    <strong>Currency:</strong> {{ itemDetails.Currency }}
-                  </v-col>
-                  <v-col cols="12" md="12">
                     <strong>Establishment Costs:</strong>
-                    {{ itemDetails.Establishment_costs }} {{ itemDetails.Establishment_unit }}
+                    {{ itemDetails.Establishment_costs }} {{ itemDetails.Currency }}/{{ itemDetails.Establishment_unit }}
                   </v-col>
                   <v-col cols="12" md="12">
                     <strong>Maintenance Costs:</strong>
-                    {{ itemDetails.Maintenance_costs }} {{ itemDetails.Maintenance_unit }}
+                    {{ itemDetails.Maintenance_costs }} {{ itemDetails.Currency }}/{{ itemDetails.Maintenance_unit }}
                   </v-col>
                 </v-row>
               </v-card-text>
